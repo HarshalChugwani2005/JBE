@@ -17,13 +17,14 @@ Consolidated day-wise plan. Detailed per-day task files also exist separately (`
 
 ## Day 3 — Category Page + Product Detail
 - Category page: brands → models, grouped and badged (warranty/tagline)
-- Product detail (modal or route): image, color swatches, specs, WhatsApp + Call CTAs
-- Graceful handling of models with no specs/colors
+ - Product detail (route): image placeholder, color swatches, specs, WhatsApp + Call CTAs — IMPLEMENTED
+ - Graceful handling of models with no specs/colors — IMPLEMENTED
 
 ## Day 4 — Contact Page + Form + Map
 - Contact page: map embed, address, hours, enquiry form
-- Wire form to Formspree (no backend)
-- Add global floating WhatsApp button across all pages
+ - Contact page: map embed, address, hours, enquiry form — IMPLEMENTED
+ - Wire form to Formspree (no backend) — IMPLEMENTED (configure `shop.formspreeUrl`)
+ - Add global floating WhatsApp button across all pages — ALREADY PRESENT
 
 ## Day 5 — Responsive Polish + SEO
 - Full responsive pass, mobile-first

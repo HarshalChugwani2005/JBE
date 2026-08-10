@@ -1,6 +1,8 @@
 import { Link, useParams } from 'react-router-dom'
+import { useState } from 'react'
 import ProductCard from '../components/ProductCard'
 import { getCategoryBySlug, getModelBySlug } from '../data/products'
+import { getWhatsAppUrl, getPhoneUrl, shop } from '../data/site'
 
 function slugify(text) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-')
@@ -38,6 +40,11 @@ export default function CategoryPage() {
     }
 
     const { brand, model } = result
+    const [selectedColor, setSelectedColor] = useState(
+      model.colors && model.colors.length > 0 ? model.colors[0] : null
+    )
+
+    const whatsappText = `Hi, I would like to enquire about the ${brand.brand} ${model.modelName}`
     return (
       <div>
         <Link
@@ -46,11 +53,94 @@ export default function CategoryPage() {
         >
           ← {category.categoryLabel}
         </Link>
-        <h1 className="mt-4 text-2xl font-bold text-gray-900">{model.modelName}</h1>
-        <p className="text-gray-600">{brand.brand}</p>
-        <p className="mt-4 text-sm text-gray-500">
-          Product detail route stub — full detail view on Day 3.
-        </p>
+
+        <div className="mt-4 grid gap-6 md:grid-cols-3">
+          <div className="md:col-span-1">
+            <div className="rounded-lg border border-gray-200 bg-gray-100 p-6">
+              <div className="flex h-64 items-center justify-center rounded bg-white text-sm text-gray-400">
+                {model.image ? `${categorySlug}/${model.image}` : 'No image available'}
+              </div>
+              <div className="mt-4">
+                <h1 className="text-2xl font-bold text-gray-900">{model.modelName}</h1>
+                <p className="text-sm text-gray-500">{brand.brand}</p>
+                {brand.tagline && <p className="mt-2 text-sm text-gray-600">{brand.tagline}</p>}
+                {brand.warranty && (
+                  <div className="mt-3 inline-block rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
+                    {brand.warranty}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="md:col-span-2">
+            <div className="rounded-lg border border-gray-200 bg-white p-6">
+              <h2 className="text-lg font-semibold text-gray-900">Product Details</h2>
+
+              <div className="mt-4">
+                <h3 className="text-sm font-medium text-gray-700">Specifications</h3>
+                {model.specs && model.specs.length > 0 ? (
+                  <ul className="mt-2 list-inside list-disc text-sm text-gray-600">
+                    {model.specs.map((s, i) => (
+                      <li key={i}>{s}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-2 text-sm text-gray-500">No specifications available for this model.</p>
+                )}
+              </div>
+
+              <div className="mt-6">
+                <h3 className="text-sm font-medium text-gray-700">Available Colors</h3>
+                {model.colors && model.colors.length > 0 ? (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {model.colors.map((color) => (
+                      <button
+                        key={color}
+                        type="button"
+                        onClick={() => setSelectedColor(color)}
+                        className={`inline-flex items-center gap-2 rounded-md border px-3 py-1 text-sm ${
+                          selectedColor === color ? 'border-amber-600 bg-amber-50' : 'border-gray-200 bg-white'
+                        }`}
+                      >
+                        <span className="h-3 w-3 rounded-full bg-stone-300" aria-hidden />
+                        {color}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="mt-2 text-sm text-gray-500">No color variants listed.</p>
+                )}
+              </div>
+
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <a
+                  href={getWhatsAppUrl(whatsappText)}
+                  className="inline-flex items-center justify-center rounded-lg bg-[#25D366] px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#1fb855]"
+                >
+                  WhatsApp Seller
+                </a>
+
+                <a
+                  href={getPhoneUrl()}
+                  className="inline-flex items-center justify-center rounded-lg border border-stone-200 bg-white px-5 py-2 text-sm font-semibold text-stone-900 hover:bg-stone-50"
+                >
+                  Call Seller
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => (window.location.href = `/contact?enquiry=${encodeURIComponent(`${brand.brand} ${model.modelName}`)}`)}
+                  className="inline-flex items-center justify-center rounded-lg bg-amber-600 px-5 py-2 text-sm font-semibold text-white hover:bg-amber-700"
+                >
+                  Enquire via form
+                </button>
+              </div>
+
+              <p className="mt-4 text-sm text-gray-500">Contact: {shop.phone}</p>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
