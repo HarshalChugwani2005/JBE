@@ -7,6 +7,7 @@ export default function MapPreview({ compact = false }) {
       <div className={compact ? 'aspect-[16/9] w-full' : 'relative min-h-[200px] md:col-span-3 md:min-h-[260px]'}>
         <iframe
           title="Jai Baba Electronic location on Google Maps"
+          title="Jai Baba Electronic location on Google Maps"
           src={shop.mapEmbedUrl}
           className="absolute inset-0 h-full w-full border-0"
           loading="lazy"

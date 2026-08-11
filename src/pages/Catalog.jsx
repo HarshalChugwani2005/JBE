@@ -1,5 +1,6 @@
 import CategoryCard from '../components/CategoryCard'
 import Section from '../components/Section'
+import SEO from '../components/SEO'
 import { categories } from '../data/products'
 
 export default function Catalog() {
@@ -7,7 +8,12 @@ export default function Catalog() {
   const comingSoonCount = categories.filter((c) => c.comingSoon).length
 
   return (
-    <div>
+    <>
+      <SEO
+        title="Catalog"
+        description="Browse Jai Baba Electronic's catalog by category, including ceiling fans and more products available for enquiry."
+      />
+      <div>
       <header className="border-b border-stone-200 pb-8">
         <h1 className="text-3xl font-bold tracking-tight text-stone-900 md:text-4xl">
           Product Catalog
@@ -42,5 +48,6 @@ export default function Catalog() {
         Browse the catalog and reach out via WhatsApp or call for a quote.
       </div>
     </div>
+    </>
   )
 }

@@ -1,10 +1,16 @@
 import ContactForm from '../components/ContactForm'
 import MapPreview from '../components/MapPreview'
+import SEO from '../components/SEO'
 import { shop, getWhatsAppUrl, getPhoneUrl } from '../data/site'
 
 export default function Contact() {
   return (
-    <div>
+    <>
+      <SEO
+        title="Contact"
+        description="Visit Jai Baba Electronic on Buldana Road, Malkapur or enquire by WhatsApp, call, or contact form."
+      />
+      <div>
       <h1 className="text-2xl font-bold text-gray-900">Contact Us</h1>
       <p className="mt-2 text-gray-600">Reach us via WhatsApp, phone, or the form below.</p>
 
@@ -41,5 +47,6 @@ export default function Contact() {
         </div>
       </div>
     </div>
+    </>
   )
 }

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import CategoryCard from '../components/CategoryCard'
 import MapPreview from '../components/MapPreview'
 import Section from '../components/Section'
+import SEO from '../components/SEO'
 import { categories } from '../data/products'
 import { featuredCategorySlugs, getWhatsAppUrl, shop } from '../data/site'
 
@@ -11,7 +12,12 @@ export default function Home() {
     .filter(Boolean)
 
   return (
-    <div className="-mx-4">
+    <>
+      <SEO
+        title="Home"
+        description="Jai Baba Electronic offers ceiling fans, coolers, appliances and more in Malkapur. Browse the catalog and enquire for wholesale or retail pricing."
+      />
+      <div className="-mx-4">
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-amber-600 via-orange-600 to-amber-700 px-4 py-14 text-white sm:px-6 md:py-20">
         <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
@@ -123,5 +129,6 @@ export default function Home() {
         </Section>
       </div>
     </div>
+    </>
   )
 }
