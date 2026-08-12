@@ -1,13 +1,33 @@
-export default function ProductCard({ modelName, brand, image, category }) {
-  const placeholderText = image ? `${category}/${image}` : 'Image coming soon'
+import { Link } from 'react-router-dom'
+import ProductImage from './ProductImage'
+
+export default function ProductCard({ to, modelName, brand, image, category }) {
+  const card = (
+    <article className="flex h-full flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-amber-300 hover:shadow-md focus-within:border-amber-400">
+      <ProductImage
+        category={category}
+        product={{ image }}
+        alt={`${brand ? `${brand} ` : ''}${modelName}`}
+        className="aspect-[4/3]"
+        imgClassName="group-hover:scale-105"
+        fallbackLabel="Photo coming soon"
+      />
+      <div className="flex flex-1 flex-col p-4">
+        <h4 className="text-base font-semibold text-stone-900 transition group-hover:text-amber-800">
+          {modelName}
+        </h4>
+        {brand && <p className="mt-1 text-sm text-stone-500">{brand}</p>}
+      </div>
+    </article>
+  )
 
   return (
-    <article className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-      <div className="flex h-32 items-center justify-center rounded bg-gradient-to-br from-stone-100 to-stone-200 text-sm font-medium text-stone-500" aria-label={`${modelName} preview`}>
-        {placeholderText}
-      </div>
-      <h4 className="mt-3 font-medium text-gray-900">{modelName}</h4>
-      {brand && <p className="text-sm text-gray-500">{brand}</p>}
-    </article>
+    <Link
+      to={to}
+      className="group block h-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+      aria-label={`${brand ? `${brand} ` : ''}${modelName}`}
+    >
+      {card}
+    </Link>
   )
 }
