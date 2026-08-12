@@ -42,8 +42,8 @@ export default function ProductImage({
         loading={loading}
         onLoad={() => setIsLoaded(true)}
         onError={() => setHasError(true)}
-        className={`h-full w-full object-cover transition duration-300 ${
-          isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
+        className={`h-full w-full object-cover transition duration-500 ease-out ${
+          isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.03]'
         } ${imgClassName}`}
       />
     </div>

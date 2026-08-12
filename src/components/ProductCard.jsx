@@ -3,7 +3,7 @@ import ProductImage from './ProductImage'
 
 export default function ProductCard({ to, modelName, brand, image, category }) {
   const card = (
-    <article className="flex h-full flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-amber-300 hover:shadow-md focus-within:border-amber-400">
+    <article className="flex h-full flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition duration-200 group-hover:-translate-y-0.5 group-hover:border-amber-300 group-hover:shadow-md group-focus-visible:border-amber-400 group-focus-visible:shadow-md">
       <ProductImage
         category={category}
         product={{ image }}
@@ -24,7 +24,7 @@ export default function ProductCard({ to, modelName, brand, image, category }) {
   return (
     <Link
       to={to}
-      className="group block h-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+      className="group block h-full rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
       aria-label={`${brand ? `${brand} ` : ''}${modelName}`}
     >
       {card}
