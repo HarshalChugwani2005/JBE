@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { getCategoryVisual, getModelCount } from '../data/categoryVisuals'
 import CategoryIcon from './CategoryIcon'
 
-export default function CategoryCard({ category, categoryLabel, comingSoon, brands = [] }) {
+export default function CategoryCard({ category, categoryLabel, comingSoon, brands = [], search = '' }) {
   const visual = getCategoryVisual(category)
   const modelCount = getModelCount({ brands })
   const statusText = comingSoon
@@ -13,7 +13,7 @@ export default function CategoryCard({ category, categoryLabel, comingSoon, bran
 
   return (
     <Link
-      to={`/catalog/${category}`}
+      to={{ pathname: `/catalog/${category}`, search }}
       className="group flex h-full flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-amber-300 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
     >
       <div
