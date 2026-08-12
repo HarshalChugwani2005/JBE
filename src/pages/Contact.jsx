@@ -11,7 +11,7 @@ export default function Contact() {
         description="Visit Jai Baba Electronic on Buldana Road, Malkapur or enquire by WhatsApp, call, or contact form."
       />
       <div>
-      <h1 className="text-2xl font-bold text-gray-900">Contact Us</h1>
+      <h1 className="font-display text-2xl font-bold text-gray-900">Contact Us</h1>
       <p className="mt-2 text-gray-600">Reach us via WhatsApp, phone, or the form below.</p>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-2">

@@ -11,7 +11,7 @@ export default function Section({
       {(title || subtitle) && (
         <header className={`mb-6 md:mb-8 ${headerClassName}`}>
           {title && (
-            <h2 className="text-2xl font-bold tracking-tight text-stone-900 md:text-3xl">
+            <h2 className="font-display text-2xl font-bold tracking-tight text-stone-900 md:text-3xl">
               {title}
             </h2>
           )}

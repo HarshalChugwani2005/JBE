@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import CategoryCard from '../components/CategoryCard'
 import MapPreview from '../components/MapPreview'
+import RevealOnScroll from '../components/RevealOnScroll'
 import Section from '../components/Section'
 import SEO from '../components/SEO'
 import { categories } from '../data/products'
@@ -19,22 +20,23 @@ export default function Home() {
       />
       <div className="-mx-4">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-amber-600 via-orange-600 to-amber-700 px-4 py-14 text-white sm:px-6 md:py-20">
+      <section className="hero-surface relative overflow-hidden px-4 py-14 text-white sm:px-6 md:py-20">
         <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-orange-400/20 blur-2xl" />
+        <div className="pointer-events-none absolute inset-0 hero-texture" aria-hidden="true" />
         <div className="relative mx-auto max-w-6xl">
-          <p className="text-sm font-medium uppercase tracking-wider text-amber-100">
+          <p className="hero-entrance text-sm font-medium uppercase tracking-wider text-amber-100">
             Buldana Road, Malkapur
           </p>
-          <h1 className="mt-2 text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
+          <h1 className="hero-entrance hero-entrance--delay-1 font-display mt-2 text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
             {shop.name}
           </h1>
-          <p className="mt-4 max-w-xl text-lg text-amber-50">{shop.tagline}</p>
-          <p className="mt-2 max-w-lg text-sm text-amber-100/90">
+          <p className="hero-entrance hero-entrance--delay-2 mt-4 max-w-xl text-lg text-amber-50">{shop.tagline}</p>
+          <p className="hero-entrance hero-entrance--delay-3 mt-2 max-w-lg text-sm text-amber-100/90">
             Browse fans, coolers, kitchen appliances, and more. Contact us for
             prices — wholesale and retail welcome.
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="hero-entrance hero-entrance--delay-4 mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Link
               to="/catalog"
               className="inline-flex min-h-11 items-center justify-center rounded-lg bg-white px-6 py-3 text-sm font-semibold text-amber-800 shadow-md transition hover:bg-amber-50"
@@ -58,14 +60,16 @@ export default function Home() {
           subtitle="Tap a category to explore models and enquire. More ranges are being added regularly."
         >
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {featured.map((cat) => (
+            {featured.map((cat, index) => (
               <li key={cat.category}>
-                <CategoryCard
-                  category={cat.category}
-                  categoryLabel={cat.categoryLabel}
-                  comingSoon={cat.comingSoon}
-                  brands={cat.brands}
-                />
+                <RevealOnScroll delay={index * 80}>
+                  <CategoryCard
+                    category={cat.category}
+                    categoryLabel={cat.categoryLabel}
+                    comingSoon={cat.comingSoon}
+                    brands={cat.brands}
+                  />
+                </RevealOnScroll>
               </li>
             ))}
           </ul>
@@ -85,6 +89,7 @@ export default function Home() {
           subtitle="Your neighborhood electronics shop — trusted by homes and dealers across Malkapur."
         >
           <div className="grid gap-6 md:grid-cols-2">
+            <RevealOnScroll>
             <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
               <h3 className="font-semibold text-stone-900">Wholesale &amp; Retail</h3>
               <p className="mt-3 text-stone-600 leading-relaxed">
@@ -94,6 +99,8 @@ export default function Home() {
                 and coolers to kitchen appliances and lighting.
               </p>
             </div>
+            </RevealOnScroll>
+            <RevealOnScroll delay={120}>
             <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
               <h3 className="font-semibold text-stone-900">Contact for Price</h3>
               <p className="mt-3 text-stone-600 leading-relaxed">
@@ -117,6 +124,7 @@ export default function Home() {
                 </li>
               </ul>
             </div>
+            </RevealOnScroll>
           </div>
         </Section>
 
