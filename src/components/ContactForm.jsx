@@ -112,7 +112,7 @@ export default function ContactForm() {
         >
           {submitting ? 'Sending…' : 'Send Enquiry'}
         </button>
-        <p className="text-sm text-gray-500">Or contact us at {shop.phone}</p>
+        <p className="text-sm text-gray-500">Or contact us at {shop.phoneNumbers?.join(', ') || shop.primaryPhone}</p>
       </div>
     </form>
   )

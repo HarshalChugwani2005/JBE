@@ -235,7 +235,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
               </a>
             </div>
 
-            <p className="mt-5 text-sm text-stone-500">Contact {shop.phone} for pricing and availability.</p>
+            <p className="mt-5 text-sm text-stone-500">Contact {shop.phoneNumbers?.join(', ') || shop.primaryPhone} for pricing and availability.</p>
             {selectedColor && (
               <p className="mt-2 text-sm text-stone-500">Selected color: {selectedColor}</p>
             )}

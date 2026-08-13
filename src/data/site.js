@@ -9,7 +9,10 @@ export const shop = {
   address: 'Buldana Road, Malkapur',
   city: 'Malkapur, Maharashtra',
   hours: 'Mon–Sat: 9:00 AM – 8:00 PM · Sun: 10:00 AM – 2:00 PM',
-  phone: '9673558859,8421009925,9156576666,9421394471', // e.g. '919876543210' — Day 3
+  // canonical number for `tel:` links
+  primaryPhone: '919673558859', // E.164 recommended (country prefix)
+  // list of display numbers for the Contact page
+  phoneNumbers: ['9673558859', '8421009925', '9156576666', '9421394471'],
   whatsapp: '8421009925', // e.g. '919876543210' — Day 3
   mapEmbedUrl:
     'https://maps.google.com/maps?q=Buldana+Road,+Malkapur,+Maharashtra&output=embed',
@@ -35,7 +38,8 @@ export function getWhatsAppUrl(message = 'Hi, I would like to enquire about your
 }
 
 export function getPhoneUrl() {
-  const number = shop.phone.replace(/\D/g, '')
+  const number = (shop.primaryPhone || '').replace(/\D/g, '')
   if (!number) return '/contact'
+  // Return a tel: link with country code (E.164) for reliability
   return `tel:+${number}`
 }
