@@ -1,0 +1,5 @@
+# robots.txt for Jai Baba Electronic
+User-agent: *
+Allow: /
+
+Sitemap: https://jaibabaelectronic.vercel.app/sitemap.xml

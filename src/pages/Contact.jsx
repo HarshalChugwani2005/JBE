@@ -23,20 +23,36 @@ export default function Contact() {
             <p className="mt-2 text-sm text-gray-600">{shop.address}</p>
             <p className="text-sm text-gray-600">{shop.city}</p>
             <p className="mt-2 text-sm text-gray-500">{shop.hours}</p>
-            <div className="mt-4 flex flex-wrap gap-3">
+
+            <div className="mt-4 border-t border-stone-100 pt-4">
+              <p className="text-xs font-semibold uppercase tracking-wider text-stone-500">Available Numbers</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {shop.phoneNumbers.map((num) => (
+                  <a
+                    key={num}
+                    href={getPhoneUrl(num)}
+                    className="inline-flex items-center gap-1.5 rounded-md border border-stone-200 bg-stone-50 px-2.5 py-1.5 text-xs font-medium text-stone-800 transition hover:border-amber-400 hover:bg-amber-50"
+                  >
+                    📞 +91 {num}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-5 flex flex-wrap gap-3">
               <a
                 href={getWhatsAppUrl()}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center rounded-lg bg-[#25D366] px-4 py-2 text-sm font-medium text-white hover:bg-[#1fb855]"
+                className="inline-flex items-center rounded-lg bg-[#25D366] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#1fb855]"
               >
                 Chat on WhatsApp
               </a>
               <a
                 href={getPhoneUrl()}
-                className="inline-flex items-center rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50"
+                className="inline-flex items-center rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 shadow-sm hover:bg-stone-50"
               >
-                Call Us
+                Call Primary ({shop.primaryPhone})
               </a>
             </div>
           </div>

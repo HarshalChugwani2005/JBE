@@ -9,8 +9,11 @@ export const shop = {
   address: 'Buldana Road, Malkapur',
   city: 'Malkapur, Maharashtra',
   hours: 'Mon–Sat: 9:00 AM – 8:00 PM · Sun: 10:00 AM – 2:00 PM',
-  phone: '9673558859,8421009925,9156576666,9421394471', // e.g. '919876543210' — Day 3
-  whatsapp: '8421009925', // e.g. '919876543210' — Day 3
+  primaryPhone: '9673558859',
+  phoneNumbers: ['9673558859', '8421009925', '9156576666', '9421394471'],
+  phone: '9673558859',
+  whatsapp: '8421009925',
+  siteUrl: 'https://jaibabaelectronic.vercel.app',
   mapEmbedUrl:
     'https://maps.google.com/maps?q=Buldana+Road,+Malkapur,+Maharashtra&output=embed',
   mapDirectionsUrl:
@@ -29,13 +32,15 @@ export const featuredCategorySlugs = [
 
 export function getWhatsAppUrl(message = 'Hi, I would like to enquire about your products.') {
   const number = shop.whatsapp.replace(/\D/g, '')
+  const formattedNumber = number.length === 10 ? `91${number}` : number
   const text = encodeURIComponent(message)
-  if (!number) return `/contact?enquiry=whatsapp`
-  return `https://wa.me/${number}?text=${text}`
+  if (!formattedNumber) return `/contact?enquiry=whatsapp`
+  return `https://wa.me/${formattedNumber}?text=${text}`
 }
 
-export function getPhoneUrl() {
-  const number = shop.phone.replace(/\D/g, '')
-  if (!number) return '/contact'
-  return `tel:+${number}`
+export function getPhoneUrl(phoneNumber = shop.primaryPhone) {
+  const digits = String(phoneNumber || '').replace(/\D/g, '')
+  if (!digits) return '/contact'
+  const formatted = digits.length === 10 ? `+91${digits}` : `+${digits}`
+  return `tel:${formatted}`
 }

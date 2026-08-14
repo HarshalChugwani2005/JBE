@@ -2,11 +2,11 @@ import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { shop } from '../data/site'
 
-export default function SEO({ title, description, image = '/favicon.svg' }) {
+export default function SEO({ title, description, image = '/og-image.png' }) {
   const { pathname } = useLocation()
 
   useEffect(() => {
-    const fullTitle = title ? `${title} | ${shop.name}` : shop.name
+    const fullTitle = title ? `${title} | ${shop.name}` : `${shop.name} — Wholesale & Retail Electronics`
     document.title = fullTitle
 
     const metaDescription = document.querySelector('meta[name="description"]')
@@ -16,7 +16,7 @@ export default function SEO({ title, description, image = '/favicon.svg' }) {
 
     const canonical = document.querySelector('link[rel="canonical"]')
     if (canonical) {
-      canonical.setAttribute('href', `${window.location.origin}${pathname}`)
+      canonical.setAttribute('href', `${shop.siteUrl || window.location.origin}${pathname}`)
     }
 
     const ogTitle = document.querySelector('meta[property="og:title"]')
@@ -27,8 +27,10 @@ export default function SEO({ title, description, image = '/favicon.svg' }) {
       ogDescription.setAttribute('content', description || shop.tagline)
     }
 
+    const fullImageUrl = image.startsWith('http') ? image : `${shop.siteUrl || window.location.origin}${image.startsWith('/') ? image : `/${image}`}`
+
     const ogImage = document.querySelector('meta[property="og:image"]')
-    if (ogImage) ogImage.setAttribute('content', image)
+    if (ogImage) ogImage.setAttribute('content', fullImageUrl)
 
     const twitterTitle = document.querySelector('meta[name="twitter:title"]')
     if (twitterTitle) twitterTitle.setAttribute('content', fullTitle)
@@ -39,7 +41,7 @@ export default function SEO({ title, description, image = '/favicon.svg' }) {
     }
 
     const twitterImage = document.querySelector('meta[name="twitter:image"]')
-    if (twitterImage) twitterImage.setAttribute('content', image)
+    if (twitterImage) twitterImage.setAttribute('content', fullImageUrl)
   }, [title, description, image, pathname])
 
   return null
