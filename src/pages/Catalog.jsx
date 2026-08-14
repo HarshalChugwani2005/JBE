@@ -55,16 +55,6 @@ export default function Catalog() {
     })
   }, [brand, query])
 
-  const visibleBrands = useMemo(() => {
-    const brandNames = new Set()
-    filteredCategories.forEach((category) => {
-      category.brands?.forEach((entry) => {
-        if (entry.brand) brandNames.add(entry.brand)
-      })
-    })
-    return Array.from(brandNames).sort()
-  }, [filteredCategories])
-
   const updateParams = (next) => {
     const params = new URLSearchParams(searchParams)
     const nextQuery = next.q ?? query

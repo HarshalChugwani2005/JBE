@@ -185,6 +185,8 @@ export default function CategoryPage() {
                   brand={brand.brand}
                   image={model.image}
                   category={categorySlug}
+                  categoryLabel={category.categoryLabel}
+                  inStock={model.inStock}
                 />
               ))}
             </div>
