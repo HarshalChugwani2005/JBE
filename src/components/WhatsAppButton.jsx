@@ -1,4 +1,5 @@
 import { getWhatsAppUrl } from '../data/site'
+import { trackWhatsAppClick } from '../utils/analytics'
 
 export default function WhatsAppButton() {
   const url = getWhatsAppUrl()
@@ -9,6 +10,7 @@ export default function WhatsAppButton() {
       href={url}
       target={isExternal ? '_blank' : undefined}
       rel="noopener noreferrer"
+      onClick={() => trackWhatsAppClick('floating_button')}
       className="fixed bottom-5 right-5 z-50 flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full bg-[#25D366] px-4 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-[#1fb855] hover:shadow-xl md:bottom-6 md:right-6"
       aria-label="Chat on WhatsApp"
     >

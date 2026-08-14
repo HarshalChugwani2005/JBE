@@ -1,0 +1,22 @@
+{
+  "name": "Jai Baba Electronic",
+  "short_name": "Jai Baba",
+  "description": "Wholesale & Retail Electronics Store in Malkapur",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#18181B",
+  "theme_color": "#d97706",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png"
+    }
+  ]
+}

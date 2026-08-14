@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCart } from '../context/CartContext'
 import { getPhoneUrl, getWhatsAppUrl, shop } from '../data/site'
 import { getProductImageUrls } from '../data/productImages'
 import ProductImage from './ProductImage'
@@ -12,6 +13,7 @@ function getFocusableElements(container) {
 }
 
 export default function ProductDetailModal({ isOpen, onClose, product }) {
+  const { addToCart, openCart } = useCart()
   const dialogRef = useRef(null)
   const closeButtonRef = useRef(null)
   const previouslyFocusedRef = useRef(null)
@@ -22,6 +24,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
   const brand = product?.brand ?? product?.brandName ?? null
   const categorySlug = product?.categorySlug ?? product?.category ?? ''
   const categoryLabel = product?.categoryLabel ?? ''
+  const inStock = model?.inStock ?? true
 
   const imageSources = useMemo(() => getProductImageUrls(categorySlug, model), [categorySlug, model])
   const activeImage = imageSources[activeImageIndex] ?? imageSources[0] ?? null
@@ -106,9 +109,25 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
       >
         <div className="flex items-center justify-between border-b border-stone-200 px-5 py-4 sm:px-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-700">
-              {categoryLabel || categorySlug || 'Product'}
-            </p>
+            <div className="flex items-center gap-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-700">
+                {categoryLabel || categorySlug || 'Product'}
+              </p>
+              {inStock ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                  In Stock
+                </span>
+              ) : inStock === false ? (
+                <span className="inline-flex items-center rounded-full bg-stone-200 px-2 py-0.5 text-[10px] font-semibold text-stone-700">
+                  Out of Stock
+                </span>
+              ) : (
+                <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800">
+                  Ask Availability
+                </span>
+              )}
+            </div>
             <h2 id="product-modal-title" className="mt-1 text-xl font-semibold text-stone-900 sm:text-2xl">
               {modelName}
             </h2>
@@ -129,7 +148,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
               category={categorySlug}
               product={{
                 images: Array.isArray(model?.images) ? model.images : undefined,
-                image: model.image,
+                image: activeImage || model.image,
               }}
               alt={`${brandName ? `${brandName} ` : ''}${modelName}`}
               className="aspect-[4/3] rounded-2xl border border-stone-200"
@@ -216,26 +235,46 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
               </div>
             )}
 
-            <div className="mt-7 grid gap-3 sm:grid-cols-2">
+            <div className="mt-7 grid gap-3 sm:grid-cols-3">
+              <button
+                type="button"
+                onClick={() => {
+                  addToCart({
+                    categorySlug,
+                    categoryLabel,
+                    brand,
+                    model,
+                    selectedColor,
+                  })
+                  openCart()
+                  onClose()
+                }}
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl border-2 border-amber-600 bg-amber-50 px-4 py-3 text-sm font-bold text-amber-900 transition hover:bg-amber-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 cursor-pointer"
+              >
+                <span>📋</span>
+                <span>Add to List</span>
+              </button>
               <a
                 href={whatsappHref}
                 target={isExternalWhatsApp ? '_blank' : undefined}
                 rel={isExternalWhatsApp ? 'noopener noreferrer' : undefined}
-                className="inline-flex items-center justify-center rounded-xl bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1fb855] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366]"
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1fb855] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366]"
               >
-                WhatsApp enquiry
+                <span>💬</span>
+                <span>WhatsApp Enquiry</span>
               </a>
               <a
                 href={phoneHref}
                 target={isExternalPhone ? '_blank' : undefined}
                 rel={isExternalPhone ? 'noopener noreferrer' : undefined}
-                className="inline-flex items-center justify-center rounded-xl border border-stone-200 bg-white px-5 py-3 text-sm font-semibold text-stone-900 transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm font-semibold text-stone-900 transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
               >
-                Call seller
+                <span>📞</span>
+                <span>Call Seller</span>
               </a>
             </div>
 
-            <p className="mt-5 text-sm text-stone-500">Contact {shop.phone} for pricing and availability.</p>
+            <p className="mt-5 text-sm text-stone-500">Contact <span className="font-medium text-stone-700">+91 {shop.primaryPhone}</span> for wholesale pricing and availability.</p>
             {selectedColor && (
               <p className="mt-2 text-sm text-stone-500">Selected color: {selectedColor}</p>
             )}
