@@ -44,7 +44,8 @@ export default function CategoryPage() {
         .join(' ')
         .toLowerCase()
 
-      return searchableText.includes(normalizedQuery)
+      const queryWords = normalizedQuery.split(/\s+/).filter(Boolean)
+      return queryWords.every((word) => searchableText.includes(word))
     })
   }, [brand, category, query])
 
@@ -97,10 +98,10 @@ export default function CategoryPage() {
       )
     }
 
-    const { brand, model } = result
+    const { brand: matchedBrand, model: matchedModel } = result
     return (
       <>
-        <SEO title={model.modelName} description={`Explore ${brand.brand} ${model.modelName} at Jai Baba Electronic.`} />
+        <SEO title={matchedModel.modelName} description={`Explore ${matchedBrand.brand} ${matchedModel.modelName} at Jai Baba Electronic.`} />
         <div className="space-y-4">
           <Link to={`/catalog/${categorySlug}${search}`} className="text-sm text-blue-700 hover:underline">
             ← {category.categoryLabel}
@@ -115,8 +116,8 @@ export default function CategoryPage() {
           product={{
             categorySlug,
             categoryLabel: category.categoryLabel,
-            brand,
-            model,
+            brand: matchedBrand,
+            model: matchedModel,
           }}
         />
       </>
@@ -162,27 +163,27 @@ export default function CategoryPage() {
           />
         </div>
 
-        {filteredBrands.map((brand) => (
-          <section key={brand.brand} className="mt-8">
+        {filteredBrands.map((brandEntry) => (
+          <section key={brandEntry.brand} className="mt-8">
             <div className="flex flex-wrap items-center gap-3">
-              <h2 className="text-xl font-semibold text-gray-900">{brand.brand}</h2>
-              {brand.tagline && (
-                <span className="text-sm text-gray-500">{brand.tagline}</span>
+              <h2 className="text-xl font-semibold text-gray-900">{brandEntry.brand}</h2>
+              {brandEntry.tagline && (
+                <span className="text-sm text-gray-500">{brandEntry.tagline}</span>
               )}
-              {brand.warranty && (
+              {brandEntry.warranty && (
                 <span className="rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                  {brand.warranty}
+                  {brandEntry.warranty}
                 </span>
               )}
             </div>
             <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {brand.models.map((model) => (
+              {brandEntry.models.map((model) => (
                 <ProductCard
                   key={model.modelName}
                   to={`/catalog/${categorySlug}/${slugify(model.modelName)}`}
                   search={search}
                   modelName={model.modelName}
-                  brand={brand.brand}
+                  brand={brandEntry.brand}
                   image={model.image}
                   category={categorySlug}
                   categoryLabel={category.categoryLabel}

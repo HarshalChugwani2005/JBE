@@ -42,6 +42,14 @@ export default function SEO({ title, description, image = '/og-image.png' }) {
 
     const twitterImage = document.querySelector('meta[name="twitter:image"]')
     if (twitterImage) twitterImage.setAttribute('content', fullImageUrl)
+
+    const fullUrl = `${shop.siteUrl || window.location.origin}${pathname}`
+
+    const ogUrl = document.querySelector('meta[property="og:url"]')
+    if (ogUrl) ogUrl.setAttribute('content', fullUrl)
+
+    const twitterUrl = document.querySelector('meta[name="twitter:url"]')
+    if (twitterUrl) twitterUrl.setAttribute('content', fullUrl)
   }, [title, description, image, pathname])
 
   return null

@@ -1,14 +1,62 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useCart } from '../context/CartContext'
 import { getWhatsAppUrl, shop } from '../data/site'
 import { trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
 import ProductImage from './ProductImage'
+
+function getFocusableElements(container) {
+  return Array.from(
+    container.querySelectorAll(
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )
+  )
+}
 
 export default function CartDrawer() {
   const { items, isOpen, closeCart, removeFromCart, updateQuantity, clearCart, totalCount } = useCart()
   const [buyerName, setBuyerName] = useState('')
   const [buyerType, setBuyerType] = useState('wholesale') // 'wholesale' | 'retail'
   const [notes, setNotes] = useState('')
+  const drawerRef = useRef(null)
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    document.body.classList.add('overflow-hidden')
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        closeCart()
+        return
+      }
+
+      if (event.key !== 'Tab' || !drawerRef.current) return
+
+      const focusableElements = getFocusableElements(drawerRef.current)
+      if (focusableElements.length === 0) return
+
+      const firstElement = focusableElements[0]
+      const lastElement = focusableElements[focusableElements.length - 1]
+
+      if (event.shiftKey) {
+        if (document.activeElement === firstElement) {
+          event.preventDefault()
+          lastElement.focus()
+        }
+      } else if (document.activeElement === lastElement) {
+        event.preventDefault()
+        firstElement.focus()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      document.body.classList.remove('overflow-hidden')
+    }
+  }, [isOpen, closeCart])
 
   if (!isOpen) return null
 
@@ -57,7 +105,7 @@ export default function CartDrawer() {
       />
 
       <div className="fixed inset-y-0 right-0 flex max-w-full pl-10">
-        <div className="w-screen max-w-md transform bg-white shadow-2xl transition-all duration-300 ease-in-out flex flex-col">
+        <div ref={drawerRef} className="w-screen max-w-md transform bg-white shadow-2xl transition-all duration-300 ease-in-out flex flex-col">
           {/* Header */}
           <div className="border-b border-stone-200 bg-stone-50 px-6 py-4">
             <div className="flex items-center justify-between">
@@ -108,7 +156,7 @@ export default function CartDrawer() {
                       <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border border-stone-200 bg-stone-100">
                         <ProductImage
                           category={item.categorySlug}
-                          product={{ image: item.image }}
+                          product={item}
                           alt={item.modelName}
                           className="h-full w-full object-cover"
                           fallbackLabel=""

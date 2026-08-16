@@ -11,7 +11,6 @@ export const shop = {
   hours: 'Mon–Sat: 9:00 AM – 8:00 PM · Sun: 10:00 AM – 2:00 PM',
   primaryPhone: '9673558859',
   phoneNumbers: ['9673558859', '8421009925', '9156576666', '9421394471'],
-  phone: '9673558859',
   whatsapp: '8421009925',
   siteUrl: 'https://jaibabaelectronic.vercel.app',
   mapEmbedUrl:

@@ -51,7 +51,8 @@ export default function Catalog() {
         .join(' ')
         .toLowerCase()
 
-      return searchableText.includes(normalizedQuery)
+      const queryWords = normalizedQuery.split(/\s+/).filter(Boolean)
+      return queryWords.every((word) => searchableText.includes(word))
     })
   }, [brand, query])
 
@@ -84,8 +85,8 @@ export default function Catalog() {
         </h1>
         <p className="mt-3 max-w-2xl text-stone-600">
           Browse our full range by category. {liveCount} categor
-          {liveCount === 1 ? 'y is' : 'ies are'} ready to explore;{' '}
-          {comingSoonCount} more coming soon as we add catalog photos.
+          {liveCount === 1 ? 'y is' : 'ies are'} ready to explore.{' '}
+          {comingSoonCount > 0 && `${comingSoonCount} more coming soon as we add catalog photos.`}
         </p>
       </header>
 

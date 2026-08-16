@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { shop } from '../data/site'
+import { shop, getWhatsAppUrl } from '../data/site'
 
 export default function ContactForm() {
   const [form, setForm] = useState({ name: '', phone: '', message: '' })

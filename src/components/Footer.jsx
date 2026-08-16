@@ -17,14 +17,20 @@ export default function Footer() {
           </div>
           <div>
             <p className="text-sm font-medium text-stone-900">Quick Links</p>
-            <p className="mt-2 flex flex-col gap-1 text-sm">
-              <Link to="/catalog" className="text-amber-700 hover:text-amber-900">
-                Browse catalog
-              </Link>
-              <Link to="/contact" className="text-amber-700 hover:text-amber-900">
-                Contact us
-              </Link>
-            </p>
+            <nav aria-label="Footer navigation" className="mt-2">
+              <ul className="flex flex-col gap-1 text-sm">
+                <li>
+                  <Link to="/catalog" className="text-amber-700 hover:text-amber-900">
+                    Browse catalog
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/contact" className="text-amber-700 hover:text-amber-900">
+                    Contact us
+                  </Link>
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
         <p className="mt-8 border-t border-stone-100 pt-6 text-center text-xs text-stone-500">
