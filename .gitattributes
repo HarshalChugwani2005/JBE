@@ -1,0 +1,13 @@
+# Enforce LF line endings in the repository
+* text=auto eol=lf
+
+# Binary files
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.webp binary
+*.avif binary
+*.svg binary
+*.ico binary
+*.woff2 binary
