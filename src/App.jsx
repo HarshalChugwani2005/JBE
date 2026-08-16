@@ -6,6 +6,7 @@ import Navbar from './components/Navbar'
 import WhatsAppButton from './components/WhatsAppButton'
 import { CartProvider } from './context/CartContext'
 import { LanguageProvider } from './context/LanguageContext'
+import { Analytics } from '@vercel/analytics/react'
 import Home from './pages/Home'
 
 const Catalog = lazy(() => import('./pages/Catalog'))
@@ -43,6 +44,7 @@ export default function App() {
             <Footer />
             <WhatsAppButton />
             <CartDrawer />
+            <Analytics />
           </div>
         </BrowserRouter>
       </CartProvider>
