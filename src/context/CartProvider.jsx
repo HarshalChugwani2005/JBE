@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { CartContext } from './CartContext.js'
 
-const CartContext = createContext(null)
 const STORAGE_KEY = 'jbe_enquiry_cart_v1'
 
 export function CartProvider({ children }) {
@@ -92,12 +92,4 @@ export function CartProvider({ children }) {
       {children}
     </CartContext.Provider>
   )
-}
-
-export function useCart() {
-  const context = useContext(CartContext)
-  if (!context) {
-    throw new Error('useCart must be used within a CartProvider')
-  }
-  return context
 }

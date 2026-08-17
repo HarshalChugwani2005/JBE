@@ -10,7 +10,7 @@ export function trackEvent(eventName, props = {}) {
   // 1. Vercel Analytics Custom Event
   try {
     track(eventName, props)
-  } catch (e) {
+  } catch {
     // ignore in non-supported environments
   }
 

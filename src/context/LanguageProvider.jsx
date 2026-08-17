@@ -1,7 +1,7 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { translations } from '../i18n/translations'
+import { LanguageContext } from './LanguageContext.js'
 
-const LanguageContext = createContext(null)
 const LANG_STORAGE_KEY = 'jbe_lang_pref'
 
 export function LanguageProvider({ children }) {
@@ -32,12 +32,4 @@ export function LanguageProvider({ children }) {
       {children}
     </LanguageContext.Provider>
   )
-}
-
-export function useLanguage() {
-  const context = useContext(LanguageContext)
-  if (!context) {
-    throw new Error('useLanguage must be used within LanguageProvider')
-  }
-  return context
 }
