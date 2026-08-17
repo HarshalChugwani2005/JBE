@@ -1,7 +1,10 @@
 import { useState } from 'react'
-import { shop, getWhatsAppUrl } from '../data/site'
+import { useLanguage } from '../context/useLanguage'
+import { getWhatsAppUrl, shop } from '../data/site'
+import { trackFormSubmit } from '../utils/analytics'
 
 export default function ContactForm() {
+  const { t } = useLanguage()
   const [form, setForm] = useState({ name: '', phone: '', message: '' })
   const [status, setStatus] = useState(null)
   const [submitting, setSubmitting] = useState(false)
@@ -14,21 +17,18 @@ export default function ContactForm() {
     e.preventDefault()
     setStatus(null)
 
-    const endpoint = shop.formspreeUrl?.trim()
-    if (!endpoint) {
-      // Fallback: If Formspree is not configured, redirect to WhatsApp with composed message
-      if (!form.name || !form.phone || !form.message) {
-        setStatus({ type: 'error', message: 'Please fill in all fields.' })
-        return
-      }
-      const text = `Hi Jai Baba Electronic, I am ${form.name} (Phone: ${form.phone}).\n\nEnquiry: ${form.message}`
-      window.open(getWhatsAppUrl(text), '_blank', 'noopener,noreferrer')
-      setStatus({ type: 'success', message: 'Opening WhatsApp with your enquiry...' })
+    if (!form.name || !form.phone || !form.message) {
+      setStatus({ type: 'error', message: t('fillAllFields') })
       return
     }
 
-    if (!form.name || !form.phone || !form.message) {
-      setStatus({ type: 'error', message: 'Please fill in all fields.' })
+    const endpoint = shop.formspreeUrl?.trim()
+    if (!endpoint) {
+      // Direct WhatsApp compose fallback
+      const text = `Hi ${shop.name}, I am ${form.name} (Phone: ${form.phone}).\n\nEnquiry: ${form.message}`
+      trackFormSubmit('whatsapp_redirect')
+      window.open(getWhatsAppUrl(text), '_blank', 'noopener,noreferrer')
+      setStatus({ type: 'success', message: 'Opening WhatsApp with your enquiry...' })
       return
     }
 
@@ -45,13 +45,16 @@ export default function ContactForm() {
       })
 
       if (res.ok) {
-        setStatus({ type: 'success', message: 'Thanks — your enquiry was sent successfully!' })
+        trackFormSubmit('success')
+        setStatus({ type: 'success', message: t('submissionSuccess') })
         setForm({ name: '', phone: '', message: '' })
       } else {
+        trackFormSubmit('failure')
         const text = await res.text()
         setStatus({ type: 'error', message: `Submission failed: ${text}` })
       }
     } catch (err) {
+      trackFormSubmit('failure')
       setStatus({ type: 'error', message: `Submission error: ${err.message}` })
     } finally {
       setSubmitting(false)
@@ -59,19 +62,19 @@ export default function ContactForm() {
   }
 
   return (
-    <form onSubmit={submitToFormspree} className="space-y-4 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-      <h3 className="font-semibold text-gray-900">Send an Enquiry</h3>
-      <p className="text-sm text-gray-500">Send us a message and we'll get back to you shortly.</p>
+    <form onSubmit={submitToFormspree} className="space-y-4 rounded-xl border border-stone-200 bg-white p-6 shadow-xs">
+      <h3 className="text-base font-bold text-stone-900">{t('sendEnquiry')}</h3>
+      <p className="text-xs text-stone-500">{t('sendEnquirySubtitle')}</p>
 
       {status && (
-        <div className={`rounded-md px-4 py-2.5 text-sm ${status.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-amber-50 text-amber-900 border border-amber-200'}`}>
+        <div className={`rounded-xl px-4 py-2.5 text-xs font-medium ${status.type === 'success' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-amber-50 text-amber-900 border border-amber-200'}`}>
           {status.message}
         </div>
       )}
 
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-          Your Name
+        <label htmlFor="name" className="block text-xs font-semibold text-stone-700">
+          {t('yourName')}
         </label>
         <input
           id="name"
@@ -80,13 +83,13 @@ export default function ContactForm() {
           value={form.name}
           onChange={handleChange}
           placeholder="e.g. Rahul Sharma"
-          className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+          className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm text-stone-900 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
           required
         />
       </div>
       <div>
-        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-          Phone Number
+        <label htmlFor="phone" className="block text-xs font-semibold text-stone-700">
+          {t('phoneNumber')}
         </label>
         <input
           id="phone"
@@ -95,13 +98,13 @@ export default function ContactForm() {
           value={form.phone}
           onChange={handleChange}
           placeholder="e.g. 9876543210"
-          className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+          className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm text-stone-900 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
           required
         />
       </div>
       <div>
-        <label htmlFor="message" className="block text-sm font-medium text-gray-700">
-          Message / Required Products
+        <label htmlFor="message" className="block text-xs font-semibold text-stone-700">
+          {t('messageLabel')}
         </label>
         <textarea
           id="message"
@@ -109,8 +112,8 @@ export default function ContactForm() {
           rows={4}
           value={form.message}
           onChange={handleChange}
-          placeholder="Tell us what product, brand, or quantity you're looking for..."
-          className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+          placeholder={t('messagePlaceholder')}
+          className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm text-stone-900 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
           required
         />
       </div>
@@ -119,11 +122,11 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex items-center justify-center rounded-lg bg-amber-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-amber-700 disabled:opacity-60 transition"
+          className="inline-flex items-center justify-center rounded-xl bg-amber-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-amber-700 disabled:opacity-60 transition cursor-pointer"
         >
-          {submitting ? 'Sending…' : shop.formspreeUrl ? 'Send Enquiry' : 'Send via WhatsApp'}
+          {submitting ? t('submitting') : shop.formspreeUrl ? t('submitEnquiry') : t('sendViaWhatsApp')}
         </button>
-        <p className="text-xs text-gray-500">Or call us directly at <span className="font-medium text-gray-800">+91 {shop.primaryPhone}</span></p>
+        <p className="text-xs text-stone-500">Or call: <span className="font-semibold text-stone-800">+91 {shop.primaryPhone}</span></p>
       </div>
     </form>
   )

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { useCart } from '../context/CartContext'
+import { useCart } from '../context/useCart'
+import { useLanguage } from '../context/useLanguage'
 import { getWhatsAppUrl, shop } from '../data/site'
 import { trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
 import ProductImage from './ProductImage'
@@ -14,6 +15,7 @@ function getFocusableElements(container) {
 
 export default function CartDrawer() {
   const { items, isOpen, closeCart, removeFromCart, updateQuantity, clearCart, totalCount } = useCart()
+  const { t } = useLanguage()
   const [buyerName, setBuyerName] = useState('')
   const [buyerType, setBuyerType] = useState('wholesale') // 'wholesale' | 'retail'
   const [notes, setNotes] = useState('')
@@ -111,18 +113,18 @@ export default function CartDrawer() {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-bold text-stone-900" id="slide-over-title">
-                  Enquiry List
+                  {t('enquiryDrawerTitle')}
                 </h2>
                 <p className="text-xs text-stone-500">
-                  {totalCount} item{totalCount !== 1 ? 's' : ''} ready for quotation
+                  {totalCount} {t('readyForQuotation')}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={closeCart}
-                className="rounded-lg p-2 text-stone-400 hover:bg-stone-200 hover:text-stone-700 transition"
+                className="rounded-lg p-2 text-stone-400 hover:bg-stone-200 hover:text-stone-700 transition cursor-pointer"
               >
-                <span className="sr-only">Close drawer</span>
+                <span className="sr-only">{t('close')}</span>
                 ✕
               </button>
             </div>
@@ -135,16 +137,16 @@ export default function CartDrawer() {
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-amber-50 text-2xl">
                   📋
                 </div>
-                <h3 className="mt-4 text-base font-semibold text-stone-900">Your enquiry list is empty</h3>
+                <h3 className="mt-4 text-base font-semibold text-stone-900">{t('enquiryEmpty')}</h3>
                 <p className="mt-1 text-sm text-stone-500">
-                  Browse the catalog and add products to send a single consolidated WhatsApp enquiry!
+                  {t('enquiryEmptySubtitle')}
                 </p>
                 <button
                   type="button"
                   onClick={closeCart}
-                  className="mt-6 inline-flex items-center rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700 transition"
+                  className="mt-6 inline-flex items-center rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700 transition cursor-pointer"
                 >
-                  Browse Catalog
+                  {t('heroBrowseCatalog')}
                 </button>
               </div>
             ) : (
@@ -168,13 +170,13 @@ export default function CartDrawer() {
                           {item.brand ? `${item.brand} ` : ''}{item.modelName}
                         </h4>
                         {item.selectedColor && (
-                          <p className="text-xs text-amber-700 font-medium">Color: {item.selectedColor}</p>
+                          <p className="text-xs text-amber-700 font-medium">{t('selectedColor')}: {item.selectedColor}</p>
                         )}
                         <div className="mt-1 flex items-center gap-2">
                           <button
                             type="button"
                             onClick={() => updateQuantity(item.id, (item.quantity || 1) - 1)}
-                            className="h-6 w-6 rounded border border-stone-200 bg-white text-xs font-bold text-stone-700 hover:bg-stone-100"
+                            className="h-6 w-6 rounded border border-stone-200 bg-white text-xs font-bold text-stone-700 hover:bg-stone-100 cursor-pointer"
                           >
                             -
                           </button>
@@ -182,7 +184,7 @@ export default function CartDrawer() {
                           <button
                             type="button"
                             onClick={() => updateQuantity(item.id, (item.quantity || 1) + 1)}
-                            className="h-6 w-6 rounded border border-stone-200 bg-white text-xs font-bold text-stone-700 hover:bg-stone-100"
+                            className="h-6 w-6 rounded border border-stone-200 bg-white text-xs font-bold text-stone-700 hover:bg-stone-100 cursor-pointer"
                           >
                             +
                           </button>
@@ -192,7 +194,7 @@ export default function CartDrawer() {
                       <button
                         type="button"
                         onClick={() => removeFromCart(item.id)}
-                        className="text-xs text-red-500 hover:text-red-700 p-1"
+                        className="text-xs text-red-500 hover:text-red-700 p-1 cursor-pointer"
                         title="Remove item"
                       >
                         🗑️
@@ -204,40 +206,40 @@ export default function CartDrawer() {
                 {/* Enquiry Preferences Form */}
                 <div className="rounded-xl border border-stone-200 bg-stone-50 p-4 space-y-3">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-stone-600">
-                    Enquiry Details
+                    {t('enquiryDetails')}
                   </h4>
 
                   <div>
-                    <label className="block text-xs font-medium text-stone-700 mb-1">Pricing Interest</label>
+                    <label className="block text-xs font-medium text-stone-700 mb-1">{t('pricingInterest')}</label>
                     <div className="grid grid-cols-2 gap-2">
                       <button
                         type="button"
                         onClick={() => setBuyerType('wholesale')}
-                        className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition ${
+                        className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${
                           buyerType === 'wholesale'
                             ? 'border-amber-600 bg-amber-600 text-white shadow-sm'
                             : 'border-stone-200 bg-white text-stone-700 hover:bg-stone-100'
                         }`}
                       >
-                        ⚡ Wholesale (Bulk)
+                        {t('wholesaleBulk')}
                       </button>
                       <button
                         type="button"
                         onClick={() => setBuyerType('retail')}
-                        className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition ${
+                        className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${
                           buyerType === 'retail'
                             ? 'border-amber-600 bg-amber-600 text-white shadow-sm'
                             : 'border-stone-200 bg-white text-stone-700 hover:bg-stone-100'
                         }`}
                       >
-                        🏠 Retail / Home
+                        {t('retailHome')}
                       </button>
                     </div>
                   </div>
 
                   <div>
                     <label htmlFor="drawer-name" className="block text-xs font-medium text-stone-700">
-                      Your Name (optional)
+                      {t('yourNameOptional')}
                     </label>
                     <input
                       id="drawer-name"
@@ -251,7 +253,7 @@ export default function CartDrawer() {
 
                   <div>
                     <label htmlFor="drawer-notes" className="block text-xs font-medium text-stone-700">
-                      Notes / City
+                      {t('notesCity')}
                     </label>
                     <input
                       id="drawer-notes"
@@ -273,21 +275,21 @@ export default function CartDrawer() {
               <button
                 type="button"
                 onClick={handleSendWhatsApp}
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#25D366] py-3 px-4 text-sm font-bold text-white shadow-md hover:bg-[#1fb855] transition"
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#25D366] py-3 px-4 text-sm font-bold text-white shadow-md hover:bg-[#1fb855] transition cursor-pointer"
               >
                 <span>💬</span>
-                <span>Send {totalCount} Items to WhatsApp</span>
+                <span>{t('sendItemsToWhatsApp')} ({totalCount})</span>
               </button>
 
               <div className="flex items-center justify-between text-xs text-stone-500">
                 <button
                   type="button"
                   onClick={clearCart}
-                  className="text-stone-500 hover:text-red-600 transition"
+                  className="text-stone-500 hover:text-red-600 transition cursor-pointer"
                 >
-                  Clear All
+                  {t('clearAll')}
                 </button>
-                <span>Direct quote from {shop.name}</span>
+                <span>{t('directQuoteFrom')} {shop.name}</span>
               </div>
             </div>
           )}

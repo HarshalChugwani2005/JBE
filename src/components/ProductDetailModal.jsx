@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useCart } from '../context/CartContext'
+import { useCart } from '../context/useCart'
+import { useLanguage } from '../context/useLanguage'
+import { useToast } from '../context/useToast'
 import { getPhoneUrl, getWhatsAppUrl, shop } from '../data/site'
 import { getProductImageUrls } from '../data/productImages'
+import { trackCallClick, trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
 import ProductImage from './ProductImage'
 
 function getFocusableElements(container) {
@@ -14,6 +17,8 @@ function getFocusableElements(container) {
 
 export default function ProductDetailModal({ isOpen, onClose, product }) {
   const { addToCart, openCart } = useCart()
+  const { t } = useLanguage()
+  const { showToast } = useToast()
   const dialogRef = useRef(null)
   const closeButtonRef = useRef(null)
   const previouslyFocusedRef = useRef(null)
@@ -91,6 +96,46 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
   const isExternalWhatsApp = whatsappHref.startsWith('http')
   const isExternalPhone = phoneHref.startsWith('http')
 
+  const handleShare = async () => {
+    const productUrl = window.location.href
+    const shareTitle = `${brandName ? `${brandName} ` : ''}${modelName} | Jai Baba Electronic`
+    const shareText = `Check out ${brandName ? `${brandName} ` : ''}${modelName} at Jai Baba Electronic Malkapur`
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: productUrl,
+        })
+        return
+      } catch (err) {
+        if (err.name === 'AbortError') return
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(productUrl)
+      showToast(t('copied'), 'success')
+    } catch {
+      showToast('Could not copy link', 'info')
+    }
+  }
+
+  const handleAddToList = () => {
+    addToCart({
+      categorySlug,
+      categoryLabel,
+      brand,
+      model,
+      selectedColor,
+    })
+    trackEnquiryCartAction('add_item', { modelName, brand: brandName, category: categorySlug, selectedColor })
+    showToast(`${brandName ? `${brandName} ` : ''}${modelName} ${t('itemAdded')}`, 'success')
+    openCart()
+    onClose()
+  }
+
   return (
     <div
       className="fixed inset-0 z-50 overflow-y-auto bg-stone-950/70 px-4 py-6 backdrop-blur-sm sm:px-6 sm:py-10"
@@ -116,15 +161,15 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
               {inStock ? (
                 <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
-                  In Stock
+                  {t('inStock')}
                 </span>
               ) : inStock === false ? (
                 <span className="inline-flex items-center rounded-full bg-stone-200 px-2 py-0.5 text-[10px] font-semibold text-stone-700">
-                  Out of Stock
+                  {t('outOfStock')}
                 </span>
               ) : (
                 <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800">
-                  Ask Availability
+                  {t('askAvailability')}
                 </span>
               )}
             </div>
@@ -132,14 +177,27 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
               {modelName}
             </h2>
           </div>
-          <button
-            ref={closeButtonRef}
-            type="button"
-            onClick={onClose}
-            className="rounded-full border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-600 transition hover:border-amber-300 hover:text-stone-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
-          >
-            Close
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleShare}
+              className="inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-700 transition hover:border-amber-300 hover:bg-stone-50 cursor-pointer"
+              title={t('share')}
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+              </svg>
+              <span className="hidden sm:inline">{t('share')}</span>
+            </button>
+            <button
+              ref={closeButtonRef}
+              type="button"
+              onClick={onClose}
+              className="rounded-full border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-600 transition hover:border-amber-300 hover:text-stone-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer"
+            >
+              {t('close')}
+            </button>
+          </div>
         </div>
 
         <div className="grid gap-0 lg:grid-cols-[1.15fr_0.85fr]">
@@ -164,7 +222,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                     key={source}
                     type="button"
                     onClick={() => setActiveImageIndex(index)}
-                    className={`overflow-hidden rounded-xl border transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 ${
+                    className={`overflow-hidden rounded-xl border transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer ${
                       activeImageIndex === index ? 'border-amber-500 ring-2 ring-amber-200' : 'border-stone-200'
                     }`}
                     aria-label={`View image ${index + 1} of ${imageSources.length}`}
@@ -196,7 +254,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
             </div>
 
             <div className="mt-5">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-stone-500">Key specs</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-stone-500">{t('keySpecs')}</p>
               {model?.specs?.length > 0 ? (
                 <ul className="mt-3 space-y-2 text-sm text-stone-700">
                   {model.specs.map((spec) => (
@@ -208,21 +266,21 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                 </ul>
               ) : (
                 <p className="mt-3 rounded-xl bg-stone-50 px-3 py-2 text-sm text-stone-500">
-                  No specifications available for this model yet.
+                  {t('noSpecsAvailable')}
                 </p>
               )}
             </div>
 
             {model?.colors?.length > 0 && (
               <div className="mt-6">
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-stone-500">Available colors</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-stone-500">{t('availableColors')}</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {model.colors.map((color) => (
                     <button
                       key={color}
                       type="button"
                       onClick={() => setSelectedColor(color)}
-                      className={`rounded-full border px-3 py-1.5 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 ${
+                      className={`rounded-full border px-3 py-1.5 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer ${
                         selectedColor === color
                           ? 'border-amber-500 bg-amber-50 text-amber-900'
                           : 'border-stone-200 bg-white text-stone-600 hover:border-amber-300'
@@ -238,45 +296,37 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
             <div className="mt-7 grid gap-3 sm:grid-cols-3">
               <button
                 type="button"
-                onClick={() => {
-                  addToCart({
-                    categorySlug,
-                    categoryLabel,
-                    brand,
-                    model,
-                    selectedColor,
-                  })
-                  openCart()
-                  onClose()
-                }}
+                onClick={handleAddToList}
                 className="inline-flex items-center justify-center gap-1.5 rounded-xl border-2 border-amber-600 bg-amber-50 px-4 py-3 text-sm font-bold text-amber-900 transition hover:bg-amber-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 cursor-pointer"
               >
                 <span>📋</span>
-                <span>Add to List</span>
+                <span>{t('addToList')}</span>
               </button>
               <a
                 href={whatsappHref}
+                onClick={() => trackWhatsAppClick('product_modal', { modelName, brand: brandName })}
                 target={isExternalWhatsApp ? '_blank' : undefined}
                 rel={isExternalWhatsApp ? 'noopener noreferrer' : undefined}
                 className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1fb855] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366]"
               >
                 <span>💬</span>
-                <span>WhatsApp Enquiry</span>
+                <span>{t('whatsappEnquiry')}</span>
               </a>
               <a
                 href={phoneHref}
+                onClick={() => trackCallClick('product_modal', shop.primaryPhone)}
                 target={isExternalPhone ? '_blank' : undefined}
                 rel={isExternalPhone ? 'noopener noreferrer' : undefined}
                 className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm font-semibold text-stone-900 transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
               >
                 <span>📞</span>
-                <span>Call Seller</span>
+                <span>{t('callSeller')}</span>
               </a>
             </div>
 
             <p className="mt-5 text-sm text-stone-500">Contact <span className="font-medium text-stone-700">+91 {shop.primaryPhone}</span> for wholesale pricing and availability.</p>
             {selectedColor && (
-              <p className="mt-2 text-sm text-stone-500">Selected color: {selectedColor}</p>
+              <p className="mt-2 text-sm text-stone-500">{t('selectedColor')}: {selectedColor}</p>
             )}
           </div>
         </div>
@@ -284,4 +334,3 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
     </div>
   )
 }
-

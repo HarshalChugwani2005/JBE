@@ -1,6 +1,6 @@
 import { Link, NavLink } from 'react-router-dom'
-import { useCart } from '../context/CartContext'
-import { useLanguage } from '../context/LanguageContext'
+import { useCart } from '../context/useCart'
+import { useLanguage } from '../context/useLanguage'
 import { shop } from '../data/site'
 import LanguageSelector from './LanguageSelector'
 

@@ -4,8 +4,12 @@ import CartDrawer from './components/CartDrawer'
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
 import WhatsAppButton from './components/WhatsAppButton'
-import { CartProvider } from './context/CartContext'
-import { LanguageProvider } from './context/LanguageContext'
+import MobileActionBar from './components/MobileActionBar'
+import ErrorBoundary from './components/ErrorBoundary'
+import ScrollToTop from './components/ScrollToTop'
+import { CartProvider } from './context/CartProvider'
+import { LanguageProvider } from './context/LanguageProvider'
+import { ToastProvider } from './context/ToastProvider'
 import { Analytics } from '@vercel/analytics/react'
 import Home from './pages/Home'
 
@@ -24,30 +28,36 @@ function PageLoader() {
 
 export default function App() {
   return (
-    <LanguageProvider>
-      <CartProvider>
-        <BrowserRouter>
-          <div className="flex min-h-screen flex-col">
-            <Navbar />
-            <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
-              <Suspense fallback={<PageLoader />}>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/catalog" element={<Catalog />} />
-                  <Route path="/catalog/:category" element={<CategoryPage />} />
-                  <Route path="/catalog/:category/:model" element={<CategoryPage />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Suspense>
-            </main>
-            <Footer />
-            <WhatsAppButton />
-            <CartDrawer />
-            <Analytics />
-          </div>
-        </BrowserRouter>
-      </CartProvider>
-    </LanguageProvider>
+    <ErrorBoundary>
+      <LanguageProvider>
+        <ToastProvider>
+          <CartProvider>
+            <BrowserRouter>
+              <ScrollToTop />
+              <div className="flex min-h-screen flex-col">
+                <Navbar />
+                <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 pb-20 md:pb-8">
+                  <Suspense fallback={<PageLoader />}>
+                    <Routes>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/catalog" element={<Catalog />} />
+                      <Route path="/catalog/:category" element={<CategoryPage />} />
+                      <Route path="/catalog/:category/:model" element={<CategoryPage />} />
+                      <Route path="/contact" element={<Contact />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </Suspense>
+                </main>
+                <Footer />
+                <WhatsAppButton />
+                <MobileActionBar />
+                <CartDrawer />
+                <Analytics />
+              </div>
+            </BrowserRouter>
+          </CartProvider>
+        </ToastProvider>
+      </LanguageProvider>
+    </ErrorBoundary>
   )
 }
