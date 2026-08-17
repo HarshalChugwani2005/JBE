@@ -3,6 +3,7 @@ import CategoryIcon from './CategoryIcon'
 import { getProductImageUrls } from '../data/productImages'
 
 export default function ProductImage({
+  src: directSrc,
   category,
   product,
   alt,
@@ -11,8 +12,11 @@ export default function ProductImage({
   fallbackLabel = 'Photo coming soon',
   loading = 'lazy',
 }) {
-  const sources = useMemo(() => getProductImageUrls(category, product), [category, product])
-  const src = sources[0] ?? null
+  const sources = useMemo(() => {
+    if (directSrc) return [directSrc]
+    return getProductImageUrls(category, product)
+  }, [directSrc, category, product])
+  const src = directSrc || sources[0] || null
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasError, setHasError] = useState(false)
 

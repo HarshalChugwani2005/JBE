@@ -15,6 +15,63 @@ function getFocusableElements(container) {
   )
 }
 
+function slugifyText(text) {
+  return String(text || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '')
+}
+
+function findImageIndexForColor(color, imageSources, colors, modelName) {
+  if (!color || !imageSources.length) return 0
+  const colorSlug = slugifyText(color)
+  const modelSlug = slugifyText(modelName)
+  const targetName = modelSlug ? `${modelSlug}-${colorSlug}` : colorSlug
+
+  // 1. Exact match on clean filename base (e.g. "titan-brown" or "brown")
+  const exactMatchIdx = imageSources.findIndex((url) => {
+    const filename = url.split(/[?#]/)[0].split('/').pop().replace(/\.[^.]+$/, '').toLowerCase()
+    const cleanFilename = filename.replace(/-[a-zA-Z0-9_-]{8,}$/, '')
+    return cleanFilename === targetName || cleanFilename === colorSlug || filename === targetName || filename === colorSlug
+  })
+  if (exactMatchIdx !== -1) return exactMatchIdx
+
+  // 2. Index match if colors array aligns with imageSources
+  const colorIdx = (colors || []).findIndex((c) => slugifyText(c) === colorSlug)
+  if (colorIdx !== -1 && colorIdx < imageSources.length) {
+    return colorIdx
+  }
+
+  return 0
+}
+
+function findColorForImage(imageSource, colors, modelName) {
+  if (!imageSource || !colors?.length) return null
+  const filename = imageSource.split(/[?#]/)[0].split('/').pop().replace(/\.[^.]+$/, '').toLowerCase()
+  const cleanFilename = filename.replace(/-[a-zA-Z0-9_-]{8,}$/, '')
+  const modelSlug = slugifyText(modelName)
+
+  // 1. Exact match against target name
+  for (const c of colors) {
+    const cSlug = slugifyText(c)
+    const targetName = modelSlug ? `${modelSlug}-${cSlug}` : cSlug
+    if (cleanFilename === targetName || cleanFilename === cSlug || filename === targetName || filename === cSlug) {
+      return c
+    }
+  }
+
+  // 2. Fallback to longest color name matching
+  const sortedColors = [...colors].sort((a, b) => b.length - a.length)
+  for (const c of sortedColors) {
+    const cSlug = slugifyText(c)
+    if (cleanFilename === cSlug || cleanFilename.endsWith(`-${cSlug}`)) {
+      return c
+    }
+  }
+
+  return null
+}
+
 export default function ProductDetailModal({ isOpen, onClose, product }) {
   const { addToCart, openCart } = useCart()
   const { t } = useLanguage()
@@ -136,6 +193,24 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
     onClose()
   }
 
+  const handleColorSelect = (color) => {
+    setSelectedColor(color)
+    if (!imageSources.length) return
+    const matchedIndex = findImageIndexForColor(color, imageSources, model?.colors, model?.modelName)
+    setActiveImageIndex(matchedIndex)
+  }
+
+  const handleThumbnailSelect = (index) => {
+    setActiveImageIndex(index)
+    if (!model?.colors?.length) return
+    const matchedColor = findColorForImage(imageSources[index], model.colors, model?.modelName)
+    if (matchedColor) {
+      setSelectedColor(matchedColor)
+    } else if (model.colors[index]) {
+      setSelectedColor(model.colors[index])
+    }
+  }
+
   return (
     <div
       className="fixed inset-0 z-50 overflow-y-auto bg-stone-950/70 px-4 py-6 backdrop-blur-sm sm:px-6 sm:py-10"
@@ -203,12 +278,10 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
         <div className="grid gap-0 lg:grid-cols-[1.15fr_0.85fr]">
           <div className="border-b border-stone-200 bg-stone-50 p-4 sm:p-6 lg:border-b-0 lg:border-r">
             <ProductImage
+              src={activeImage}
               category={categorySlug}
-              product={{
-                images: Array.isArray(model?.images) ? model.images : undefined,
-                image: activeImage || model.image,
-              }}
-              alt={`${brandName ? `${brandName} ` : ''}${modelName}`}
+              product={model}
+              alt={`${brandName ? `${brandName} ` : ''}${modelName}${selectedColor ? ` in ${selectedColor}` : ''}`}
               className="aspect-[4/3] rounded-2xl border border-stone-200"
               imgClassName="transition duration-300"
               fallbackLabel="Photo coming soon"
@@ -221,7 +294,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                   <button
                     key={source}
                     type="button"
-                    onClick={() => setActiveImageIndex(index)}
+                    onClick={() => handleThumbnailSelect(index)}
                     className={`overflow-hidden rounded-xl border transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer ${
                       activeImageIndex === index ? 'border-amber-500 ring-2 ring-amber-200' : 'border-stone-200'
                     }`}
@@ -279,7 +352,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                     <button
                       key={color}
                       type="button"
-                      onClick={() => setSelectedColor(color)}
+                      onClick={() => handleColorSelect(color)}
                       className={`rounded-full border px-3 py-1.5 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer ${
                         selectedColor === color
                           ? 'border-amber-500 bg-amber-50 text-amber-900'

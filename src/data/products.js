@@ -23,7 +23,8 @@ export const categories = [
               'Superior paint finish',
             ],
             colors: ['Smoke Brown', 'Ivory', 'Brown'],
-            image: 'titan.jpg',
+            image: 'titan-smoke-brown.jpg',
+            images: ['titan-smoke-brown.jpg', 'titan-ivory.jpg', 'titan-brown.jpg'],
             inStock: true,
           },
           {
