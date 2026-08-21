@@ -92,12 +92,12 @@ export default function Catalog() {
         description="Browse Jai Baba Electronic's catalog by category, including ceiling fans and more products available for enquiry."
       />
       <div>
-        <header className="border-b border-stone-200 pb-8">
-          <h1 className="text-3xl font-bold tracking-tight text-stone-900 md:text-4xl">
+        <header className="border-b border-stone-200/80 pb-8">
+          <h1 className="font-heading text-3xl font-extrabold tracking-tight text-stone-900 md:text-4xl">
             {t('catalogTitle')}
           </h1>
-          <p className="mt-3 max-w-2xl text-stone-600">
-            {t('catalogSubtitle')} {liveCount} {t('allCategories').toLowerCase()} available.
+          <p className="mt-2.5 max-w-2xl text-stone-600 text-sm sm:text-base">
+            {t('catalogSubtitle')} <span className="font-bold text-amber-900 bg-amber-100/80 px-2 py-0.5 rounded-full">{liveCount} {t('allCategories').toLowerCase()}</span> available.
           </p>
         </header>
 
@@ -121,7 +121,7 @@ export default function Catalog() {
           subtitle="Tap any category to view brands and models. Categories marked Coming Soon will be updated as product data arrives."
           className="pt-8"
         >
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {filteredCategories.map((cat) => (
               <CategoryCard
                 key={cat.category}
@@ -134,13 +134,13 @@ export default function Catalog() {
             ))}
           </div>
           {filteredCategories.length === 0 && (
-            <p className="mt-4 rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm text-stone-600">
+            <p className="mt-4 rounded-2xl border border-stone-200 bg-white px-5 py-4 text-sm font-medium text-stone-600 shadow-xs">
               {t('noCategoriesFound')}
             </p>
           )}
         </Section>
 
-        <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900">
+        <div className="mt-8 rounded-2xl border border-amber-300/80 bg-amber-50/80 px-5 py-4 text-xs sm:text-sm text-amber-900 shadow-xs">
           <strong>{t('contactForPrice')}</strong> — {t('contactNotice')}
         </div>
       </div>

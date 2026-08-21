@@ -213,7 +213,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 overflow-y-auto bg-stone-950/70 px-4 py-6 backdrop-blur-sm sm:px-6 sm:py-10"
+      className="fixed inset-0 z-50 overflow-y-auto bg-stone-950/75 px-3 py-4 backdrop-blur-md sm:px-6 sm:py-8 transition-all duration-300"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
           onClose()
@@ -225,30 +225,30 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="product-modal-title"
-        className="mx-auto w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-black/5"
+        className="animate-modal-pop mx-auto w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] ring-1 ring-stone-200/80"
       >
-        <div className="flex items-center justify-between border-b border-stone-200 px-5 py-4 sm:px-6">
+        <div className="flex items-center justify-between border-b border-stone-200/90 bg-stone-50/70 px-5 py-4 sm:px-6">
           <div>
             <div className="flex items-center gap-2">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-700">
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-amber-700">
                 {categoryLabel || categorySlug || 'Product'}
               </p>
               {inStock ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-800">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-pulse" />
                   {t('inStock')}
                 </span>
               ) : inStock === false ? (
-                <span className="inline-flex items-center rounded-full bg-stone-200 px-2 py-0.5 text-[10px] font-semibold text-stone-700">
+                <span className="inline-flex items-center rounded-full bg-stone-200 px-2.5 py-0.5 text-[10px] font-semibold text-stone-700">
                   {t('outOfStock')}
                 </span>
               ) : (
-                <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800">
+                <span className="inline-flex items-center rounded-full border border-amber-300 bg-amber-50 px-2.5 py-0.5 text-[10px] font-semibold text-amber-800">
                   {t('askAvailability')}
                 </span>
               )}
             </div>
-            <h2 id="product-modal-title" className="mt-1 text-xl font-semibold text-stone-900 sm:text-2xl">
+            <h2 id="product-modal-title" className="mt-1 font-heading text-xl font-extrabold text-stone-900 sm:text-2xl tracking-tight">
               {modelName}
             </h2>
           </div>
@@ -256,7 +256,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
             <button
               type="button"
               onClick={handleShare}
-              className="inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-700 transition hover:border-amber-300 hover:bg-stone-50 cursor-pointer"
+              className="inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-semibold text-stone-700 transition duration-200 hover:border-amber-300 hover:bg-stone-50 cursor-pointer"
               title={t('share')}
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -268,72 +268,74 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
               ref={closeButtonRef}
               type="button"
               onClick={onClose}
-              className="rounded-full border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-600 transition hover:border-amber-300 hover:text-stone-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer"
+              className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-bold text-stone-600 transition duration-200 hover:border-amber-300 hover:text-stone-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer"
             >
-              {t('close')}
+              ✕
             </button>
           </div>
         </div>
 
         <div className="grid gap-0 lg:grid-cols-[1.15fr_0.85fr]">
-          <div className="border-b border-stone-200 bg-stone-50 p-4 sm:p-6 lg:border-b-0 lg:border-r">
+          <div className="border-b border-stone-200 bg-stone-50/60 p-4 sm:p-6 lg:border-b-0 lg:border-r">
             <ProductImage
               src={activeImage}
               category={categorySlug}
               product={model}
               alt={`${brandName ? `${brandName} ` : ''}${modelName}${selectedColor ? ` in ${selectedColor}` : ''}`}
-              className="aspect-[4/3] rounded-2xl border border-stone-200"
-              imgClassName="transition duration-300"
+              className="aspect-[4/3] rounded-2xl border border-stone-200 bg-white shadow-xs"
+              imgClassName="transition-transform duration-500"
               fallbackLabel="Photo coming soon"
               loading="eager"
             />
 
             {imageSources.length > 1 && (
-              <div className="mt-4 grid grid-cols-4 gap-3 sm:grid-cols-6">
+              <div className="mt-4 grid grid-cols-4 gap-2.5 sm:grid-cols-6">
                 {imageSources.map((source, index) => (
                   <button
                     key={source}
                     type="button"
                     onClick={() => handleThumbnailSelect(index)}
-                    className={`overflow-hidden rounded-xl border transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer ${
-                      activeImageIndex === index ? 'border-amber-500 ring-2 ring-amber-200' : 'border-stone-200'
+                    className={`overflow-hidden rounded-xl border transition duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer ${
+                      activeImageIndex === index
+                        ? 'border-amber-500 ring-3 ring-amber-400/30 scale-102'
+                        : 'border-stone-200 hover:border-amber-300'
                     }`}
                     aria-label={`View image ${index + 1} of ${imageSources.length}`}
                   >
-                    <img src={source} alt="" className="h-20 w-full object-cover" loading="lazy" />
+                    <img src={source} alt="" className="h-16 sm:h-20 w-full object-cover" loading="lazy" />
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          <div className="p-5 sm:p-6">
+          <div className="p-5 sm:p-7 flex flex-col">
             <div className="flex flex-wrap items-center gap-2">
               {brandName && (
-                <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-amber-800">
+                <span className="rounded-full bg-amber-100/80 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-900 shadow-xs">
                   {brandName}
                 </span>
               )}
               {model?.warranty && (
-                <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800">
+                <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800 border border-emerald-200/80">
                   {model.warranty}
                 </span>
               )}
               {model?.tagline && (
-                <span className="rounded-full bg-stone-100 px-3 py-1 text-xs font-semibold text-stone-700">
+                <span className="rounded-full bg-stone-100 px-3 py-1 text-xs font-medium text-stone-700">
                   {model.tagline}
                 </span>
               )}
             </div>
 
             <div className="mt-5">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-stone-500">{t('keySpecs')}</p>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-stone-500">{t('keySpecs')}</p>
               {model?.specs?.length > 0 ? (
                 <ul className="mt-3 space-y-2 text-sm text-stone-700">
                   {model.specs.map((spec) => (
-                    <li key={spec} className="flex gap-3 rounded-xl bg-stone-50 px-3 py-2">
-                      <span className="mt-1 h-2 w-2 rounded-full bg-amber-500" aria-hidden="true" />
-                      <span>{spec}</span>
+                    <li key={spec} className="flex items-center gap-2.5 rounded-xl border border-stone-200/70 bg-stone-50/80 px-3.5 py-2 transition hover:bg-stone-50">
+                      <span className="h-2 w-2 rounded-full bg-amber-500" aria-hidden="true" />
+                      <span className="font-medium">{spec}</span>
                     </li>
                   ))}
                 </ul>
@@ -345,18 +347,18 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
             </div>
 
             {model?.colors?.length > 0 && (
-              <div className="mt-6">
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-stone-500">{t('availableColors')}</p>
-                <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-5">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-stone-500">{t('availableColors')}</p>
+                <div className="mt-2.5 flex flex-wrap gap-2">
                   {model.colors.map((color) => (
                     <button
                       key={color}
                       type="button"
                       onClick={() => handleColorSelect(color)}
-                      className={`rounded-full border px-3 py-1.5 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer ${
+                      className={`rounded-full border px-3.5 py-1.5 text-xs font-semibold transition duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer ${
                         selectedColor === color
-                          ? 'border-amber-500 bg-amber-50 text-amber-900'
-                          : 'border-stone-200 bg-white text-stone-600 hover:border-amber-300'
+                          ? 'border-amber-500 bg-amber-500 text-white shadow-xs'
+                          : 'border-stone-200 bg-white text-stone-700 hover:border-amber-300 hover:bg-amber-50/50'
                       }`}
                     >
                       {color}
@@ -366,11 +368,11 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
               </div>
             )}
 
-            <div className="mt-7 grid gap-3 sm:grid-cols-3">
+            <div className="mt-7 grid gap-2.5 sm:grid-cols-3">
               <button
                 type="button"
                 onClick={handleAddToList}
-                className="inline-flex items-center justify-center gap-1.5 rounded-xl border-2 border-amber-600 bg-amber-50 px-4 py-3 text-sm font-bold text-amber-900 transition hover:bg-amber-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 cursor-pointer"
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl border-2 border-amber-600 bg-amber-50 px-4 py-3 text-sm font-bold text-amber-900 transition duration-200 hover:bg-amber-100 hover:shadow-xs active:scale-95 cursor-pointer"
               >
                 <span>📋</span>
                 <span>{t('addToList')}</span>
@@ -380,7 +382,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                 onClick={() => trackWhatsAppClick('product_modal', { modelName, brand: brandName })}
                 target={isExternalWhatsApp ? '_blank' : undefined}
                 rel={isExternalWhatsApp ? 'noopener noreferrer' : undefined}
-                className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1fb855] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366]"
+                className="glow-wa inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-bold text-white shadow-sm transition duration-200 hover:bg-[#1fb855] hover:-translate-y-0.5 active:scale-95"
               >
                 <span>💬</span>
                 <span>{t('whatsappEnquiry')}</span>
@@ -390,16 +392,16 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                 onClick={() => trackCallClick('product_modal', shop.primaryPhone)}
                 target={isExternalPhone ? '_blank' : undefined}
                 rel={isExternalPhone ? 'noopener noreferrer' : undefined}
-                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm font-semibold text-stone-900 transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm font-bold text-stone-800 transition duration-200 hover:border-stone-300 hover:bg-stone-50"
               >
                 <span>📞</span>
                 <span>{t('callSeller')}</span>
               </a>
             </div>
 
-            <p className="mt-5 text-sm text-stone-500">Contact <span className="font-medium text-stone-700">+91 {shop.primaryPhone}</span> for wholesale pricing and availability.</p>
+            <p className="mt-5 text-xs text-stone-500">Contact <span className="font-semibold text-stone-800">+91 {shop.primaryPhone}</span> for wholesale pricing and stock availability.</p>
             {selectedColor && (
-              <p className="mt-2 text-sm text-stone-500">{t('selectedColor')}: {selectedColor}</p>
+              <p className="mt-1 text-xs text-amber-800 font-medium">{t('selectedColor')}: {selectedColor}</p>
             )}
           </div>
         </div>

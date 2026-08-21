@@ -14,27 +14,31 @@ export default function CategoryCard({ category, categoryLabel, comingSoon, bran
   return (
     <Link
       to={{ pathname: `/catalog/${category}`, search }}
-      className="group flex h-full flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-amber-300 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1.5 hover:border-amber-400/80 hover:shadow-[0_16px_32px_-6px_rgba(217,119,6,0.14)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
     >
       <div
-        className={`relative flex aspect-[4/3] items-center justify-center bg-gradient-to-br ${visual.gradient} text-white/90`}
+        className={`relative flex aspect-[4/3] items-center justify-center bg-gradient-to-br ${visual.gradient} text-white overflow-hidden`}
       >
-        <CategoryIcon slug={category} className="h-12 w-12 transition group-hover:scale-105" />
+        {/* Subtle radial sheen */}
+        <div className="absolute inset-0 bg-radial from-white/20 via-transparent to-black/10 pointer-events-none" />
+        <CategoryIcon slug={category} className="h-14 w-14 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:rotate-2 drop-shadow-md" />
         {comingSoon && (
-          <span className="absolute right-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-amber-800 shadow-sm">
+          <span className="absolute right-3 top-3 rounded-full border border-white/40 bg-white/90 px-3 py-1 text-xs font-bold text-amber-900 shadow-sm backdrop-blur-md">
             Coming Soon
           </span>
         )}
       </div>
-      <div className="flex flex-1 flex-col p-4">
-        <h3 className="text-lg font-semibold text-stone-900 group-hover:text-amber-800">
+      <div className="flex flex-1 flex-col p-5">
+        <h3 className="font-heading text-lg font-bold text-stone-900 transition-colors duration-200 group-hover:text-amber-800">
           {categoryLabel}
         </h3>
         <p className="mt-1 text-sm text-stone-500">{statusText}</p>
         {!comingSoon && brands.length > 0 && (
-          <p className="mt-2 text-xs font-medium uppercase tracking-wide text-amber-700">
-            {brands.map((b) => b.brand).join(' · ')}
-          </p>
+          <div className="mt-auto pt-3">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-amber-700/90 truncate">
+              {brands.map((b) => b.brand).join(' · ')}
+            </p>
+          </div>
         )}
       </div>
     </Link>

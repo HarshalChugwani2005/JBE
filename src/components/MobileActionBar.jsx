@@ -18,14 +18,14 @@ export default function MobileActionBar() {
   return (
     <aside
       aria-label="Quick actions"
-      className="fixed bottom-0 left-0 right-0 z-40 border-t border-stone-200 bg-white/95 px-3 py-2 backdrop-blur-md shadow-lg md:hidden"
+      className="fixed bottom-0 left-0 right-0 z-40 border-t border-stone-200/80 bg-white/90 px-3 py-2.5 backdrop-blur-lg shadow-[0_-4px_20px_rgba(0,0,0,0.06)] md:hidden"
     >
-      <div className="mx-auto flex max-w-md items-center justify-between gap-2">
+      <div className="mx-auto flex max-w-md items-center justify-between gap-2.5">
         {/* Call Shop */}
         <a
           href={getPhoneUrl(shop.primaryPhone)}
           onClick={handleCall}
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-stone-200 bg-stone-50 py-2.5 text-xs font-semibold text-stone-800 transition hover:bg-stone-100"
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-stone-200 bg-stone-50/90 py-2.5 text-xs font-bold text-stone-800 transition active:scale-95 hover:bg-stone-100"
         >
           <span>📞</span>
           <span>{t('callPrimary')}</span>
@@ -37,7 +37,7 @@ export default function MobileActionBar() {
           onClick={handleWhatsApp}
           target="_blank"
           rel="noreferrer"
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#25D366] py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-[#1fb855]"
+          className="glow-wa flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#25D366] py-2.5 text-xs font-bold text-white shadow-xs transition active:scale-95 hover:bg-[#1fb855]"
         >
           <span>💬</span>
           <span>WhatsApp</span>
@@ -47,12 +47,12 @@ export default function MobileActionBar() {
         <button
           type="button"
           onClick={toggleCart}
-          className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 py-2.5 text-xs font-bold text-amber-900 transition hover:bg-amber-100 cursor-pointer"
+          className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50/90 py-2.5 text-xs font-bold text-amber-900 transition active:scale-95 hover:bg-amber-100 cursor-pointer shadow-xs"
         >
           <span>📋</span>
           <span>{t('navCart')}</span>
           {totalCount > 0 && (
-            <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-600 px-1 text-[9px] font-bold text-white">
+            <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-gradient-to-r from-amber-600 to-orange-500 px-1 text-[9px] font-bold text-white shadow-xs">
               {totalCount}
             </span>
           )}

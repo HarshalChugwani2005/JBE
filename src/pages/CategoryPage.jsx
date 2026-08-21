@@ -129,10 +129,11 @@ export default function CategoryPage() {
         description={`Browse ${category.categoryLabel} products at Jai Baba Electronic.`}
       />
       <div>
-        <Link to={`/catalog${search}`} className="text-sm font-semibold text-amber-700 hover:underline">
-          {t('backToCatalog')}
+        <Link to={`/catalog${search}`} className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-amber-700 hover:text-amber-900 transition-colors">
+          <span>←</span>
+          <span>{t('backToCatalog')}</span>
         </Link>
-        <h1 className="mt-3 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
+        <h1 className="mt-3 font-heading text-3xl font-extrabold tracking-tight text-stone-900 sm:text-4xl">
           {category.categoryLabel}
         </h1>
 
@@ -152,19 +153,19 @@ export default function CategoryPage() {
         </div>
 
         {filteredBrands.map((brandEntry) => (
-          <section key={brandEntry.brand} className="mt-8">
-            <div className="flex flex-wrap items-center gap-3">
-              <h2 className="text-xl font-bold text-stone-900">{brandEntry.brand}</h2>
+          <section key={brandEntry.brand} className="mt-10">
+            <div className="flex flex-wrap items-center gap-3 border-b border-stone-200/80 pb-3">
+              <h2 className="font-heading text-2xl font-extrabold text-stone-900">{brandEntry.brand}</h2>
               {brandEntry.tagline && (
-                <span className="text-xs text-stone-500">{brandEntry.tagline}</span>
+                <span className="text-xs font-medium text-stone-500">{brandEntry.tagline}</span>
               )}
               {brandEntry.warranty && (
-                <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
+                <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800 border border-emerald-200/80 shadow-xs">
                   {brandEntry.warranty}
                 </span>
               )}
             </div>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {brandEntry.models.map((model) => (
                 <ProductCard
                   key={model.modelName}
@@ -183,7 +184,7 @@ export default function CategoryPage() {
         ))}
 
         {filteredBrands.length === 0 && (
-          <p className="mt-4 rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm text-stone-600">
+          <p className="mt-6 rounded-2xl border border-stone-200 bg-white px-5 py-4 text-sm font-medium text-stone-600 shadow-xs">
             {t('noBrandsFound')}
           </p>
         )}
