@@ -146,6 +146,30 @@ export const categories = [
     comingSoon: false,
     brands: [
       {
+        brand: 'Crompton',
+        tagline: 'Instant Hot Water with 4-Level Safety Shield',
+        warranty: '5 Years Tank Warranty · 2 Years Product Warranty',
+        models: [
+          {
+            modelName: 'Rapid Jet 3L',
+            specs: [
+              '3000W Heavy-Duty Nickel-Coated Copper Heating Element',
+              '3 Litres Capacity — Instant 33% Faster Heating',
+              '6.5 Bar Pressure Rating — Suitable for High-Rise Buildings',
+              'High-Grade 304L Stainless Steel Tank (Rust & Scale Proof)',
+              '4-Level Advanced Safety Shield (Capillary Thermostat & Auto Thermal Cut-off)',
+              'High-Density PUF Insulation for Maximum Heat Retention',
+              'Anti-Siphon Protection against Dry Heating Damage',
+              'Smart Bi-Color LED Indicators for Power & Heating',
+            ],
+            colors: ['White'],
+            image: 'crompton-rapid-jet-3l.png',
+            images: ['crompton-rapid-jet-3l.png'],
+            inStock: true,
+          },
+        ],
+      },
+      {
         brand: 'Havells',
         tagline: 'Fast heating and safety',
         warranty: '2 Year Warranty',
