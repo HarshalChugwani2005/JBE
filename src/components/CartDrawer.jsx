@@ -13,6 +13,8 @@ function getFocusableElements(container) {
   )
 }
 
+const ANIM_DURATION = 300 // ms — must match the CSS transition duration
+
 export default function CartDrawer() {
   const { items, isOpen, closeCart, removeFromCart, updateQuantity, clearCart, totalCount } = useCart()
   const { t } = useLanguage()
@@ -20,6 +22,31 @@ export default function CartDrawer() {
   const [buyerType, setBuyerType] = useState('wholesale') // 'wholesale' | 'retail'
   const [notes, setNotes] = useState('')
   const drawerRef = useRef(null)
+  // Animation state: track whether the panel is currently visible (CSS-wise)
+  const [isVisible, setIsVisible] = useState(false)
+  const closeTimerRef = useRef(null)
+
+  // Sync CSS visibility with isOpen from context
+  useEffect(() => {
+    if (isOpen) {
+      // Slight rAF delay lets the browser paint the hidden state first so the
+      // enter transition actually plays
+      const frame = requestAnimationFrame(() => setIsVisible(true))
+      return () => cancelAnimationFrame(frame)
+    } else {
+      setIsVisible(false)
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    return () => { if (closeTimerRef.current) clearTimeout(closeTimerRef.current) }
+  }, [])
+
+  // Animated close: slide out first, then call context closeCart
+  const handleAnimatedClose = () => {
+    setIsVisible(false)
+    closeTimerRef.current = setTimeout(() => closeCart(), ANIM_DURATION)
+  }
 
   useEffect(() => {
     if (!isOpen) return
@@ -29,7 +56,7 @@ export default function CartDrawer() {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
         event.preventDefault()
-        closeCart()
+        handleAnimatedClose()
         return
       }
 
@@ -58,9 +85,11 @@ export default function CartDrawer() {
       document.removeEventListener('keydown', handleKeyDown)
       document.body.classList.remove('overflow-hidden')
     }
-  }, [isOpen, closeCart])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen])
 
-  if (!isOpen) return null
+  // Keep DOM mounted so exit animation plays; hide visually when fully closed
+  if (!isOpen && !isVisible) return null
 
   const handleSendWhatsApp = () => {
     if (items.length === 0) return
@@ -100,14 +129,21 @@ export default function CartDrawer() {
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
-      {/* Backdrop */}
+      {/* Backdrop — fades in/out */}
       <div
-        className="fixed inset-0 bg-stone-950/60 backdrop-blur-sm transition-opacity duration-300"
-        onClick={closeCart}
+        className={`fixed inset-0 bg-stone-950/60 backdrop-blur-sm transition-opacity duration-300 ${
+          isVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+        onClick={handleAnimatedClose}
       />
 
       <div className="fixed inset-y-0 right-0 flex max-w-full pl-6 sm:pl-10">
-        <div ref={drawerRef} className="w-screen max-w-md transform bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] transition-transform duration-300 ease-out flex flex-col">
+        <div
+          ref={drawerRef}
+          className={`w-screen max-w-md transform bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] flex flex-col
+            transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
+            ${isVisible ? 'translate-x-0' : 'translate-x-full'}`}
+        >
           {/* Header */}
           <div className="border-b border-stone-200 bg-stone-50/80 px-6 py-4 backdrop-blur-md">
             <div className="flex items-center justify-between">
@@ -121,7 +157,7 @@ export default function CartDrawer() {
               </div>
               <button
                 type="button"
-                onClick={closeCart}
+                onClick={handleAnimatedClose}
                 className="rounded-full border border-stone-200 bg-white p-1.5 text-stone-500 hover:bg-stone-100 hover:text-stone-900 transition duration-200 cursor-pointer"
               >
                 <span className="sr-only">{t('close')}</span>

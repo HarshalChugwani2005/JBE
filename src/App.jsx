@@ -6,6 +6,7 @@ import Navbar from './components/Navbar'
 import WhatsAppButton from './components/WhatsAppButton'
 import MobileActionBar from './components/MobileActionBar'
 import ErrorBoundary from './components/ErrorBoundary'
+import PageSkeleton from './components/PageSkeleton'
 import ScrollToTop from './components/ScrollToTop'
 import { CartProvider } from './context/CartProvider'
 import { LanguageProvider } from './context/LanguageProvider'
@@ -18,13 +19,6 @@ const CategoryPage = lazy(() => import('./pages/CategoryPage'))
 const Contact = lazy(() => import('./pages/Contact'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
-function PageLoader() {
-  return (
-    <div className="flex items-center justify-center py-24">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-200 border-t-amber-600" />
-    </div>
-  )
-}
 
 export default function App() {
   return (
@@ -37,7 +31,7 @@ export default function App() {
               <div className="flex min-h-screen flex-col">
                 <Navbar />
                 <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 pb-20 md:pb-8">
-                  <Suspense fallback={<PageLoader />}>
+                  <Suspense fallback={<PageSkeleton />}>
                     <Routes>
                       <Route path="/" element={<Home />} />
                       <Route path="/catalog" element={<Catalog />} />
