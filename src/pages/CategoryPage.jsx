@@ -6,6 +6,7 @@ import ProductDetailModal from '../components/ProductDetailModal'
 import SEO from '../components/SEO'
 import { useLanguage } from '../context/useLanguage'
 import { getCategoryBySlug, getModelBySlug } from '../data/products'
+import { getProductImageUrls } from '../data/productImages'
 
 function slugify(text) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-')
@@ -122,11 +123,26 @@ export default function CategoryPage() {
     )
   }
 
+  const modelImages = activeModalModel ? getProductImageUrls(categorySlug, activeModalModel.model) : []
+  const activeBrandName = activeModalModel?.brand?.brand || activeModalModel?.brand || ''
+  const modelName = activeModalModel?.model?.modelName || ''
+
+  const seoTitle = activeModalModel
+    ? `${activeBrandName ? `${activeBrandName} ` : ''}${modelName} | ${category.categoryLabel}`
+    : `${category.categoryLabel} | Jai Baba Electronic`
+
+  const seoDescription = activeModalModel
+    ? `${activeBrandName ? `${activeBrandName} ` : ''}${modelName} (${category.categoryLabel}). ${activeModalModel.model.specs?.slice(0, 3).join(', ') || ''}. Genuine wholesale and retail pricing on enquiry at Jai Baba Electronic Malkapur.`
+    : `Browse ${category.categoryLabel} products at Jai Baba Electronic Malkapur. Wholesale and retail pricing on enquiry.`
+
+  const seoImage = modelImages[0] || `/og/${categorySlug}.png`
+
   return (
     <>
       <SEO
-        title={activeModalModel ? activeModalModel.model.modelName : category.categoryLabel}
-        description={`Browse ${category.categoryLabel} products at Jai Baba Electronic.`}
+        title={seoTitle}
+        description={seoDescription}
+        image={seoImage}
       />
       <div>
         <Link to={`/catalog${search}`} className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-amber-700 hover:text-amber-900 transition-colors">

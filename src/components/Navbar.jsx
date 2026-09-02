@@ -1,6 +1,7 @@
 import { Link, NavLink } from 'react-router-dom'
 import { useCart } from '../context/useCart'
 import { useLanguage } from '../context/useLanguage'
+import { useSearch } from '../context/useSearch'
 import { shop } from '../data/site'
 import LanguageSelector from './LanguageSelector'
 
@@ -13,6 +14,7 @@ const navLinkClass = ({ isActive }) =>
 
 export default function Navbar() {
   const { totalCount, toggleCart } = useCart()
+  const { openSearch } = useSearch()
   const { t } = useLanguage()
 
   return (
@@ -48,6 +50,20 @@ export default function Navbar() {
               </NavLink>
             </li>
           </ul>
+
+          <button
+            type="button"
+            onClick={openSearch}
+            className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-stone-200/90 bg-stone-50/80 px-2.5 sm:px-3 py-1.5 text-xs font-semibold text-stone-600 transition duration-200 hover:border-amber-400 hover:bg-amber-50/90 hover:text-stone-900 hover:shadow-xs focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-500 cursor-pointer"
+            aria-label="Search catalog (Ctrl+K or ⌘K)"
+            title="Search catalog (Ctrl+K or ⌘K)"
+          >
+            <span className="text-xs sm:text-sm">🔍</span>
+            <span className="hidden md:inline text-stone-500 font-normal">Search...</span>
+            <kbd className="hidden sm:inline-block rounded border border-stone-300 bg-white px-1.5 py-0.5 font-mono text-[10px] text-stone-400 shadow-2xs">
+              ⌘K
+            </kbd>
+          </button>
 
           <LanguageSelector />
 
