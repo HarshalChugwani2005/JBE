@@ -5,6 +5,7 @@ import { useToast } from '../context/useToast'
 import { getPhoneUrl, getWhatsAppUrl, shop } from '../data/site'
 import { getProductImageUrls } from '../data/productImages'
 import { trackCallClick, trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
+import ImageLightbox from './ImageLightbox'
 import ProductImage from './ProductImage'
 
 function getFocusableElements(container) {
@@ -81,6 +82,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
   const previouslyFocusedRef = useRef(null)
   const [activeImageIndex, setActiveImageIndex] = useState(0)
   const [selectedColor, setSelectedColor] = useState(null)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
 
   const model = product?.model ?? product ?? null
   const brand = product?.brand ?? product?.brandName ?? null
@@ -277,16 +279,35 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
 
         <div className="grid gap-0 lg:grid-cols-[1.15fr_0.85fr]">
           <div className="border-b border-stone-200 bg-stone-50/60 p-4 sm:p-6 lg:border-b-0 lg:border-r">
-            <ProductImage
-              src={activeImage}
-              category={categorySlug}
-              product={model}
-              alt={`${brandName ? `${brandName} ` : ''}${modelName}${selectedColor ? ` in ${selectedColor}` : ''}`}
-              className="aspect-[4/3] rounded-2xl border border-stone-200 bg-white shadow-xs"
-              imgClassName="transition-transform duration-500"
-              fallbackLabel="Photo coming soon"
-              loading="eager"
-            />
+            {/* Main image — click to open lightbox */}
+            <button
+              type="button"
+              className="group relative block w-full cursor-zoom-in rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+              onClick={() => activeImage && setLightboxOpen(true)}
+              aria-label="Open fullscreen image viewer"
+              title="Click to zoom"
+            >
+              <ProductImage
+                src={activeImage}
+                category={categorySlug}
+                product={model}
+                alt={`${brandName ? `${brandName} ` : ''}${modelName}${selectedColor ? ` in ${selectedColor}` : ''}`}
+                className="aspect-[4/3] rounded-2xl border border-stone-200 bg-white shadow-xs"
+                imgClassName="transition-transform duration-500 group-hover:scale-[1.03]"
+                fallbackLabel="Photo coming soon"
+                loading="eager"
+              />
+              {/* Zoom hint badge */}
+              {activeImage && (
+                <span className="pointer-events-none absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full border border-white/30 bg-stone-900/60 px-2.5 py-1 text-[11px] font-semibold text-white/90 backdrop-blur-md opacity-0 transition-opacity duration-200 group-hover:opacity-100" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-3.5 w-3.5">
+                    <circle cx="11" cy="11" r="8" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-4.35-4.35M11 8v6M8 11h6" />
+                  </svg>
+                  Zoom
+                </span>
+              )}
+            </button>
 
             {imageSources.length > 1 && (
               <div className="mt-4 grid grid-cols-4 gap-2.5 sm:grid-cols-6">
@@ -406,6 +427,16 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
           </div>
         </div>
       </div>
+
+      {/* Lightbox portal */}
+      {lightboxOpen && imageSources.length > 0 && (
+        <ImageLightbox
+          images={imageSources}
+          startIndex={activeImageIndex}
+          alt={`${brandName ? `${brandName} ` : ''}${modelName}`}
+          onClose={() => setLightboxOpen(false)}
+        />
+      )}
     </div>
   )
 }
