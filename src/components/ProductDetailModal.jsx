@@ -390,23 +390,37 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
             )}
 
             <div className="mt-7 grid gap-2.5 sm:grid-cols-3">
-              <button
-                type="button"
-                onClick={handleAddToList}
-                className="inline-flex items-center justify-center gap-1.5 rounded-xl border-2 border-amber-600 bg-amber-50 px-4 py-3 text-sm font-bold text-amber-900 transition duration-200 hover:bg-amber-100 hover:shadow-xs active:scale-95 cursor-pointer"
-              >
-                <span>📋</span>
-                <span>{t('addToList')}</span>
-              </button>
+              {inStock === false ? (
+                /* OOS: show a disabled badge in place of Add to List */
+                <div className="inline-flex items-center justify-center gap-1.5 rounded-xl border-2 border-stone-200 bg-stone-50 px-4 py-3 text-sm font-bold text-stone-400 cursor-not-allowed select-none">
+                  <span>🚫</span>
+                  <span>{t('outOfStock')}</span>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleAddToList}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-xl border-2 border-amber-600 bg-amber-50 px-4 py-3 text-sm font-bold text-amber-900 transition duration-200 hover:bg-amber-100 hover:shadow-xs active:scale-95 cursor-pointer"
+                >
+                  <span>📋</span>
+                  <span>{t('addToList')}</span>
+                </button>
+              )}
               <a
-                href={whatsappHref}
+                href={
+                  inStock === false
+                    ? getWhatsAppUrl(
+                        `Hi, I'd like to know when ${brandName ? `${brandName} ` : ''}${modelName} will be back in stock.`
+                      )
+                    : whatsappHref
+                }
                 onClick={() => trackWhatsAppClick('product_modal', { modelName, brand: brandName })}
                 target={isExternalWhatsApp ? '_blank' : undefined}
                 rel={isExternalWhatsApp ? 'noopener noreferrer' : undefined}
                 className="glow-wa inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-bold text-white shadow-sm transition duration-200 hover:bg-[#1fb855] hover:-translate-y-0.5 active:scale-95"
               >
                 <span>💬</span>
-                <span>{t('whatsappEnquiry')}</span>
+                <span>{inStock === false ? t('askAvailabilityWa') : t('whatsappEnquiry')}</span>
               </a>
               <a
                 href={phoneHref}
@@ -419,6 +433,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                 <span>{t('callSeller')}</span>
               </a>
             </div>
+
 
             <p className="mt-5 text-xs text-stone-500">Contact <span className="font-semibold text-stone-800">+91 {shop.primaryPhone}</span> for wholesale pricing and stock availability.</p>
             {selectedColor && (

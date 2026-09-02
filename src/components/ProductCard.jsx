@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom'
 import { useCart } from '../context/useCart'
 import { useLanguage } from '../context/useLanguage'
 import { useToast } from '../context/useToast'
-import { trackEnquiryCartAction } from '../utils/analytics'
+import { getWhatsAppUrl } from '../data/site'
+import { trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
 import ProductImage from './ProductImage'
 
 export default function ProductCard({
@@ -22,6 +23,7 @@ export default function ProductCard({
   const handleQuickAdd = (e) => {
     e.preventDefault()
     e.stopPropagation()
+    if (inStock === false) return // guard: OOS items cannot be added
     addToCart({
       categorySlug: category,
       categoryLabel,
@@ -132,17 +134,37 @@ export default function ProductCard({
           className="text-xs font-bold text-amber-700 hover:text-amber-900 transition duration-150 inline-flex items-center gap-1"
         >
           <span>{t('viewSpecs')}</span>
-          <span className="text-xs">→</span>
         </Link>
-        <button
-          type="button"
-          onClick={handleQuickAdd}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-stone-200 bg-stone-50/90 px-3 py-1.5 text-xs font-semibold text-stone-700 hover:border-amber-400 hover:bg-amber-50 hover:text-amber-900 hover:shadow-xs transition duration-200 active:scale-95 cursor-pointer"
-          title="Add to multi-item enquiry list"
-        >
-          <span>+</span>
-          <span>{t('addToList')}</span>
-        </button>
+
+        {inStock === false ? (
+          /* OOS: replace button with a WhatsApp ask link */
+          <a
+            href={getWhatsAppUrl(
+              `Hi, I'd like to know when ${brand ? `${brand} ` : ''}${modelName} will be back in stock.`
+            )}
+            onClick={(e) => {
+              e.stopPropagation()
+              trackWhatsAppClick('product_card_oos', { modelName, brand, category })
+            }}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 hover:border-emerald-400 hover:bg-emerald-100 transition duration-200 active:scale-95"
+            title="Ask about stock on WhatsApp"
+          >
+            <span>💬</span>
+            <span>{t('askAvailabilityWa')}</span>
+          </a>
+        ) : (
+          <button
+            type="button"
+            onClick={handleQuickAdd}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-stone-200 bg-stone-50/90 px-3 py-1.5 text-xs font-semibold text-stone-700 hover:border-amber-400 hover:bg-amber-50 hover:text-amber-900 hover:shadow-xs transition duration-200 active:scale-95 cursor-pointer"
+            title="Add to multi-item enquiry list"
+          >
+            <span>+</span>
+            <span>{t('addToList')}</span>
+          </button>
+        )}
       </div>
     </article>
   )
