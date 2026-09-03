@@ -1,4 +1,5 @@
-import { Link, NavLink } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useCart } from '../context/useCart'
 import { useLanguage } from '../context/useLanguage'
 import { useSearch } from '../context/useSearch'
@@ -6,17 +7,69 @@ import { shop } from '../data/site'
 import LanguageSelector from './LanguageSelector'
 import ThemeToggle from './ThemeToggle'
 
-const navLinkClass = ({ isActive }) =>
-  `relative px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition duration-200 ${
-    isActive
-      ? 'bg-amber-100/80 text-amber-900 font-semibold shadow-xs'
-      : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100/70'
-  }`
-
 export default function Navbar() {
   const { totalCount, toggleCart } = useCart()
   const { openSearch } = useSearch()
   const { t } = useLanguage()
+  const location = useLocation()
+
+  const navRef = useRef(null)
+  const [pill, setPill] = useState({ left: 0, width: 0, opacity: 0 })
+  const linkRefs = useRef({})
+
+  // Nav routes in order
+  const navRoutes = [
+    { to: '/', label: t('navHome'), end: true },
+    { to: '/catalog', label: t('navCatalog'), end: false },
+    { to: '/contact', label: t('navContact'), end: false },
+  ]
+
+  // Determine active route
+  const getActiveRoute = () => {
+    if (location.pathname === '/') return '/'
+    if (location.pathname.startsWith('/catalog')) return '/catalog'
+    if (location.pathname.startsWith('/contact')) return '/contact'
+    return null
+  }
+
+  // Update pill position/size whenever location or layout changes
+  useEffect(() => {
+    const activeKey = getActiveRoute()
+    if (!activeKey || !navRef.current) {
+      setPill((p) => ({ ...p, opacity: 0 }))
+      return
+    }
+
+    const activeEl = linkRefs.current[activeKey]
+    if (!activeEl) return
+
+    const navRect = navRef.current.getBoundingClientRect()
+    const elRect = activeEl.getBoundingClientRect()
+
+    setPill({
+      left: elRect.left - navRect.left,
+      width: elRect.width,
+      opacity: 1,
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname])
+
+  // Also reposition on resize
+  useEffect(() => {
+    const observer = new ResizeObserver(() => {
+      const activeKey = getActiveRoute()
+      if (!activeKey || !navRef.current) return
+      const activeEl = linkRefs.current[activeKey]
+      if (!activeEl) return
+      const navRect = navRef.current.getBoundingClientRect()
+      const elRect = activeEl.getBoundingClientRect()
+      setPill({ left: elRect.left - navRect.left, width: elRect.width, opacity: 1 })
+    })
+
+    if (navRef.current) observer.observe(navRef.current)
+    return () => observer.disconnect()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <header className="sticky top-0 z-40 border-b border-stone-200/80 bg-white/80 backdrop-blur-md transition-all duration-300 shadow-[0_2px_12px_-2px_rgba(0,0,0,0.04)]">
@@ -34,22 +87,41 @@ export default function Navbar() {
         </Link>
 
         <div className="flex items-center gap-2 sm:gap-4">
-          <ul className="flex items-center gap-1 sm:gap-1.5">
-            <li>
-              <NavLink to="/" end className={navLinkClass}>
-                {t('navHome')}
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/catalog" className={navLinkClass}>
-                {t('navCatalog')}
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/contact" className={navLinkClass}>
-                {t('navContact')}
-              </NavLink>
-            </li>
+          {/* Nav Links with animated sliding pill */}
+          <ul
+            ref={navRef}
+            className="relative flex items-center gap-1 sm:gap-1.5"
+            role="navigation"
+          >
+            {/* Animated sliding indicator pill */}
+            <span
+              aria-hidden="true"
+              className="nav-pill-indicator"
+              style={{
+                left: pill.left,
+                width: pill.width,
+                opacity: pill.opacity,
+              }}
+            />
+
+            {navRoutes.map(({ to, label, end }) => (
+              <li key={to}>
+                <NavLink
+                  to={to}
+                  end={end}
+                  ref={(el) => { linkRefs.current[to] = el }}
+                  className={({ isActive }) =>
+                    `relative z-10 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                      isActive
+                        ? 'text-amber-900 font-semibold'
+                        : 'text-stone-600 hover:text-stone-900'
+                    }`
+                  }
+                >
+                  {label}
+                </NavLink>
+              </li>
+            ))}
           </ul>
 
           <button
