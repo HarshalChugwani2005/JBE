@@ -92,6 +92,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
   const inStock = model?.inStock ?? true
 
   const imageSources = useMemo(() => getProductImageUrls(categorySlug, model), [categorySlug, model])
+  const activeImage = imageSources[activeImageIndex] ?? imageSources[0] ?? null
 
   useEffect(() => {
     if (!isOpen) return
