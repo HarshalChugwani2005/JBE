@@ -5,11 +5,6 @@ import CategoryIcon from './CategoryIcon'
 export default function CategoryCard({ category, categoryLabel, comingSoon, brands = [], search = '' }) {
   const visual = getCategoryVisual(category)
   const modelCount = getModelCount({ brands })
-  const statusText = comingSoon
-    ? 'Catalog coming soon'
-    : modelCount > 0
-      ? `${modelCount} model${modelCount === 1 ? '' : 's'} available`
-      : 'Browse models'
 
   return (
     <Link
@@ -22,6 +17,15 @@ export default function CategoryCard({ category, categoryLabel, comingSoon, bran
         {/* Subtle radial sheen */}
         <div className="absolute inset-0 bg-radial from-white/20 via-transparent to-black/10 pointer-events-none" />
         <CategoryIcon slug={category} className="h-14 w-14 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:rotate-2 drop-shadow-md" />
+
+        {/* Model count badge — top-left corner */}
+        {!comingSoon && modelCount > 0 && (
+          <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/40 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-md border border-white/20 shadow-sm">
+            <span className="opacity-75">📦</span>
+            {modelCount} model{modelCount === 1 ? '' : 's'}
+          </span>
+        )}
+
         {comingSoon && (
           <span className="absolute right-3 top-3 rounded-full border border-white/40 bg-white/90 px-3 py-1 text-xs font-bold text-amber-900 shadow-sm backdrop-blur-md">
             Coming Soon
@@ -32,7 +36,24 @@ export default function CategoryCard({ category, categoryLabel, comingSoon, bran
         <h3 className="font-heading text-lg font-bold text-stone-900 transition-colors duration-200 group-hover:text-amber-800">
           {categoryLabel}
         </h3>
-        <p className="mt-1 text-sm text-stone-500">{statusText}</p>
+
+        {/* Model count chip in the card body */}
+        <div className="mt-2 flex items-center gap-2">
+          {!comingSoon && modelCount > 0 ? (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200/80 px-2.5 py-0.5 text-[11px] font-semibold text-amber-800">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+              {modelCount} model{modelCount === 1 ? '' : 's'} available
+            </span>
+          ) : comingSoon ? (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 border border-stone-200/80 px-2.5 py-0.5 text-[11px] font-semibold text-stone-500">
+              <span className="h-1.5 w-1.5 rounded-full bg-stone-400" />
+              Catalog coming soon
+            </span>
+          ) : (
+            <span className="text-sm text-stone-500">Browse models</span>
+          )}
+        </div>
+
         {!comingSoon && brands.length > 0 && (
           <div className="mt-auto pt-3">
             <p className="text-[11px] font-bold uppercase tracking-wider text-amber-700/90 truncate">

@@ -3,7 +3,7 @@ import { Component } from 'react'
 export default class ErrorBoundary extends Component {
   constructor(props) {
     super(props)
-    this.state = { hasError: false, error: null }
+    this.state = { hasError: false, error: null, detailsOpen: false }
   }
 
   static getDerivedStateFromError(error) {
@@ -19,39 +19,111 @@ export default class ErrorBoundary extends Component {
   }
 
   handleGoHome = () => {
-    this.setState({ hasError: false, error: null })
+    this.setState({ hasError: false, error: null, detailsOpen: false })
     window.location.href = '/'
+  }
+
+  toggleDetails = () => {
+    this.setState((s) => ({ detailsOpen: !s.detailsOpen }))
   }
 
   render() {
     if (this.state.hasError) {
+      const { error, detailsOpen } = this.state
       return (
-        <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-100 text-3xl text-amber-800 shadow-inner">
-            ⚡
+        <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-stone-950 px-4 py-16">
+          {/* Ambient blobs */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-32 left-1/2 h-[480px] w-[480px] -translate-x-1/2 rounded-full bg-amber-600/10 blur-3xl"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute bottom-0 right-0 h-64 w-64 rounded-full bg-orange-600/10 blur-3xl"
+          />
+
+          {/* Card */}
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="relative z-10 w-full max-w-md rounded-3xl border border-stone-800/80 bg-stone-900/90 p-8 shadow-2xl backdrop-blur-xl text-center"
+            style={{ animation: 'errBounceIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both' }}
+          >
+            {/* Logo mark */}
+            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-600 via-orange-500 to-amber-400 text-4xl shadow-lg shadow-amber-900/40 select-none">
+              ⚡
+            </div>
+
+            {/* Heading */}
+            <h1 className="font-heading text-2xl font-bold tracking-tight text-stone-50 sm:text-3xl">
+              Oops! Something broke.
+            </h1>
+            <p className="mt-3 text-sm leading-relaxed text-stone-400">
+              An unexpected error occurred while loading this page.
+              Please try reloading — if the issue persists, contact us directly on WhatsApp.
+            </p>
+
+            {/* Action buttons */}
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <button
+                type="button"
+                onClick={this.handleReload}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-600 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow-md shadow-amber-900/30 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:scale-95 cursor-pointer"
+              >
+                <span>🔄</span> Reload Page
+              </button>
+              <button
+                type="button"
+                onClick={this.handleGoHome}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-stone-700 bg-stone-800/80 px-6 py-3 text-sm font-semibold text-stone-200 transition-all duration-200 hover:border-stone-600 hover:bg-stone-700 active:scale-95 cursor-pointer"
+              >
+                <span>🏠</span> Back to Home
+              </button>
+            </div>
+
+            {/* WhatsApp fallback */}
+            <a
+              href="https://wa.me/918421009925?text=Hi%2C%20the%20JBE%20website%20is%20showing%20an%20error.%20Please%20help!"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366]/10 border border-[#25D366]/30 px-5 py-2.5 text-sm font-semibold text-[#25D366] transition-all duration-200 hover:bg-[#25D366]/20 active:scale-95 cursor-pointer w-full"
+            >
+              <span>💬</span> Chat on WhatsApp — +91 84210 09925
+            </a>
+
+            {/* Collapsible error details */}
+            {error && (
+              <div className="mt-6 text-left">
+                <button
+                  type="button"
+                  onClick={this.toggleDetails}
+                  className="flex w-full items-center justify-between rounded-lg border border-stone-800 bg-stone-800/50 px-4 py-2.5 text-xs font-mono text-stone-500 transition hover:text-stone-400 cursor-pointer"
+                >
+                  <span>Error details</span>
+                  <span className={`transition-transform duration-200 ${detailsOpen ? 'rotate-180' : ''}`}>▼</span>
+                </button>
+                {detailsOpen && (
+                  <pre className="mt-1 max-h-36 overflow-auto rounded-b-lg border border-t-0 border-stone-800 bg-stone-950 px-4 py-3 text-[11px] leading-relaxed text-red-400 whitespace-pre-wrap break-words">
+                    {error.message}
+                    {'\n\n'}
+                    {error.stack}
+                  </pre>
+                )}
+              </div>
+            )}
           </div>
-          <h2 className="mt-6 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
-            Something went wrong
-          </h2>
-          <p className="mt-2 max-w-md text-sm text-stone-600">
-            We ran into an unexpected issue while loading this view. You can reload the page or return to the home catalog.
+
+          {/* Shop branding footer */}
+          <p className="relative z-10 mt-8 text-xs text-stone-600">
+            Jai Baba Electronic · Malkapur, Maharashtra
           </p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <button
-              type="button"
-              onClick={this.handleReload}
-              className="inline-flex min-h-11 items-center justify-center rounded-xl bg-amber-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-700 cursor-pointer"
-            >
-              Reload Page
-            </button>
-            <button
-              type="button"
-              onClick={this.handleGoHome}
-              className="inline-flex min-h-11 items-center justify-center rounded-xl border border-stone-300 bg-white px-5 py-2.5 text-sm font-semibold text-stone-700 shadow-sm transition hover:bg-stone-50 cursor-pointer"
-            >
-              Back to Home
-            </button>
-          </div>
+
+          <style>{`
+            @keyframes errBounceIn {
+              from { opacity: 0; transform: scale(0.88) translateY(16px); }
+              to   { opacity: 1; transform: scale(1) translateY(0); }
+            }
+          `}</style>
         </div>
       )
     }
