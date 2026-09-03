@@ -37,6 +37,10 @@ export const categoryVisuals = {
     gradient: 'from-yellow-400 to-yellow-600',
     label: 'LED Bulbs',
   },
+  'led-battens': {
+    gradient: 'from-amber-400 to-amber-600',
+    label: 'LED Battens',
+  },
   'bluetooth-speakers': {
     gradient: 'from-indigo-500 to-blue-600',
     label: 'Speakers',

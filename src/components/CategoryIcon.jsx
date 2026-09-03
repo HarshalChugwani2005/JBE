@@ -62,6 +62,13 @@ const icons = {
       d="M9 18h6M12 3a5 5 0 015 5c0 2-1 3-2 4v2H9v-2c-1-1-2-2-2-4a5 5 0 015-5z"
     />
   ),
+  'led-battens': (
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M3 10h18M3 14h18M2 10a1 1 0 011-1h18a1 1 0 011 1v4a1 1 0 01-1 1H3a1 1 0 01-1-1v-4zM6 9v6M18 9v6"
+    />
+  ),
   'bluetooth-speakers': (
     <path
       strokeLinecap="round"
