@@ -1,5 +1,31 @@
-# robots.txt for Jai Baba Electronic
+# robots.txt — Jai Baba Electronic
+# https://jaibabaelectronic.vercel.app
+
+# Allow all well-behaved crawlers
 User-agent: *
 Allow: /
+Allow: /catalog
+Allow: /catalog/
+Allow: /contact
 
+# Disallow Vercel internals and hashed build assets (no SEO value)
+Disallow: /_vercel/
+Disallow: /assets/
+
+# Crawl-delay (seconds) — be polite
+Crawl-delay: 5
+
+# Google-specific rules — no crawl-delay needed, they self-throttle
+User-agent: Googlebot
+Allow: /
+Disallow: /_vercel/
+Disallow: /assets/
+
+# Bing-specific rules
+User-agent: Bingbot
+Allow: /
+Disallow: /_vercel/
+Disallow: /assets/
+
+# Sitemap location
 Sitemap: https://jaibabaelectronic.vercel.app/sitemap.xml

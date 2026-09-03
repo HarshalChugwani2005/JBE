@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node scripts/generate-sitemap.js && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
+    "sitemap": "node scripts/generate-sitemap.js",
     "catalog:sync": "node scripts/sync-catalog.js",
     "catalog:export-wa": "node scripts/export-wa-catalog.js",
     "images:generate": "node scripts/generate-product-images.js"

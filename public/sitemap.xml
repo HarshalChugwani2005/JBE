@@ -1,195 +1,206 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+    http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
   <url>
     <loc>https://jaibabaelectronic.vercel.app/</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://jaibabaelectronic.vercel.app/catalog</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://jaibabaelectronic.vercel.app/contact</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://jaibabaelectronic.vercel.app/catalog/ceiling-fans</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/ceiling-fans/titan</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/ceiling-fans/glory</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/ceiling-fans/bounce</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/ceiling-fans/zoro</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/ceiling-fans/wonder</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/ceiling-fans/intex-designer-sona-</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/coolers</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/coolers/cooler-30l</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/table-fans</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/table-fans/desk-fan-12</loc>
-    <lastmod>2026-08-16</lastmod>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/ceiling-fans?model=titan</loc>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/geysers</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/ceiling-fans?model=glory</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/geysers/instant-3l</loc>
-    <lastmod>2026-08-16</lastmod>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/ceiling-fans?model=bounce</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/ceiling-fans?model=zoro</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/ceiling-fans?model=wonder</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/ceiling-fans?model=intex-designer-sona</loc>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://jaibabaelectronic.vercel.app/catalog/hot-plates</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/hot-plates/cooktop-2-burner</loc>
-    <lastmod>2026-08-16</lastmod>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/hot-plates?model=cooktop-2-burner</loc>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://jaibabaelectronic.vercel.app/catalog/mixers</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/mixers/mx-200</loc>
-    <lastmod>2026-08-16</lastmod>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/mixers?model=mx-200</loc>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://jaibabaelectronic.vercel.app/catalog/torches</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/torches?model=led-torch</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/torches/led-torch</loc>
-    <lastmod>2026-08-16</lastmod>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/geysers</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/geysers?model=rapid-jet-3l</loc>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/geysers?model=instant-3l</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://jaibabaelectronic.vercel.app/catalog/immersion-rods</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/immersion-rods?model=300w-rod</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/immersion-rods/300w-rod</loc>
-    <lastmod>2026-08-16</lastmod>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/table-fans</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/table-fans?model=desk-fan-12</loc>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://jaibabaelectronic.vercel.app/catalog/electric-irons</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/electric-irons/steam-iron</loc>
-    <lastmod>2026-08-16</lastmod>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/electric-irons?model=steam-iron</loc>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://jaibabaelectronic.vercel.app/catalog/led-bulbs</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/led-bulbs/9w-led</loc>
-    <lastmod>2026-08-16</lastmod>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/led-bulbs?model=9w-led</loc>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://jaibabaelectronic.vercel.app/catalog/bluetooth-speakers</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/bluetooth-speakers/soundbar-mini</loc>
-    <lastmod>2026-08-16</lastmod>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/bluetooth-speakers?model=soundbar-mini</loc>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://jaibabaelectronic.vercel.app/catalog/12v-batteries</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/12v-batteries?model=12v-rechargeable</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://jaibabaelectronic.vercel.app/catalog/12v-batteries/12v-rechargeable</loc>
-    <lastmod>2026-08-16</lastmod>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/coolers</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jaibabaelectronic.vercel.app/catalog/coolers?model=cooler-30l</loc>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.6</priority>
   </url>
 </urlset>
