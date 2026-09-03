@@ -13,6 +13,7 @@ export default function Catalog() {
   const { search } = useLocation()
   const query = searchParams.get('q') ?? ''
   const brand = searchParams.get('brand') ?? ''
+  const tier = searchParams.get('tier') ?? ''
   const inStockOnly = searchParams.get('inStock') === '1'
 
   const liveCount = categories.filter((c) => !c.comingSoon).length
@@ -44,6 +45,13 @@ export default function Catalog() {
         if (!hasInStockModel) return false
       }
 
+      if (tier) {
+        const hasTierModel = category.brands?.some((b) =>
+          b.models?.some((m) => m.priceTier === tier)
+        )
+        if (!hasTierModel) return false
+      }
+
       if (!normalizedQuery) return true
 
       const searchableText = [
@@ -63,12 +71,13 @@ export default function Catalog() {
       const queryWords = normalizedQuery.split(/\s+/).filter(Boolean)
       return queryWords.every((word) => searchableText.includes(word))
     })
-  }, [brand, inStockOnly, query])
+  }, [brand, inStockOnly, query, tier])
 
   const updateParams = (next) => {
     const params = new URLSearchParams(searchParams)
     const nextQuery = next.q !== undefined ? next.q : query
     const nextBrand = next.brand !== undefined ? next.brand : brand
+    const nextTier = next.tier !== undefined ? next.tier : tier
     const nextInStock = next.inStock !== undefined ? next.inStock : inStockOnly
 
     if (nextQuery.trim()) params.set('q', nextQuery)
@@ -76,6 +85,9 @@ export default function Catalog() {
 
     if (nextBrand.trim()) params.set('brand', nextBrand)
     else params.delete('brand')
+
+    if (nextTier.trim()) params.set('tier', nextTier)
+    else params.delete('tier')
 
     if (nextInStock) params.set('inStock', '1')
     else params.delete('inStock')
@@ -109,6 +121,8 @@ export default function Catalog() {
             brands={allBrands}
             selectedBrand={brand}
             onBrandChange={(value) => updateParams({ brand: value })}
+            selectedTier={tier}
+            onTierChange={(value) => updateParams({ tier: value })}
             inStockOnly={inStockOnly}
             onInStockChange={(value) => updateParams({ inStock: value })}
             resultsLabel={`${filteredCategories.length} of ${categories.length} shown`}

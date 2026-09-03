@@ -4,6 +4,7 @@ import { useLanguage } from '../context/useLanguage'
 import { useToast } from '../context/useToast'
 import { getWhatsAppUrl } from '../data/site'
 import { trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
+import { addRecentlyViewed } from '../utils/recentlyViewed'
 import ProductImage from './ProductImage'
 
 export default function ProductCard({
@@ -68,6 +69,16 @@ export default function ProductCard({
     <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-amber-400/80 hover:shadow-[0_12px_24px_-4px_rgba(217,119,6,0.12)]">
       <Link
         to={{ pathname: to, search }}
+        onClick={() => {
+          addRecentlyViewed({
+            categorySlug: category,
+            categoryLabel,
+            brand,
+            modelName,
+            image,
+            inStock,
+          })
+        }}
         className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
         aria-label={`${brand ? `${brand} ` : ''}${modelName}`}
       >

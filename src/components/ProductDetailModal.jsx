@@ -5,6 +5,7 @@ import { useToast } from '../context/useToast'
 import { getPhoneUrl, getWhatsAppUrl, shop } from '../data/site'
 import { getProductImageUrls } from '../data/productImages'
 import { trackCallClick, trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
+import { addRecentlyViewed } from '../utils/recentlyViewed'
 import ImageLightbox from './ImageLightbox'
 import ProductImage from './ProductImage'
 
@@ -100,6 +101,18 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
     previouslyFocusedRef.current = document.activeElement
     setActiveImageIndex(0)
     setSelectedColor(model?.colors?.[0] ?? null)
+
+    if (model?.modelName) {
+      addRecentlyViewed({
+        categorySlug,
+        categoryLabel,
+        brand: brandName,
+        modelName: model.modelName,
+        image: model.image,
+        inStock,
+        priceTier: model.priceTier,
+      })
+    }
 
     const frame = window.requestAnimationFrame(() => {
       closeButtonRef.current?.focus()

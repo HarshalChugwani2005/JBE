@@ -8,6 +8,8 @@ export default function CatalogFilters({
   brands = [],
   selectedBrand = '',
   onBrandChange,
+  selectedTier = '',
+  onTierChange,
   inStockOnly = false,
   onInStockChange,
   resultsLabel,
@@ -15,7 +17,7 @@ export default function CatalogFilters({
   onClear,
 }) {
   const { t } = useLanguage()
-  const hasActiveFilters = Boolean(searchValue?.trim() || selectedBrand || inStockOnly)
+  const hasActiveFilters = Boolean(searchValue?.trim() || selectedBrand || selectedTier || inStockOnly)
 
   return (
     <div className="glass-card rounded-2xl p-4 sm:p-6 shadow-[0_2px_12px_-3px_rgba(0,0,0,0.04)]">
@@ -63,15 +65,71 @@ export default function CatalogFilters({
         </div>
       </div>
 
+      {/* Price Segment / Tier Filter Chips */}
+      {onTierChange && (
+        <div className="mt-5 pt-4 border-t border-stone-100 flex flex-wrap items-center gap-2">
+          <span className="text-xs font-bold uppercase tracking-wider text-stone-500 mr-1">
+            {t('priceSegment')}:
+          </span>
+          <button
+            type="button"
+            onClick={() => onTierChange('')}
+            className={`rounded-full border px-3 py-1 text-xs font-semibold transition duration-200 cursor-pointer ${
+              !selectedTier
+                ? 'border-amber-600 bg-amber-600 text-white shadow-xs'
+                : 'border-stone-200 bg-white text-stone-600 hover:border-amber-300 hover:text-amber-900'
+            }`}
+          >
+            {t('allTiers')}
+          </button>
+          <button
+            type="button"
+            onClick={() => onTierChange(selectedTier === 'budget' ? '' : 'budget')}
+            className={`rounded-full border px-3 py-1 text-xs font-semibold transition duration-200 cursor-pointer ${
+              selectedTier === 'budget'
+                ? 'border-amber-600 bg-amber-600 text-white shadow-xs'
+                : 'border-stone-200 bg-white text-stone-600 hover:border-amber-300 hover:text-amber-900'
+            }`}
+          >
+            {t('tierBudget')}
+          </button>
+          <button
+            type="button"
+            onClick={() => onTierChange(selectedTier === 'mid' ? '' : 'mid')}
+            className={`rounded-full border px-3 py-1 text-xs font-semibold transition duration-200 cursor-pointer ${
+              selectedTier === 'mid'
+                ? 'border-amber-600 bg-amber-600 text-white shadow-xs'
+                : 'border-stone-200 bg-white text-stone-600 hover:border-amber-300 hover:text-amber-900'
+            }`}
+          >
+            {t('tierMid')}
+          </button>
+          <button
+            type="button"
+            onClick={() => onTierChange(selectedTier === 'premium' ? '' : 'premium')}
+            className={`rounded-full border px-3 py-1 text-xs font-semibold transition duration-200 cursor-pointer ${
+              selectedTier === 'premium'
+                ? 'border-amber-600 bg-amber-600 text-white shadow-xs'
+                : 'border-stone-200 bg-white text-stone-600 hover:border-amber-300 hover:text-amber-900'
+            }`}
+          >
+            {t('tierPremium')}
+          </button>
+        </div>
+      )}
+
       {brands.length > 0 && (
-        <div className="mt-5 pt-4 border-t border-stone-100 flex flex-wrap gap-2">
+        <div className="mt-3 pt-3 border-t border-stone-100 flex flex-wrap gap-2 items-center">
+          <span className="text-xs font-bold uppercase tracking-wider text-stone-500 mr-1">
+            {t('allBrands')}:
+          </span>
           <button
             type="button"
             onClick={() => onBrandChange?.('')}
-            className={`rounded-full border px-3.5 py-1.5 text-xs sm:text-sm font-semibold transition duration-200 cursor-pointer ${
+            className={`rounded-full border px-3 py-1 text-xs font-semibold transition duration-200 cursor-pointer ${
               selectedBrand
                 ? 'border-stone-200 bg-white text-stone-600 hover:border-amber-300 hover:text-amber-900'
-                : 'border-amber-500 bg-amber-500 text-white shadow-xs'
+                : 'border-amber-600 bg-amber-600 text-white shadow-xs'
             }`}
           >
             {t('allBrands')}
@@ -84,9 +142,9 @@ export default function CatalogFilters({
                 key={brand}
                 type="button"
                 onClick={() => onBrandChange?.(isActive ? '' : brand)}
-                className={`rounded-full border px-3.5 py-1.5 text-xs sm:text-sm font-semibold transition duration-200 cursor-pointer ${
+                className={`rounded-full border px-3 py-1 text-xs font-semibold transition duration-200 cursor-pointer ${
                   isActive
-                    ? 'border-amber-500 bg-amber-500 text-white shadow-xs'
+                    ? 'border-amber-600 bg-amber-600 text-white shadow-xs'
                     : 'border-stone-200 bg-white text-stone-600 hover:border-amber-300 hover:text-amber-900 hover:bg-amber-50/30'
                 }`}
               >

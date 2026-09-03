@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import CategoryCard from '../components/CategoryCard'
 import MapPreview from '../components/MapPreview'
+import RecentlyViewed from '../components/RecentlyViewed'
 import RevealOnScroll from '../components/RevealOnScroll'
 import Section from '../components/Section'
 import SEO from '../components/SEO'
@@ -151,6 +152,9 @@ export default function Home() {
               </RevealOnScroll>
             </div>
           </Section>
+
+          {/* Recently Viewed Products */}
+          <RecentlyViewed />
 
           {/* Map Preview */}
           <Section

@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import ProductCard from '../components/ProductCard'
 import CatalogFilters from '../components/CatalogFilters'
 import ProductDetailModal from '../components/ProductDetailModal'
+import RecentlyViewed from '../components/RecentlyViewed'
 import SEO from '../components/SEO'
 import { useLanguage } from '../context/useLanguage'
 import { getCategoryBySlug, getModelBySlug } from '../data/products'
@@ -22,6 +23,7 @@ export default function CategoryPage() {
   const category = getCategoryBySlug(categorySlug)
   const query = searchParams.get('q') ?? ''
   const brand = searchParams.get('brand') ?? ''
+  const tier = searchParams.get('tier') ?? ''
   const inStockOnly = searchParams.get('inStock') === '1'
 
   const allBrands = useMemo(() => {
@@ -40,6 +42,9 @@ export default function CategoryPage() {
       let models = entry.models ?? []
       if (inStockOnly) {
         models = models.filter((m) => m.inStock !== false)
+      }
+      if (tier) {
+        models = models.filter((m) => m.priceTier === tier)
       }
 
       if (normalizedQuery) {
@@ -68,12 +73,13 @@ export default function CategoryPage() {
         models,
       }
     }).filter(Boolean)
-  }, [brand, category, inStockOnly, query])
+  }, [brand, category, inStockOnly, query, tier])
 
   const updateParams = (next) => {
     const params = new URLSearchParams(searchParams)
     const nextQuery = next.q !== undefined ? next.q : query
     const nextBrand = next.brand !== undefined ? next.brand : brand
+    const nextTier = next.tier !== undefined ? next.tier : tier
     const nextInStock = next.inStock !== undefined ? next.inStock : inStockOnly
 
     if (nextQuery.trim()) params.set('q', nextQuery)
@@ -81,6 +87,9 @@ export default function CategoryPage() {
 
     if (nextBrand.trim()) params.set('brand', nextBrand)
     else params.delete('brand')
+
+    if (nextTier.trim()) params.set('tier', nextTier)
+    else params.delete('tier')
 
     if (nextInStock) params.set('inStock', '1')
     else params.delete('inStock')
@@ -161,6 +170,8 @@ export default function CategoryPage() {
             brands={allBrands}
             selectedBrand={brand}
             onBrandChange={(value) => updateParams({ brand: value })}
+            selectedTier={tier}
+            onTierChange={(value) => updateParams({ tier: value })}
             inStockOnly={inStockOnly}
             onInStockChange={(value) => updateParams({ inStock: value })}
             resultsLabel={`${filteredBrands.length} of ${category.brands.length} brands shown`}
@@ -218,6 +229,9 @@ export default function CategoryPage() {
             }}
           />
         )}
+
+        {/* Recently Viewed Products */}
+        <RecentlyViewed currentModelName={activeModalModel?.model?.modelName} />
       </div>
     </>
   )
