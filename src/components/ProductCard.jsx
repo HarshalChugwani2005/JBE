@@ -151,7 +151,7 @@ export default function ProductCard({
           /* OOS: replace button with a WhatsApp ask link */
           <a
             href={getWhatsAppUrl(
-              `Hi, I'd like to know when ${brand ? `${brand} ` : ''}${modelName} will be back in stock.`
+              `⚡ *JAI BABA ELECTRONIC — STOCK CHECK*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📦 *Product:* ${brand ? `${brand} ` : ''}${modelName}\n📁 *Category:* ${categoryLabel}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n💬 _"Hello! Could you please let me know when this model will be available in stock? Thank you!"_`
             )}
             onClick={(e) => {
               e.stopPropagation()

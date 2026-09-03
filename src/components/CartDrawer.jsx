@@ -97,34 +97,41 @@ export default function CartDrawer() {
     trackWhatsAppClick('enquiry_cart', { itemCount: totalCount, buyerType })
     trackEnquiryCartAction('submit_enquiry', { totalCount, buyerType })
 
-    let msg = `*Jai Baba Electronic — Product Quotation Request*\n`
-    msg += `------------------------------------\n`
-    if (buyerName.trim()) {
-      msg += `*Customer:* ${buyerName.trim()}\n`
-    }
-    msg += `*Enquiry Type:* ${buyerType === 'wholesale' ? 'Wholesale (Bulk Pricing)' : 'Retail (Home/Personal)'}\n`
-    msg += `------------------------------------\n`
-    msg += `*Selected Products (${totalCount} item${totalCount > 1 ? 's' : ''}):*\n\n`
-
-    items.forEach((item, index) => {
-      msg += `${index + 1}. *${item.brand ? `${item.brand} ` : ''}${item.modelName}*`
-      if (item.selectedColor) {
-        msg += ` (${item.selectedColor})`
-      }
-      msg += `\n   Category: ${item.categoryLabel || item.categorySlug}`
-      if (item.quantity && item.quantity > 1) {
-        msg += `\n   Quantity: ${item.quantity}`
-      }
-      msg += `\n\n`
+    const now = new Date()
+    const dateStr = now.toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
     })
 
-    if (notes.trim()) {
-      msg += `*Additional Note:* ${notes.trim()}\n\n`
+    let msg = `⚡ *JAI BABA ELECTRONIC — QUOTATION REQUEST*\n`
+    msg += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`
+    msg += `📅 *Date:* ${dateStr}\n`
+    if (buyerName.trim()) {
+      msg += `👤 *Customer:* ${buyerName.trim()}\n`
     }
+    msg += `🏷️ *Order Type:* ${buyerType === 'wholesale' ? '⚡ Wholesale / Dealer (Bulk Order)' : '🏠 Retail / Personal (Home Use)'}\n`
+    if (notes.trim()) {
+      msg += `📍 *Location / Notes:* ${notes.trim()}\n`
+    }
+    msg += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`
+    msg += `📦 *Requested Products (${totalCount} item${totalCount > 1 ? 's' : ''}):*\n\n`
 
-    msg += `Please provide your best price, available stock, and delivery/pickup details.\nThank you!`
+    items.forEach((item, index) => {
+      const num = index + 1
+      msg += `*${num}. ${item.brand ? `${item.brand} ` : ''}${item.modelName}*\n`
+      msg += `   • Category: ${item.categoryLabel || item.categorySlug}\n`
+      if (item.selectedColor) {
+        msg += `   • Color: ${item.selectedColor}\n`
+      }
+      msg += `   • Quantity: *${item.quantity || 1} unit${(item.quantity || 1) > 1 ? 's' : ''}*\n\n`
+    })
 
-    window.open(getWhatsAppUrl(msg), '_blank', 'noopener,noreferrer')
+    msg += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`
+    msg += `💬 _"Hello! Please share your best price quotation, current stock availability, and delivery/pickup details for the items listed above. Thank you!"_`
+
+    const url = getWhatsAppUrl(msg)
+    window.open(url, '_blank', 'noopener,noreferrer')
   }
 
   return (

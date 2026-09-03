@@ -4,6 +4,7 @@ import { useLanguage } from '../context/useLanguage'
 import { useSearch } from '../context/useSearch'
 import { shop } from '../data/site'
 import LanguageSelector from './LanguageSelector'
+import ThemeToggle from './ThemeToggle'
 
 const navLinkClass = ({ isActive }) =>
   `relative px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition duration-200 ${
@@ -66,6 +67,7 @@ export default function Navbar() {
           </button>
 
           <LanguageSelector />
+          <ThemeToggle />
 
           {/* Enquiry List Trigger Button */}
           <button

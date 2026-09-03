@@ -12,6 +12,7 @@ import ScrollToTop from './components/ScrollToTop'
 import { CartProvider } from './context/CartProvider'
 import { LanguageProvider } from './context/LanguageProvider'
 import { SearchProvider } from './context/SearchProvider'
+import { ThemeProvider } from './context/ThemeProvider'
 import { ToastProvider } from './context/ToastProvider'
 import { Analytics } from '@vercel/analytics/react'
 import Home from './pages/Home'
@@ -24,11 +25,12 @@ const NotFound = lazy(() => import('./pages/NotFound'))
 export default function App() {
   return (
     <ErrorBoundary>
-      <LanguageProvider>
-        <ToastProvider>
-          <CartProvider>
-            <SearchProvider>
-              <BrowserRouter>
+      <ThemeProvider>
+        <LanguageProvider>
+          <ToastProvider>
+            <CartProvider>
+              <SearchProvider>
+                <BrowserRouter>
                 <ScrollToTop />
                 <div className="flex min-h-screen flex-col">
                   <Navbar />
@@ -56,7 +58,7 @@ export default function App() {
           </CartProvider>
         </ToastProvider>
       </LanguageProvider>
-    </ErrorBoundary>
+    </ThemeProvider>
+  </ErrorBoundary>
   )
 }
-

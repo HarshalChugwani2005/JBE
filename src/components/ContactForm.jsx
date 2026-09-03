@@ -36,7 +36,17 @@ export default function ContactForm() {
     const endpoint = shop.formspreeUrl?.trim()
     if (!endpoint) {
       // WhatsApp compose fallback
-      const text = `Hi ${shop.name}, I am ${form.name} (Phone: ${form.phone}).\n\nEnquiry: ${form.message}`
+      const text = [
+        `⚡ *JAI BABA ELECTRONIC — DIRECT ENQUIRY*`,
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+        `👤 *Customer Name:* ${form.name}`,
+        `📞 *Phone Number:* ${form.phone}`,
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+        `📝 *Requirement / Message:*`,
+        form.message,
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+        `💬 _"Looking forward to hearing from you soon. Thank you!"_`,
+      ].join('\n')
       trackFormSubmit('whatsapp_redirect')
       window.open(getWhatsAppUrl(text), '_blank', 'noopener,noreferrer')
       setStatus({ type: 'success', message: 'Opening WhatsApp with your enquiry…' })

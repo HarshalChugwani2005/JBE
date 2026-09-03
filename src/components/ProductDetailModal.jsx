@@ -92,8 +92,25 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
   const inStock = model?.inStock ?? true
 
   const imageSources = useMemo(() => getProductImageUrls(categorySlug, model), [categorySlug, model])
-  const activeImage = imageSources[activeImageIndex] ?? imageSources[0] ?? null
-  const whatsappText = `Hi, I would like to enquire about the ${brand?.brand ?? brand ?? ''} ${model?.modelName ?? ''}${selectedColor ? ` in ${selectedColor}` : ''}`.trim()
+  const whatsappText = [
+    `⚡ *JAI BABA ELECTRONIC — PRODUCT ENQUIRY*`,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `📦 *Model:* ${brandName ? `${brandName} ` : ''}${modelName}`,
+    `📁 *Category:* ${categoryLabel || categorySlug}`,
+    selectedColor ? `🎨 *Selected Color:* ${selectedColor}` : null,
+    model?.specs?.[0] ? `⚙️ *Key Spec:* ${model.specs[0]}` : null,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `💬 _"Hello! Please share current wholesale and retail pricing, warranty details, and availability for this model. Thank you!"_`,
+  ].filter(Boolean).join('\n')
+
+  const oosWhatsappText = [
+    `⚡ *JAI BABA ELECTRONIC — STOCK AVAILABILITY CHECK*`,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `📦 *Product:* ${brandName ? `${brandName} ` : ''}${modelName}`,
+    `📁 *Category:* ${categoryLabel || categorySlug}`,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `💬 _"Hello! Could you please let me know when this model will be available in stock? Thank you!"_`,
+  ].join('\n')
 
   useEffect(() => {
     if (!isOpen) return
@@ -420,13 +437,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                 </button>
               )}
               <a
-                href={
-                  inStock === false
-                    ? getWhatsAppUrl(
-                        `Hi, I'd like to know when ${brandName ? `${brandName} ` : ''}${modelName} will be back in stock.`
-                      )
-                    : whatsappHref
-                }
+                href={inStock === false ? getWhatsAppUrl(oosWhatsappText) : whatsappHref}
                 onClick={() => trackWhatsAppClick('product_modal', { modelName, brand: brandName })}
                 target={isExternalWhatsApp ? '_blank' : undefined}
                 rel={isExternalWhatsApp ? 'noopener noreferrer' : undefined}
