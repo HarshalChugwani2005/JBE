@@ -9,6 +9,7 @@ import ErrorBoundary from './components/ErrorBoundary'
 import PageSkeleton from './components/PageSkeleton'
 import SearchPalette from './components/SearchPalette'
 import ScrollToTop from './components/ScrollToTop'
+import OfflineBanner from './components/OfflineBanner'
 import { CartProvider } from './context/CartProvider'
 import { LanguageProvider } from './context/LanguageProvider'
 import { SearchProvider } from './context/SearchProvider'
@@ -51,6 +52,7 @@ export default function App() {
                   <MobileActionBar />
                   <CartDrawer />
                   <SearchPalette />
+                  <OfflineBanner />
                   <Analytics />
                 </div>
               </BrowserRouter>

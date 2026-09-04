@@ -117,9 +117,12 @@ export const translations = {
     submissionSuccess: 'Thanks — your enquiry was sent successfully!',
 
     // Footer
-    quickLinks: 'Quick Links',
-    address: 'Address',
-    allPricesOnEnquiry: 'All prices on enquiry.',
+    // PWA & Offline
+    installApp: 'Install App',
+    installAppDesc: 'Install Jai Baba Electronic app for faster access and offline catalog browsing.',
+    offlineNotice: 'You are offline. Showing cached catalog & products.',
+    onlineNotice: 'Back online! Reconnected to network.',
+    dismiss: 'Dismiss',
   },
 
   mr: {
@@ -240,9 +243,12 @@ export const translations = {
     submissionSuccess: 'धन्यवाद — तुमची चौकशी यशस्वीरीत्या पाठवली गेली!',
 
     // Footer
-    quickLinks: 'महत्त्वाच्या लिंक्स',
-    address: 'पत्ता',
-    allPricesOnEnquiry: 'सर्व दर चौकशीवर उपलब्ध.',
+    // PWA & Offline
+    installApp: 'अ‍ॅप इन्स्टॉल करा',
+    installAppDesc: 'जलद वापर आणि ऑफलाइन कॅटलॉगसाठी अ‍ॅप इन्स्टॉल करा.',
+    offlineNotice: 'तुम्ही ऑफलाइन आहात. सेव्ह केलेला कॅटलॉग दाखवला जात आहे.',
+    onlineNotice: 'इंटरनेट पुन्हा सुरू झाले!',
+    dismiss: 'बंद करा',
   },
 
   hi: {
@@ -363,8 +369,11 @@ export const translations = {
     submissionSuccess: 'धन्यवाद — आपकी पूछताछ सफलतापूर्वक भेजी गई!',
 
     // Footer
-    quickLinks: 'महत्वपूर्ण लिंक्स',
-    address: 'पता',
-    allPricesOnEnquiry: 'सभी दरें पूछताछ पर उपलब्ध।',
+    // PWA & Offline
+    installApp: 'ऐप इंस्टॉल करें',
+    installAppDesc: 'तेज़ इस्तेमाल और ऑफ़लाइन कैटलॉग देखने के लिए ऐप इंस्टॉल करें।',
+    offlineNotice: 'आप ऑफ़लाइन हैं। सहेजा गया कैटलॉग दिखाया जा रहा है।',
+    onlineNotice: 'इंटरनेट फिर से चालू हो गया!',
+    dismiss: 'खारिज करें',
   },
 }
