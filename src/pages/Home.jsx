@@ -24,7 +24,7 @@ export default function Home() {
       />
       <div className="-mx-4">
         {/* Hero */}
-        <section className="hero-surface relative overflow-hidden px-4 py-16 text-white sm:px-6 md:py-24">
+        <section className="hero-surface relative overflow-hidden px-4 py-10 text-white sm:px-6 md:py-24">
           {/* Ambient Lighting Orbs */}
           <div className="pointer-events-none absolute -right-16 -top-16 h-72 w-72 rounded-full bg-white/15 blur-3xl animate-float-slow" />
           <div className="pointer-events-none absolute -bottom-24 -left-12 h-64 w-64 rounded-full bg-amber-400/25 blur-3xl animate-float-reverse" />
@@ -38,7 +38,7 @@ export default function Home() {
               <span>{t('heroLocation')}</span>
             </div>
 
-            <h1 className="hero-entrance hero-entrance--delay-1 font-display mt-4 text-3xl font-extrabold leading-tight tracking-tight sm:text-5xl md:text-6xl text-balance drop-shadow-sm">
+            <h1 className="hero-entrance hero-entrance--delay-1 font-display mt-3 text-4xl font-extrabold leading-tight tracking-tight sm:mt-4 sm:text-5xl md:text-6xl text-balance drop-shadow-sm">
               {shop.name}
             </h1>
             <p className="hero-entrance hero-entrance--delay-2 mt-4 max-w-xl text-lg font-medium text-amber-50/95 sm:text-xl leading-relaxed">
@@ -49,10 +49,10 @@ export default function Home() {
             </p>
 
             {/* CTA Buttons */}
-            <div className="hero-entrance hero-entrance--delay-4 mt-8 flex flex-col gap-3.5 sm:flex-row sm:items-center">
+            <div className="hero-entrance hero-entrance--delay-4 mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
               <Link
                 to="/catalog"
-                className="btn-shimmer inline-flex min-h-12 items-center justify-center rounded-xl bg-white px-7 py-3.5 text-sm font-bold text-amber-900 shadow-lg shadow-black/10 transition duration-200 hover:bg-amber-50 hover:shadow-xl hover:-translate-y-0.5"
+                className="btn-shimmer inline-flex w-full sm:w-auto min-h-12 items-center justify-center rounded-xl bg-white px-7 py-3.5 text-sm font-bold text-amber-900 shadow-lg shadow-black/10 transition duration-200 hover:bg-amber-50 hover:shadow-xl hover:-translate-y-0.5"
               >
                 <span>{t('heroBrowseCatalog')}</span>
                 <span className="ml-2 text-base transition-transform duration-200 group-hover:translate-x-1">→</span>
@@ -62,7 +62,7 @@ export default function Home() {
                 onClick={() => trackWhatsAppClick('hero_section')}
                 target="_blank"
                 rel="noreferrer"
-                className="glow-wa inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-7 py-3.5 text-sm font-bold text-white shadow-lg transition duration-200 hover:bg-[#1fb855] hover:-translate-y-0.5"
+                className="glow-wa inline-flex w-full sm:w-auto min-h-12 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-7 py-3.5 text-sm font-bold text-white shadow-lg transition duration-200 hover:bg-[#1fb855] hover:-translate-y-0.5"
               >
                 <span>💬</span>
                 <span>{t('heroWhatsAppUs')}</span>
@@ -77,7 +77,7 @@ export default function Home() {
             title={t('featuredCategories')}
             subtitle={t('featuredCategoriesSubtitle')}
           >
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
               {featured.map((cat, index) => (
                 <li key={cat.category}>
                   <RevealOnScroll delay={index * 80}>

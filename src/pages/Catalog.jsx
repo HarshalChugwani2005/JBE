@@ -105,7 +105,7 @@ export default function Catalog() {
       />
       <div>
         <header className="border-b border-stone-200/80 pb-8">
-          <h1 className="font-heading text-3xl font-extrabold tracking-tight text-stone-900 md:text-4xl">
+          <h1 className="font-heading text-2xl font-extrabold tracking-tight text-stone-900 dark:text-white sm:text-3xl md:text-4xl">
             {t('catalogTitle')}
           </h1>
           <p className="mt-2.5 max-w-2xl text-stone-600 text-sm sm:text-base">
@@ -135,7 +135,7 @@ export default function Catalog() {
           subtitle="Tap any category to view brands and models. Categories marked Coming Soon will be updated as product data arrives."
           className="pt-8"
         >
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
             {filteredCategories.map((cat) => (
               <CategoryCard
                 key={cat.category}

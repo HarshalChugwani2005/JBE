@@ -35,7 +35,7 @@ export default function App() {
                 <ScrollToTop />
                 <div className="flex min-h-screen flex-col">
                   <Navbar />
-                  <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 pb-20 md:pb-8">
+                  <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-5 pb-24 sm:py-8 md:pb-8">
                     <Suspense fallback={<PageSkeleton />}>
                       <Routes>
                         <Route path="/" element={<Home />} />
