@@ -4,6 +4,21 @@ import { Resvg } from '@resvg/resvg-js'
 import { categories } from '../src/data/products.js'
 import { shop } from '../src/data/site.js'
 
+function slugify(text) {
+  return String(text || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+}
+
+function escapeXml(unsafe) {
+  return String(unsafe || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;')
+}
+
 // 1. Render default og-image.png from public/og-image.svg
 const svgPath = path.resolve('public/og-image.svg')
 const pngPath = path.resolve('public/og-image.png')
@@ -22,13 +37,9 @@ if (!fs.existsSync(ogDir)) {
   fs.mkdirSync(ogDir, { recursive: true })
 }
 
-function escapeXml(unsafe) {
-  return String(unsafe || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;')
+const ogProductsDir = path.resolve('public/og/products')
+if (!fs.existsSync(ogProductsDir)) {
+  fs.mkdirSync(ogProductsDir, { recursive: true })
 }
 
 function buildCategorySvg(category) {
@@ -102,6 +113,94 @@ function buildCategorySvg(category) {
 </svg>`
 }
 
+function buildProductSvg(category, brand, model) {
+  const modelName = escapeXml(model.modelName)
+  const brandName = escapeXml(brand.brand || '')
+  const categoryLabel = escapeXml(category.categoryLabel)
+  const warranty = escapeXml(brand.warranty || 'Genuine Manufacturer Warranty')
+  const tagline = escapeXml(brand.tagline || 'Wholesale & Retail in Malkapur')
+  const specs = (model.specs || []).slice(0, 3)
+
+  const specsListSvg = specs
+    .map((s, idx) => {
+      const y = 350 + idx * 38
+      return `
+        <circle cx="105" cy="${y - 6}" r="5" fill="#F59E0B" />
+        <text x="125" y="${y}" fill="#E7E5E4" font-family="system-ui, -apple-system, sans-serif" font-size="19" font-weight="500">
+          ${escapeXml(s.length > 75 ? s.slice(0, 72) + '...' : s)}
+        </text>
+      `
+    })
+    .join('')
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#0C0A09"/>
+  <defs>
+    <radialGradient id="pglow1" cx="20%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#D97706" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0C0A09" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="pglow2" cx="85%" cy="70%" r="55%">
+      <stop offset="0%" stop-color="#EA580C" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#0C0A09" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ptextGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FEF3C7"/>
+      <stop offset="50%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#pglow1)"/>
+  <rect width="1200" height="630" fill="url(#pglow2)"/>
+
+  <!-- Border -->
+  <rect x="30" y="30" width="1140" height="570" rx="24" stroke="#44403C" stroke-width="1.5" fill="none" opacity="0.6"/>
+
+  <!-- Top Badges -->
+  <rect x="80" y="70" width="220" height="38" rx="19" fill="#78350F" fill-opacity="0.5" stroke="#D97706" stroke-width="1.5"/>
+  <circle cx="102" cy="89" r="5" fill="#10B981"/>
+  <text x="116" y="94" fill="#FDE68A" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" letter-spacing="1">MALKAPUR · JBE</text>
+
+  <rect x="312" y="70" width="170" height="38" rx="19" fill="#292524" stroke="#57534E" stroke-width="1.5"/>
+  <text x="330" y="94" fill="#FDE68A" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" letter-spacing="1">${brandName.toUpperCase()}</text>
+
+  <rect x="494" y="70" width="240" height="38" rx="19" fill="#1C1917" stroke="#44403C" stroke-width="1.5"/>
+  <text x="512" y="94" fill="#A8A29E" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" letter-spacing="1">${categoryLabel.toUpperCase()}</text>
+
+  <!-- Product Title -->
+  <text x="80" y="175" fill="url(#ptextGrad)" font-family="system-ui, -apple-system, sans-serif" font-size="50" font-weight="900" letter-spacing="-1">
+    ${modelName}
+  </text>
+
+  <!-- Brand & Subtitle -->
+  <text x="80" y="225" fill="#E7E5E4" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="600">
+    ${brandName ? `${brandName} · ` : ''}${tagline}
+  </text>
+
+  <!-- Warranty Pill -->
+  <rect x="80" y="248" width="380" height="34" rx="17" fill="#14532D" fill-opacity="0.6" stroke="#22C55E" stroke-width="1"/>
+  <text x="96" y="271" fill="#86EFAC" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700">
+    🛡️ ${warranty}
+  </text>
+
+  <!-- Key Specifications Box -->
+  <rect x="80" y="300" width="1040" height="155" rx="18" fill="#1C1917" fill-opacity="0.8" stroke="#44403C" stroke-width="1"/>
+  <text x="105" y="332" fill="#FBBF24" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="700" letter-spacing="1">KEY SPECIFICATIONS</text>
+  ${specsListSvg}
+
+  <!-- Footer Info -->
+  <line x1="80" y1="485" x2="1120" y2="485" stroke="#292524" stroke-width="1"/>
+  <text x="80" y="530" fill="#D6D3D1" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600">
+    📍 Buldana Road, Malkapur, Maharashtra · 📞 +91 ${shop.primaryPhone}
+  </text>
+  <text x="80" y="562" fill="#A8A29E" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="500">
+    Direct WhatsApp Quotation · Best Wholesale &amp; Retail Pricing
+  </text>
+</svg>`
+}
+
+// Generate category OG images
 for (const cat of categories) {
   const catSvg = buildCategorySvg(cat)
   const resvg = new Resvg(catSvg, { fitTo: { mode: 'width', value: 1200 } })
@@ -109,5 +208,21 @@ for (const cat of categories) {
   const outPath = path.join(ogDir, `${cat.category}.png`)
   fs.writeFileSync(outPath, pngBuffer)
 }
-
 console.log(`✓ Generated ${categories.length} category OG images in public/og/`)
+
+// Generate per-product OG images
+let productCardCount = 0
+for (const cat of categories) {
+  for (const brand of cat.brands || []) {
+    for (const model of brand.models || []) {
+      const modelSlug = slugify(model.modelName)
+      const pSvg = buildProductSvg(cat, brand, model)
+      const resvg = new Resvg(pSvg, { fitTo: { mode: 'width', value: 1200 } })
+      const pngBuffer = resvg.render().asPng()
+      const outPath = path.join(ogProductsDir, `${cat.category}-${modelSlug}.png`)
+      fs.writeFileSync(outPath, pngBuffer)
+      productCardCount++
+    }
+  }
+}
+console.log(`✓ Generated ${productCardCount} product OG images in public/og/products/`)

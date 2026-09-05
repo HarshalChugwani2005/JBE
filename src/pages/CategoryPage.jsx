@@ -144,7 +144,10 @@ export default function CategoryPage() {
     ? `${activeBrandName ? `${activeBrandName} ` : ''}${modelName} (${category.categoryLabel}). ${activeModalModel.model.specs?.slice(0, 3).join(', ') || ''}. Genuine wholesale and retail pricing on enquiry at Jai Baba Electronic Malkapur.`
     : `Browse ${category.categoryLabel} products at Jai Baba Electronic Malkapur. Wholesale and retail pricing on enquiry.`
 
-  const seoImage = modelImages[0] || `/og/${categorySlug}.png`
+  const modelSlugClean = modelName ? slugify(modelName) : ''
+  const seoImage = activeModalModel
+    ? `/og/products/${categorySlug}-${modelSlugClean}.png`
+    : `/og/${categorySlug}.png`
 
   return (
     <>

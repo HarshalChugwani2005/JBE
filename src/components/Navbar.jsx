@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useCart } from '../context/useCart'
 import { useLanguage } from '../context/useLanguage'
@@ -28,6 +28,10 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const isMobile = useIsMobile(1024) // hamburger below 1024px
 
+  const navContainerRef = useRef(null)
+  const linkRefs = useRef({})
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 })
+
   // Close drawer on route change
   useEffect(() => {
     setMenuOpen(false)
@@ -38,6 +42,41 @@ export default function Navbar() {
     { to: '/catalog', label: t('navCatalog'), end: false, icon: '📦' },
     { to: '/contact', label: t('navContact'), end: false, icon: '📍' },
   ]
+
+  // Update sliding indicator position
+  useEffect(() => {
+    if (isMobile) return
+
+    const updateIndicator = () => {
+      const activeRoute =
+        navRoutes.find((r) =>
+          r.end ? location.pathname === r.to : location.pathname.startsWith(r.to)
+        ) || (location.pathname.startsWith('/catalog') ? navRoutes[1] : null)
+      const activeKey = activeRoute ? activeRoute.to : null
+      const activeEl = activeKey ? linkRefs.current[activeKey] : null
+
+      if (activeEl && navContainerRef.current) {
+        const containerRect = navContainerRef.current.getBoundingClientRect()
+        const elRect = activeEl.getBoundingClientRect()
+        setIndicatorStyle({
+          left: elRect.left - containerRect.left,
+          width: elRect.width,
+          opacity: 1,
+        })
+      } else {
+        setIndicatorStyle((prev) => ({ ...prev, opacity: 0 }))
+      }
+    }
+
+    updateIndicator()
+    // Small timeout to allow font layout settlement
+    const timer = setTimeout(updateIndicator, 50)
+    window.addEventListener('resize', updateIndicator)
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('resize', updateIndicator)
+    }
+  }, [location.pathname, isMobile, t])
 
   return (
     <header className="sticky top-0 z-40 border-b border-stone-200/80 bg-white/90 backdrop-blur-md transition-all duration-300 shadow-[0_2px_12px_-2px_rgba(0,0,0,0.05)] dark:border-stone-800 dark:bg-stone-950/90">
@@ -59,25 +98,43 @@ export default function Navbar() {
 
         {/* Desktop Nav — only shown when not mobile */}
         {!isMobile && (
-          <ul className="flex items-center gap-1" role="navigation">
-            {navRoutes.map(({ to, label, end }) => (
-              <li key={to}>
-                <NavLink
-                  to={to}
-                  end={end}
-                  className={({ isActive }) =>
-                    `px-3 py-1.5 rounded-full text-sm font-medium transition-colors duration-200 ${
-                      isActive
-                        ? 'bg-amber-100 text-amber-900 font-semibold dark:bg-amber-950/60 dark:text-amber-300'
-                        : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100 dark:text-stone-300 dark:hover:text-white dark:hover:bg-stone-800'
-                    }`
-                  }
-                >
-                  {label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
+          <div className="relative" role="navigation">
+            <ul
+              ref={navContainerRef}
+              className="relative flex items-center gap-1 rounded-full border border-stone-200/80 bg-stone-100/70 p-1 backdrop-blur-xs dark:border-stone-800 dark:bg-stone-900/70"
+            >
+              {/* Animated sliding pill */}
+              <span
+                className="absolute top-1 bottom-1 rounded-full bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-amber-200/60 dark:bg-amber-950/80 dark:border-amber-700/60 transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none"
+                style={{
+                  left: `${indicatorStyle.left}px`,
+                  width: `${indicatorStyle.width}px`,
+                  opacity: indicatorStyle.opacity,
+                }}
+              />
+
+              {navRoutes.map(({ to, label, end }) => (
+                <li key={to} className="relative z-10">
+                  <NavLink
+                    ref={(el) => {
+                      if (el) linkRefs.current[to] = el
+                    }}
+                    to={to}
+                    end={end}
+                    className={({ isActive }) =>
+                      `px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-colors duration-200 inline-block ${
+                        isActive
+                          ? 'text-amber-900 dark:text-amber-300 font-bold'
+                          : 'text-stone-600 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100'
+                      }`
+                    }
+                  >
+                    {label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
 
         {/* Right-side controls */}

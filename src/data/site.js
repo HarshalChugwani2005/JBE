@@ -17,8 +17,12 @@ export const shop = {
     'https://maps.google.com/maps?q=Buldana+Road,+Malkapur,+Maharashtra&output=embed',
   mapDirectionsUrl:
     'https://www.google.com/maps/search/?api=1&query=Buldana+Road+Malkapur+Maharashtra',
-  // Formspree endpoint (set to your form's URL or via VITE_FORMSPREE_URL env var)
-  formspreeUrl: (typeof import.meta !== 'undefined' && import.meta.env?.VITE_FORMSPREE_URL) || '',
+  // Formspree endpoint (set via VITE_FORMSPREE_URL or VITE_FORMSPREE_ID)
+  formspreeUrl:
+    (typeof import.meta !== 'undefined' && import.meta.env?.VITE_FORMSPREE_URL) ||
+    (typeof import.meta !== 'undefined' && import.meta.env?.VITE_FORMSPREE_ID
+      ? `https://formspree.io/f/${import.meta.env.VITE_FORMSPREE_ID}`
+      : ''),
 }
 
 /** Category slugs shown on the Home page featured grid. */
