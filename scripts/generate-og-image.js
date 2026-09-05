@@ -50,64 +50,45 @@ function buildCategorySvg(category) {
     .join('  ·  ')
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
-  <rect width="1200" height="630" fill="#0C0A09"/>
-  <defs>
-    <radialGradient id="glow1" cx="20%" cy="30%" r="60%">
-      <stop offset="0%" stop-color="#D97706" stop-opacity="0.35"/>
-      <stop offset="100%" stop-color="#0C0A09" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="glow2" cx="85%" cy="70%" r="55%">
-      <stop offset="0%" stop-color="#EA580C" stop-opacity="0.25"/>
-      <stop offset="100%" stop-color="#0C0A09" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FEF3C7"/>
-      <stop offset="50%" stop-color="#FBBF24"/>
-      <stop offset="100%" stop-color="#F59E0B"/>
-    </linearGradient>
-  </defs>
-
-  <rect width="1200" height="630" fill="url(#glow1)"/>
-  <rect width="1200" height="630" fill="url(#glow2)"/>
+  <rect width="1200" height="630" fill="#1C1917"/>
 
   <!-- Border -->
-  <rect x="30" y="30" width="1140" height="570" rx="24" stroke="#44403C" stroke-width="1.5" fill="none" opacity="0.6"/>
+  <rect x="30" y="30" width="1140" height="570" rx="20" stroke="#44403C" stroke-width="1.5" fill="none"/>
 
   <!-- Top Pills -->
-  <rect x="80" y="80" width="220" height="42" rx="21" fill="#78350F" fill-opacity="0.4" stroke="#D97706" stroke-width="1.5"/>
-  <circle cx="102" cy="101" r="6" fill="#10B981"/>
-  <text x="118" y="107" fill="#FDE68A" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="700" letter-spacing="1">MALKAPUR · JBE</text>
+  <rect x="80" y="80" width="220" height="42" rx="8" fill="#D97706"/>
+  <text x="100" y="106" fill="#FFFFFF" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="14" font-weight="800" letter-spacing="1">MALKAPUR · JBE</text>
 
   <!-- Category Badge -->
-  <rect x="316" y="80" width="180" height="42" rx="21" fill="#292524" stroke="#57534E" stroke-width="1.5"/>
-  <text x="336" y="107" fill="#E7E5E4" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="700" letter-spacing="1">PRODUCT CATALOG</text>
+  <rect x="316" y="80" width="190" height="42" rx="8" fill="#292524" stroke="#57534E" stroke-width="1.5"/>
+  <text x="336" y="106" fill="#E7E5E4" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" letter-spacing="1">PRODUCT CATALOG</text>
 
   <!-- Main Headline -->
-  <text x="80" y="220" fill="url(#textGrad)" font-family="system-ui, -apple-system, sans-serif" font-size="64" font-weight="900" letter-spacing="-1">
+  <text x="80" y="220" fill="#FAF7F2" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="64" font-weight="900" letter-spacing="-1">
     ${escapeXml(category.categoryLabel)}
   </text>
 
   <!-- Tagline / Subtitle -->
-  <text x="80" y="280" fill="#E7E5E4" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="600">
+  <text x="80" y="280" fill="#D97706" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="28" font-weight="600">
     Wholesale &amp; Retail Pricing · Jai Baba Electronic
   </text>
 
   <!-- Brands bar -->
   ${
     brandsList
-      ? `<rect x="80" y="340" width="800" height="64" rx="18" fill="#1C1917" stroke="#44403C" stroke-width="1"/>
-  <text x="110" y="380" fill="#FBBF24" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700">
+      ? `<rect x="80" y="340" width="800" height="64" rx="12" fill="#292524" stroke="#44403C" stroke-width="1"/>
+  <text x="110" y="380" fill="#FBBF24" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="20" font-weight="700">
     BRANDS: <tspan fill="#E7E5E4" font-weight="500">${escapeXml(brandsList)}</tspan>
   </text>`
       : ''
   }
 
   <!-- Footer Info -->
-  <line x1="80" y1="460" x2="1120" y2="460" stroke="#292524" stroke-width="1"/>
-  <text x="80" y="520" fill="#D6D3D1" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600">
-    📍 Buldana Road, Malkapur, Maharashtra · 📞 +91 ${shop.primaryPhone}
+  <line x1="80" y1="460" x2="1120" y2="460" stroke="#44403C" stroke-width="1"/>
+  <text x="80" y="520" fill="#D6D3D1" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="20" font-weight="600">
+    Buldana Road, Malkapur, Maharashtra · Call/WhatsApp: +91 ${shop.primaryPhone}
   </text>
-  <text x="80" y="555" fill="#A8A29E" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500">
+  <text x="80" y="555" fill="#A8A29E" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="16" font-weight="500">
     Direct WhatsApp Quotation · Genuine Warranty Backed Stock
   </text>
 </svg>`
@@ -125,8 +106,8 @@ function buildProductSvg(category, brand, model) {
     .map((s, idx) => {
       const y = 350 + idx * 38
       return `
-        <circle cx="105" cy="${y - 6}" r="5" fill="#F59E0B" />
-        <text x="125" y="${y}" fill="#E7E5E4" font-family="system-ui, -apple-system, sans-serif" font-size="19" font-weight="500">
+        <circle cx="105" cy="${y - 6}" r="5" fill="#D97706" />
+        <text x="125" y="${y}" fill="#E7E5E4" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="19" font-weight="500">
           ${escapeXml(s.length > 75 ? s.slice(0, 72) + '...' : s)}
         </text>
       `
@@ -134,67 +115,48 @@ function buildProductSvg(category, brand, model) {
     .join('')
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
-  <rect width="1200" height="630" fill="#0C0A09"/>
-  <defs>
-    <radialGradient id="pglow1" cx="20%" cy="30%" r="60%">
-      <stop offset="0%" stop-color="#D97706" stop-opacity="0.35"/>
-      <stop offset="100%" stop-color="#0C0A09" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="pglow2" cx="85%" cy="70%" r="55%">
-      <stop offset="0%" stop-color="#EA580C" stop-opacity="0.25"/>
-      <stop offset="100%" stop-color="#0C0A09" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="ptextGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FEF3C7"/>
-      <stop offset="50%" stop-color="#FBBF24"/>
-      <stop offset="100%" stop-color="#F59E0B"/>
-    </linearGradient>
-  </defs>
-
-  <rect width="1200" height="630" fill="url(#pglow1)"/>
-  <rect width="1200" height="630" fill="url(#pglow2)"/>
+  <rect width="1200" height="630" fill="#1C1917"/>
 
   <!-- Border -->
-  <rect x="30" y="30" width="1140" height="570" rx="24" stroke="#44403C" stroke-width="1.5" fill="none" opacity="0.6"/>
+  <rect x="30" y="30" width="1140" height="570" rx="20" stroke="#44403C" stroke-width="1.5" fill="none"/>
 
   <!-- Top Badges -->
-  <rect x="80" y="70" width="220" height="38" rx="19" fill="#78350F" fill-opacity="0.5" stroke="#D97706" stroke-width="1.5"/>
-  <circle cx="102" cy="89" r="5" fill="#10B981"/>
-  <text x="116" y="94" fill="#FDE68A" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" letter-spacing="1">MALKAPUR · JBE</text>
+  <rect x="80" y="70" width="220" height="38" rx="8" fill="#D97706"/>
+  <text x="100" y="94" fill="#FFFFFF" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="14" font-weight="800" letter-spacing="1">MALKAPUR · JBE</text>
 
-  <rect x="312" y="70" width="170" height="38" rx="19" fill="#292524" stroke="#57534E" stroke-width="1.5"/>
-  <text x="330" y="94" fill="#FDE68A" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" letter-spacing="1">${brandName.toUpperCase()}</text>
+  <rect x="312" y="70" width="170" height="38" rx="8" fill="#292524" stroke="#57534E" stroke-width="1.5"/>
+  <text x="330" y="94" fill="#FDE68A" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" letter-spacing="1">${brandName.toUpperCase()}</text>
 
-  <rect x="494" y="70" width="240" height="38" rx="19" fill="#1C1917" stroke="#44403C" stroke-width="1.5"/>
-  <text x="512" y="94" fill="#A8A29E" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" letter-spacing="1">${categoryLabel.toUpperCase()}</text>
+  <rect x="494" y="70" width="240" height="38" rx="8" fill="#292524" stroke="#44403C" stroke-width="1.5"/>
+  <text x="512" y="94" fill="#A8A29E" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" letter-spacing="1">${categoryLabel.toUpperCase()}</text>
 
   <!-- Product Title -->
-  <text x="80" y="175" fill="url(#ptextGrad)" font-family="system-ui, -apple-system, sans-serif" font-size="50" font-weight="900" letter-spacing="-1">
+  <text x="80" y="175" fill="#FAF7F2" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="50" font-weight="900" letter-spacing="-1">
     ${modelName}
   </text>
 
   <!-- Brand & Subtitle -->
-  <text x="80" y="225" fill="#E7E5E4" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="600">
+  <text x="80" y="225" fill="#E7E5E4" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="24" font-weight="600">
     ${brandName ? `${brandName} · ` : ''}${tagline}
   </text>
 
   <!-- Warranty Pill -->
-  <rect x="80" y="248" width="380" height="34" rx="17" fill="#14532D" fill-opacity="0.6" stroke="#22C55E" stroke-width="1"/>
-  <text x="96" y="271" fill="#86EFAC" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700">
-    🛡️ ${warranty}
+  <rect x="80" y="248" width="380" height="34" rx="8" fill="#14532D" stroke="#22C55E" stroke-width="1"/>
+  <text x="96" y="271" fill="#86EFAC" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="14" font-weight="700">
+    ${warranty}
   </text>
 
   <!-- Key Specifications Box -->
-  <rect x="80" y="300" width="1040" height="155" rx="18" fill="#1C1917" fill-opacity="0.8" stroke="#44403C" stroke-width="1"/>
-  <text x="105" y="332" fill="#FBBF24" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="700" letter-spacing="1">KEY SPECIFICATIONS</text>
+  <rect x="80" y="300" width="1040" height="155" rx="12" fill="#292524" stroke="#44403C" stroke-width="1"/>
+  <text x="105" y="332" fill="#FBBF24" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="15" font-weight="700" letter-spacing="1">KEY SPECIFICATIONS</text>
   ${specsListSvg}
 
   <!-- Footer Info -->
-  <line x1="80" y1="485" x2="1120" y2="485" stroke="#292524" stroke-width="1"/>
-  <text x="80" y="530" fill="#D6D3D1" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600">
-    📍 Buldana Road, Malkapur, Maharashtra · 📞 +91 ${shop.primaryPhone}
+  <line x1="80" y1="485" x2="1120" y2="485" stroke="#44403C" stroke-width="1"/>
+  <text x="80" y="530" fill="#D6D3D1" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="20" font-weight="600">
+    Buldana Road, Malkapur, Maharashtra · Call/WhatsApp: +91 ${shop.primaryPhone}
   </text>
-  <text x="80" y="562" fill="#A8A29E" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="500">
+  <text x="80" y="562" fill="#A8A29E" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="15" font-weight="500">
     Direct WhatsApp Quotation · Best Wholesale &amp; Retail Pricing
   </text>
 </svg>`

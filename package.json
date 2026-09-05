@@ -11,8 +11,7 @@
     "sitemap": "node scripts/generate-sitemap.js",
     "icons:pwa": "node scripts/generate-pwa-icons.js",
     "catalog:sync": "node scripts/sync-catalog.js",
-    "catalog:export-wa": "node scripts/export-wa-catalog.js",
-    "images:generate": "node scripts/generate-product-images.js"
+    "catalog:export-wa": "node scripts/export-wa-catalog.js"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
