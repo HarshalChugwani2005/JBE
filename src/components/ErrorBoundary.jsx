@@ -1,4 +1,5 @@
 import { Component } from 'react'
+import { AlertTriangleIcon, HomeIcon, RefreshIcon, WhatsAppIcon } from './Icons'
 
 export default class ErrorBoundary extends Component {
   constructor(props) {
@@ -31,27 +32,17 @@ export default class ErrorBoundary extends Component {
     if (this.state.hasError) {
       const { error, detailsOpen } = this.state
       return (
-        <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-stone-950 px-4 py-16">
-          {/* Ambient blobs */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-32 left-1/2 h-[480px] w-[480px] -translate-x-1/2 rounded-full bg-amber-600/10 blur-3xl"
-          />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute bottom-0 right-0 h-64 w-64 rounded-full bg-orange-600/10 blur-3xl"
-          />
-
+        <div className="relative flex min-h-screen flex-col items-center justify-center bg-stone-950 px-4 py-16">
           {/* Card */}
           <div
             role="alert"
             aria-live="assertive"
-            className="relative z-10 w-full max-w-md rounded-3xl border border-stone-800/80 bg-stone-900/90 p-8 shadow-2xl backdrop-blur-xl text-center"
+            className="relative z-10 w-full max-w-md rounded-3xl border border-stone-800 bg-stone-900 p-8 shadow-2xl text-center"
             style={{ animation: 'errBounceIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both' }}
           >
-            {/* Logo mark */}
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-600 via-orange-500 to-amber-400 text-4xl shadow-lg shadow-amber-900/40 select-none">
-              ⚡
+            {/* Logo / Alert mark */}
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-500 shadow-sm select-none">
+              <AlertTriangleIcon className="h-8 w-8 text-amber-500" />
             </div>
 
             {/* Heading */}
@@ -68,16 +59,18 @@ export default class ErrorBoundary extends Component {
               <button
                 type="button"
                 onClick={this.handleReload}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-600 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow-md shadow-amber-900/30 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:scale-95 cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-600 px-6 py-3 text-sm font-bold text-white shadow-md transition-all duration-200 hover:bg-amber-700 active:scale-95 cursor-pointer"
               >
-                <span>🔄</span> Reload Page
+                <RefreshIcon className="h-4 w-4" />
+                <span>Reload Page</span>
               </button>
               <button
                 type="button"
                 onClick={this.handleGoHome}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-stone-700 bg-stone-800/80 px-6 py-3 text-sm font-semibold text-stone-200 transition-all duration-200 hover:border-stone-600 hover:bg-stone-700 active:scale-95 cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-stone-700 bg-stone-800 px-6 py-3 text-sm font-semibold text-stone-200 transition-all duration-200 hover:border-stone-600 hover:bg-stone-700 active:scale-95 cursor-pointer"
               >
-                <span>🏠</span> Back to Home
+                <HomeIcon className="h-4 w-4" />
+                <span>Back to Home</span>
               </button>
             </div>
 
@@ -88,7 +81,8 @@ export default class ErrorBoundary extends Component {
               rel="noopener noreferrer"
               className="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366]/10 border border-[#25D366]/30 px-5 py-2.5 text-sm font-semibold text-[#25D366] transition-all duration-200 hover:bg-[#25D366]/20 active:scale-95 cursor-pointer w-full"
             >
-              <span>💬</span> Chat on WhatsApp — +91 84210 09925
+              <WhatsAppIcon className="h-4 w-4" />
+              <span>Chat on WhatsApp — +91 84210 09925</span>
             </a>
 
             {/* Collapsible error details */}

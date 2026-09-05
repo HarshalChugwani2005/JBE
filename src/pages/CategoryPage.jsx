@@ -7,7 +7,6 @@ import RecentlyViewed from '../components/RecentlyViewed'
 import SEO from '../components/SEO'
 import { useLanguage } from '../context/useLanguage'
 import { getCategoryBySlug, getModelBySlug } from '../data/products'
-import { getProductImageUrls } from '../data/productImages'
 
 function slugify(text) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-')
@@ -132,7 +131,6 @@ export default function CategoryPage() {
     )
   }
 
-  const modelImages = activeModalModel ? getProductImageUrls(categorySlug, activeModalModel.model) : []
   const activeBrandName = activeModalModel?.brand?.brand || activeModalModel?.brand || ''
   const modelName = activeModalModel?.model?.modelName || ''
 

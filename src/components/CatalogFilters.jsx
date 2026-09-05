@@ -1,4 +1,5 @@
 import { useLanguage } from '../context/useLanguage'
+import { CheckIcon, SearchIcon } from './Icons'
 
 export default function CatalogFilters({
   title,
@@ -20,11 +21,11 @@ export default function CatalogFilters({
   const hasActiveFilters = Boolean(searchValue?.trim() || selectedBrand || selectedTier || inStockOnly)
 
   return (
-    <div className="glass-card rounded-2xl p-4 sm:p-6 shadow-[0_2px_12px_-3px_rgba(0,0,0,0.04)]">
+    <div className="store-card rounded-2xl p-4 sm:p-6 shadow-[0_2px_12px_-3px_rgba(0,0,0,0.04)]">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <label className="block flex-1">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-stone-500 flex items-center gap-1.5 mb-1.5">
-            <span>🔍</span>
+            <SearchIcon className="h-4 w-4 text-stone-500" />
             <span>{title || 'Search & Filter'}</span>
           </span>
           <input
@@ -32,7 +33,7 @@ export default function CatalogFilters({
             value={searchValue}
             onChange={(event) => onSearchChange?.(event.target.value)}
             placeholder={searchPlaceholder || t('searchPlaceholder')}
-            className="glass-input w-full rounded-xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 outline-none"
+            className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition"
           />
         </label>
 
@@ -43,13 +44,14 @@ export default function CatalogFilters({
               <button
                 type="button"
                 onClick={() => onInStockChange(!inStockOnly)}
-                className={`rounded-full border px-3.5 py-1.5 text-xs font-bold transition duration-200 cursor-pointer ${
+                className={`inline-flex items-center gap-1 rounded-full border px-3.5 py-1.5 text-xs font-bold transition duration-200 cursor-pointer ${
                   inStockOnly
-                    ? 'border-emerald-500 bg-emerald-500 text-white shadow-xs'
+                    ? 'border-emerald-500 bg-emerald-600 text-white shadow-xs'
                     : 'border-stone-200 bg-stone-50 text-stone-600 hover:border-stone-300 hover:bg-stone-100'
                 }`}
               >
-                {inStockOnly ? '✓ ' : ''}{t('inStockOnly')}
+                {inStockOnly && <CheckIcon className="h-3 w-3" />}
+                <span>{t('inStockOnly')}</span>
               </button>
             )}
             {hasActiveFilters && onClear && (

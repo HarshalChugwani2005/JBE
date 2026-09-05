@@ -5,6 +5,7 @@ import { useLanguage } from '../context/useLanguage'
 import { categories } from '../data/products'
 import { getCategoryVisual, getModelCount } from '../data/categoryVisuals'
 import CategoryIcon from './CategoryIcon'
+import { CloseIcon, SearchIcon } from './Icons'
 import ProductImage from './ProductImage'
 
 function slugify(text) {
@@ -152,7 +153,7 @@ export default function SearchPalette() {
 
   return (
     <div
-      className="fixed inset-0 z-50 overflow-y-auto bg-stone-950/70 backdrop-blur-md p-3 sm:p-6 md:p-12 transition-opacity duration-200"
+      className="fixed inset-0 z-50 overflow-y-auto bg-stone-950/75 p-3 sm:p-6 md:p-12 transition-opacity duration-200"
       onClick={(e) => {
         if (e.target === e.currentTarget) closeSearch()
       }}
@@ -163,9 +164,7 @@ export default function SearchPalette() {
       <div className="mx-auto max-w-2xl overflow-hidden rounded-3xl bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)] ring-1 ring-stone-200/90 animate-modal-pop">
         {/* Search Input Bar */}
         <div className="relative flex items-center border-b border-stone-200/80 px-4 py-3.5 sm:px-6">
-          <span className="text-stone-400 text-lg sm:text-xl mr-3" aria-hidden="true">
-            🔍
-          </span>
+          <SearchIcon className="h-5 w-5 text-stone-400 mr-3 shrink-0" />
           <input
             ref={inputRef}
             type="text"
@@ -180,16 +179,16 @@ export default function SearchPalette() {
             <button
               type="button"
               onClick={() => setQuery('')}
-              className="rounded-lg p-1 text-stone-400 hover:bg-stone-100 hover:text-stone-700 transition"
+              className="rounded-lg p-1 text-stone-400 hover:bg-stone-100 hover:text-stone-700 transition cursor-pointer"
               aria-label="Clear search"
             >
-              ✕
+              <CloseIcon className="h-4 w-4" />
             </button>
           )}
           <button
             type="button"
             onClick={closeSearch}
-            className="ml-2 rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1 text-xs font-semibold text-stone-500 hover:border-amber-300 hover:text-stone-900 transition"
+            className="ml-2 rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1 text-xs font-semibold text-stone-500 hover:border-amber-300 hover:text-stone-900 transition cursor-pointer"
           >
             ESC
           </button>
@@ -199,7 +198,7 @@ export default function SearchPalette() {
         <div ref={listRef} className="max-h-[60vh] overflow-y-auto p-3 sm:p-4 space-y-1.5">
           {filteredItems.length === 0 ? (
             <div className="py-12 text-center text-stone-500">
-              <span className="text-3xl">🔎</span>
+              <SearchIcon className="mx-auto h-10 w-10 text-stone-300" />
               <p className="mt-3 font-semibold text-stone-700">No matching products or categories</p>
               <p className="mt-1 text-xs text-stone-400">
                 Try searching for "ZIPSY", "Titan", "Fan", "Cooler", or "Havells"

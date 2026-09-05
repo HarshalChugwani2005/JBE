@@ -2,13 +2,14 @@ import { useEffect, useRef, useState } from 'react'
 import { useLanguage } from '../context/useLanguage'
 import { getWhatsAppUrl, shop } from '../data/site'
 import { trackFormSubmit } from '../utils/analytics'
+import { WhatsAppIcon, CheckCircleIcon, InfoIcon, CloseIcon } from './Icons'
 
 const hasFormspree = Boolean(shop.formspreeUrl?.trim())
 
 export default function ContactForm() {
   const { t } = useLanguage()
   const [form, setForm] = useState({ name: '', phone: '', message: '' })
-  const [status, setStatus] = useState(null)   // { type: 'success'|'error', message: string }
+  const [status, setStatus] = useState(null)   // { type: 'success'|'error', message: string, canWhatsApp?: boolean }
   const [submitting, setSubmitting] = useState(false)
   const [lastSubmitted, setLastSubmitted] = useState(null)
   const clearTimerRef = useRef(null)
@@ -27,15 +28,15 @@ export default function ContactForm() {
 
   const getWhatsAppMessage = (data = form) => {
     return [
-      `⚡ *JAI BABA ELECTRONIC — DIRECT ENQUIRY*`,
+      `JAI BABA ELECTRONIC — DIRECT ENQUIRY`,
       `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-      `👤 *Customer Name:* ${data.name || 'Not provided'}`,
-      `📞 *Phone Number:* ${data.phone || 'Not provided'}`,
+      `Customer Name: ${data.name || 'Not provided'}`,
+      `Phone Number: ${data.phone || 'Not provided'}`,
       `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-      `📝 *Requirement / Message:*`,
+      `Requirement / Message:`,
       data.message || '',
       `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-      `💬 _"Looking forward to hearing from you soon. Thank you!"_`,
+      `"Looking forward to hearing from you soon. Thank you!"`,
     ].join('\n')
   }
 
@@ -100,7 +101,7 @@ export default function ContactForm() {
           canWhatsApp: true,
         })
       }
-    } catch (err) {
+    } catch {
       trackFormSubmit('failure')
       setStatus({
         type: 'error',
@@ -113,7 +114,7 @@ export default function ContactForm() {
   }
 
   return (
-    <form onSubmit={submitToFormspree} className="glass-card space-y-4 rounded-2xl p-6 sm:p-7 shadow-[0_2px_12px_-3px_rgba(0,0,0,0.05)]">
+    <form onSubmit={submitToFormspree} className="space-y-4 rounded-2xl border border-stone-200 bg-white p-6 sm:p-7 shadow-xs">
       <div>
         <h3 className="font-heading text-lg font-bold text-stone-900">{t('sendEnquiry')}</h3>
         <p className="text-xs text-stone-500 mt-0.5">{t('sendEnquirySubtitle')}</p>
@@ -123,15 +124,19 @@ export default function ContactForm() {
       {status && (
         <div
           role="alert"
-          className={`flex flex-col gap-2 rounded-xl p-3.5 text-xs font-semibold border transition-all duration-300 ${
+          className={`flex flex-col gap-2 rounded-xl p-3.5 text-xs font-semibold border transition-all duration-200 ${
             status.type === 'success'
               ? 'bg-emerald-50 text-emerald-900 border-emerald-200'
               : 'bg-amber-50 text-amber-900 border-amber-200'
           }`}
         >
           <div className="flex items-start gap-2.5">
-            <span className="text-base leading-none mt-0.5" aria-hidden="true">
-              {status.type === 'success' ? '✅' : 'ℹ️'}
+            <span className="shrink-0 mt-0.5">
+              {status.type === 'success' ? (
+                <CheckCircleIcon className="h-4 w-4 text-emerald-700" />
+              ) : (
+                <InfoIcon className="h-4 w-4 text-amber-700" />
+              )}
             </span>
             <div className="flex-1">
               <p className="leading-snug">{status.message}</p>
@@ -139,10 +144,10 @@ export default function ContactForm() {
             <button
               type="button"
               onClick={() => setStatus(null)}
-              className="ml-auto shrink-0 opacity-60 hover:opacity-100 transition cursor-pointer"
+              className="ml-auto shrink-0 opacity-60 hover:opacity-100 transition cursor-pointer p-0.5"
               aria-label="Dismiss"
             >
-              ✕
+              <CloseIcon className="h-3.5 w-3.5" />
             </button>
           </div>
 
@@ -151,9 +156,9 @@ export default function ContactForm() {
               <button
                 type="button"
                 onClick={() => handleWhatsAppRedirect(lastSubmitted || form)}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[#25D366] px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-[#1fb855] transition active:scale-95 cursor-pointer"
+                className="btn-whatsapp inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold text-white shadow-xs"
               >
-                <span>💬</span>
+                <WhatsAppIcon className="h-3.5 w-3.5" />
                 <span>
                   {status.type === 'success'
                     ? 'Also message on WhatsApp'
@@ -176,7 +181,7 @@ export default function ContactForm() {
           value={form.name}
           onChange={handleChange}
           placeholder="e.g. Rahul Sharma"
-          className="glass-input w-full rounded-xl px-3.5 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none"
+          className="w-full rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600"
           required
           disabled={submitting}
         />
@@ -193,7 +198,7 @@ export default function ContactForm() {
           value={form.phone}
           onChange={handleChange}
           placeholder="e.g. 9876543210"
-          className="glass-input w-full rounded-xl px-3.5 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none"
+          className="w-full rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600"
           required
           disabled={submitting}
         />
@@ -210,7 +215,7 @@ export default function ContactForm() {
           value={form.message}
           onChange={handleChange}
           placeholder={t('messagePlaceholder')}
-          className="glass-input w-full rounded-xl px-3.5 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none resize-none"
+          className="w-full rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none resize-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600"
           required
           disabled={submitting}
         />
@@ -220,7 +225,7 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={submitting}
-          className="glow-amber inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-600 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow-md hover:from-amber-700 hover:to-orange-600 disabled:opacity-60 disabled:cursor-not-allowed transition duration-200 active:scale-95 cursor-pointer min-w-36"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-600 px-6 py-2.5 text-sm font-bold text-white shadow-xs hover:bg-amber-700 disabled:opacity-60 disabled:cursor-not-allowed transition duration-150 active:scale-[0.99] cursor-pointer min-w-36"
         >
           {submitting ? (
             <>
@@ -231,7 +236,7 @@ export default function ContactForm() {
             t('submitEnquiry')
           ) : (
             <>
-              <span>💬</span>
+              <WhatsAppIcon className="h-4 w-4" />
               {t('sendViaWhatsApp')}
             </>
           )}

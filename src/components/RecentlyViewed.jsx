@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../context/useLanguage'
 import { clearRecentlyViewed, getRecentlyViewed } from '../utils/recentlyViewed'
+import { ClockIcon } from './Icons'
 import ProductImage from './ProductImage'
 
 function slugify(text) {
@@ -46,7 +47,7 @@ export default function RecentlyViewed({ currentModelName, className = '' }) {
             id="recently-viewed-title"
             className="font-heading text-lg sm:text-xl font-bold text-stone-900 flex items-center gap-2"
           >
-            <span>🕒</span>
+            <ClockIcon className="h-5 w-5 text-amber-700" />
             <span>{t('recentlyViewed')}</span>
           </h2>
           <p className="text-xs text-stone-500 mt-0.5">
@@ -80,7 +81,7 @@ export default function RecentlyViewed({ currentModelName, className = '' }) {
                 imgClassName="group-hover:scale-105 transition-transform duration-300"
                 fallbackLabel=""
               />
-              <span className="absolute top-2 right-2 rounded-full bg-stone-900/65 px-2 py-0.5 text-[9px] font-bold text-white backdrop-blur-xs">
+              <span className="absolute top-2 right-2 rounded-full bg-stone-900/80 px-2 py-0.5 text-[9px] font-bold text-white">
                 {item.categoryLabel}
               </span>
             </div>

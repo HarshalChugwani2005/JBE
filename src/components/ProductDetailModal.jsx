@@ -6,6 +6,7 @@ import { getPhoneUrl, getWhatsAppUrl, shop } from '../data/site'
 import { getProductImageUrls } from '../data/productImages'
 import { trackCallClick, trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
 import { addRecentlyViewed } from '../utils/recentlyViewed'
+import { AlertTriangleIcon, CartIcon, CloseIcon, PhoneIcon, ShareIcon, WhatsAppIcon } from './Icons'
 import ImageLightbox from './ImageLightbox'
 import ProductImage from './ProductImage'
 
@@ -164,23 +165,23 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
   const brandName = brand?.brand ?? brand ?? ''
 
   const whatsappText = [
-    `⚡ *JAI BABA ELECTRONIC — PRODUCT ENQUIRY*`,
+    `*JAI BABA ELECTRONIC — PRODUCT ENQUIRY*`,
     `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `📦 *Model:* ${brandName ? `${brandName} ` : ''}${modelName}`,
-    `📁 *Category:* ${categoryLabel || categorySlug}`,
-    selectedColor ? `🎨 *Selected Color:* ${selectedColor}` : null,
-    model?.specs?.[0] ? `⚙️ *Key Spec:* ${model.specs[0]}` : null,
+    `*Model:* ${brandName ? `${brandName} ` : ''}${modelName}`,
+    `*Category:* ${categoryLabel || categorySlug}`,
+    selectedColor ? `*Selected Color:* ${selectedColor}` : null,
+    model?.specs?.[0] ? `*Key Spec:* ${model.specs[0]}` : null,
     `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `💬 _"Hello! Please share current wholesale and retail pricing, warranty details, and availability for this model. Thank you!"_`,
+    `_"Hello! Please share current wholesale and retail pricing, warranty details, and availability for this model. Thank you!"_`,
   ].filter(Boolean).join('\n')
 
   const oosWhatsappText = [
-    `⚡ *JAI BABA ELECTRONIC — STOCK AVAILABILITY CHECK*`,
+    `*JAI BABA ELECTRONIC — STOCK AVAILABILITY CHECK*`,
     `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `📦 *Product:* ${brandName ? `${brandName} ` : ''}${modelName}`,
-    `📁 *Category:* ${categoryLabel || categorySlug}`,
+    `*Product:* ${brandName ? `${brandName} ` : ''}${modelName}`,
+    `*Category:* ${categoryLabel || categorySlug}`,
     `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `💬 _"Hello! Could you please let me know when this model will be available in stock? Thank you!"_`,
+    `_"Hello! Could you please let me know when this model will be available in stock? Thank you!"_`,
   ].join('\n')
 
   const whatsappHref = getWhatsAppUrl(whatsappText)
@@ -248,7 +249,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 overflow-y-auto bg-stone-950/75 px-3 py-4 backdrop-blur-md sm:px-6 sm:py-8 transition-all duration-300"
+      className="fixed inset-0 z-50 overflow-y-auto bg-stone-950/80 px-3 py-4 sm:px-6 sm:py-8 transition-all duration-300"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
           onClose()
@@ -294,18 +295,17 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
               className="inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-semibold text-stone-700 transition duration-200 hover:border-amber-300 hover:bg-stone-50 cursor-pointer"
               title={t('share')}
             >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-              </svg>
+              <ShareIcon className="h-4 w-4" />
               <span className="hidden sm:inline">{t('share')}</span>
             </button>
             <button
               ref={closeButtonRef}
               type="button"
               onClick={onClose}
-              className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-bold text-stone-600 transition duration-200 hover:border-amber-300 hover:text-stone-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer"
+              className="rounded-full border border-stone-200 bg-white p-2 text-stone-600 transition duration-200 hover:border-amber-300 hover:text-stone-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer"
+              aria-label={t('close') || 'Close'}
             >
-              ✕
+              <CloseIcon className="h-4 w-4" />
             </button>
           </div>
         </div>
@@ -332,7 +332,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
               />
               {/* Zoom hint badge */}
               {activeImage && (
-                <span className="pointer-events-none absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full border border-white/30 bg-stone-900/60 px-2.5 py-1 text-[11px] font-semibold text-white/90 backdrop-blur-md opacity-0 transition-opacity duration-200 group-hover:opacity-100" aria-hidden="true">
+                <span className="pointer-events-none absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full border border-white/20 bg-stone-900/80 px-2.5 py-1 text-[11px] font-semibold text-white/90 opacity-0 transition-opacity duration-200 group-hover:opacity-100" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-3.5 w-3.5">
                     <circle cx="11" cy="11" r="8" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-4.35-4.35M11 8v6M8 11h6" />
@@ -426,7 +426,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
               {inStock === false ? (
                 /* OOS: show a disabled badge in place of Add to List */
                 <div className="inline-flex items-center justify-center gap-1.5 rounded-xl border-2 border-stone-200 bg-stone-50 px-4 py-3 text-sm font-bold text-stone-400 cursor-not-allowed select-none">
-                  <span>🚫</span>
+                  <AlertTriangleIcon className="h-4 w-4 text-stone-400" />
                   <span>{t('outOfStock')}</span>
                 </div>
               ) : (
@@ -435,7 +435,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                   onClick={handleAddToList}
                   className="inline-flex items-center justify-center gap-1.5 rounded-xl border-2 border-amber-600 bg-amber-50 px-4 py-3 text-sm font-bold text-amber-900 transition duration-200 hover:bg-amber-100 hover:shadow-xs active:scale-95 cursor-pointer"
                 >
-                  <span>📋</span>
+                  <CartIcon className="h-4 w-4" />
                   <span>{t('addToList')}</span>
                 </button>
               )}
@@ -444,9 +444,9 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                 onClick={() => trackWhatsAppClick('product_modal', { modelName, brand: brandName })}
                 target={isExternalWhatsApp ? '_blank' : undefined}
                 rel={isExternalWhatsApp ? 'noopener noreferrer' : undefined}
-                className="glow-wa inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-bold text-white shadow-sm transition duration-200 hover:bg-[#1fb855] hover:-translate-y-0.5 active:scale-95"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-bold text-white shadow-xs transition duration-200 hover:bg-[#1fb855] hover:-translate-y-0.5 active:scale-95"
               >
-                <span>💬</span>
+                <WhatsAppIcon className="h-4 w-4" />
                 <span>{inStock === false ? t('askAvailabilityWa') : t('whatsappEnquiry')}</span>
               </a>
               <a
@@ -454,13 +454,12 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                 onClick={() => trackCallClick('product_modal', shop.primaryPhone)}
                 target={isExternalPhone ? '_blank' : undefined}
                 rel={isExternalPhone ? 'noopener noreferrer' : undefined}
-                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm font-bold text-stone-800 transition duration-200 hover:border-stone-300 hover:bg-stone-50"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm font-bold text-stone-800 transition duration-200 hover:border-stone-300 hover:bg-stone-50"
               >
-                <span>📞</span>
+                <PhoneIcon className="h-4 w-4" />
                 <span>{t('callSeller')}</span>
               </a>
             </div>
-
 
             <p className="mt-5 text-xs text-stone-500">Contact <span className="font-semibold text-stone-800">+91 {shop.primaryPhone}</span> for wholesale pricing and stock availability.</p>
             {selectedColor && (

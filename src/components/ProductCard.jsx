@@ -5,6 +5,7 @@ import { useToast } from '../context/useToast'
 import { getWhatsAppUrl } from '../data/site'
 import { trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
 import { addRecentlyViewed } from '../utils/recentlyViewed'
+import { PlusIcon, ShareIcon, WhatsAppIcon } from './Icons'
 import ProductImage from './ProductImage'
 
 export default function ProductCard({
@@ -98,7 +99,7 @@ export default function ProductCard({
           {/* Stock Badge */}
           <div className="absolute top-3 right-3 flex items-center gap-1.5">
             {inStock ? (
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-600/90 px-2.5 py-0.5 text-[11px] font-bold text-white shadow-xs backdrop-blur-md">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-700 px-2.5 py-0.5 text-[11px] font-bold text-white shadow-xs">
                 <span className="relative flex h-1.5 w-1.5">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-white" />
@@ -106,11 +107,11 @@ export default function ProductCard({
                 {t('inStock')}
               </span>
             ) : inStock === false ? (
-              <span className="inline-flex items-center rounded-full border border-stone-600/30 bg-stone-800/85 px-2.5 py-0.5 text-[11px] font-semibold text-white backdrop-blur-md">
+              <span className="inline-flex items-center rounded-full border border-stone-600/30 bg-stone-800 px-2.5 py-0.5 text-[11px] font-semibold text-white">
                 {t('outOfStock')}
               </span>
             ) : (
-              <span className="inline-flex items-center rounded-full border border-amber-400/30 bg-amber-600/90 px-2.5 py-0.5 text-[11px] font-semibold text-white backdrop-blur-md">
+              <span className="inline-flex items-center rounded-full border border-amber-400/30 bg-amber-700 px-2.5 py-0.5 text-[11px] font-semibold text-white">
                 {t('askAvailability')}
               </span>
             )}
@@ -129,9 +130,7 @@ export default function ProductCard({
               title={t('share')}
               aria-label={`Share ${modelName}`}
             >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-              </svg>
+              <ShareIcon className="h-4 w-4" />
             </button>
           </div>
           {brand && <p className="mt-0.5 text-xs font-semibold uppercase tracking-wider text-amber-700/90">{brand}</p>}
@@ -151,7 +150,7 @@ export default function ProductCard({
           /* OOS: replace button with a WhatsApp ask link */
           <a
             href={getWhatsAppUrl(
-              `⚡ *JAI BABA ELECTRONIC — STOCK CHECK*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📦 *Product:* ${brand ? `${brand} ` : ''}${modelName}\n📁 *Category:* ${categoryLabel}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n💬 _"Hello! Could you please let me know when this model will be available in stock? Thank you!"_`
+              `*JAI BABA ELECTRONIC — STOCK CHECK*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n*Product:* ${brand ? `${brand} ` : ''}${modelName}\n*Category:* ${categoryLabel}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n_"Hello! Could you please let me know when this model will be available in stock? Thank you!"_`
             )}
             onClick={(e) => {
               e.stopPropagation()
@@ -162,7 +161,7 @@ export default function ProductCard({
             className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 hover:border-emerald-400 hover:bg-emerald-100 transition duration-200 active:scale-95"
             title="Ask about stock on WhatsApp"
           >
-            <span>💬</span>
+            <WhatsAppIcon className="h-3.5 w-3.5" />
             <span>{t('askAvailabilityWa')}</span>
           </a>
         ) : (
@@ -172,7 +171,7 @@ export default function ProductCard({
             className="inline-flex items-center gap-1.5 rounded-lg border border-stone-200 bg-stone-50/90 px-3 py-1.5 text-xs font-semibold text-stone-700 hover:border-amber-400 hover:bg-amber-50 hover:text-amber-900 hover:shadow-xs transition duration-200 active:scale-95 cursor-pointer"
             title="Add to multi-item enquiry list"
           >
-            <span>+</span>
+            <PlusIcon className="h-3.5 w-3.5" />
             <span>{t('addToList')}</span>
           </button>
         )}

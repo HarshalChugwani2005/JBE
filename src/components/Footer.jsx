@@ -11,10 +11,10 @@ export default function Footer() {
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
           <div>
             <div className="flex items-center gap-2">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-tr from-amber-600 to-orange-500 text-white text-xs font-black shadow-xs">
-                ⚡
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-600 text-white text-[11px] font-black tracking-wider shadow-xs">
+                JBE
               </span>
-              <p className="font-heading font-extrabold text-stone-900 text-base">{shop.name}</p>
+              <p className="font-heading font-bold text-stone-900 text-base">{shop.name}</p>
             </div>
             <p className="mt-2 text-xs sm:text-sm text-stone-600 max-w-xs">{shop.tagline}</p>
           </div>

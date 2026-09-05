@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { getCategoryVisual, getModelCount } from '../data/categoryVisuals'
 import CategoryIcon from './CategoryIcon'
+import { PackageIcon } from './Icons'
 
 export default function CategoryCard({ category, categoryLabel, comingSoon, brands = [], search = '' }) {
   const visual = getCategoryVisual(category)
@@ -20,14 +21,14 @@ export default function CategoryCard({ category, categoryLabel, comingSoon, bran
 
         {/* Model count badge — top-left corner */}
         {!comingSoon && modelCount > 0 && (
-          <span className="absolute left-2.5 top-2.5 inline-flex items-center gap-1 rounded-full bg-black/40 px-2 py-0.5 text-[10px] sm:text-[11px] font-bold text-white backdrop-blur-md border border-white/20 shadow-sm">
-            <span className="opacity-75">📦</span>
+          <span className="absolute left-2.5 top-2.5 inline-flex items-center gap-1.5 rounded-full bg-stone-900/80 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-bold text-white border border-white/20 shadow-sm">
+            <PackageIcon className="h-3 w-3 text-white/80" />
             {modelCount} model{modelCount === 1 ? '' : 's'}
           </span>
         )}
 
         {comingSoon && (
-          <span className="absolute right-2.5 top-2.5 rounded-full border border-white/40 bg-white/90 px-2.5 py-0.5 text-[10px] sm:text-xs font-bold text-amber-900 shadow-sm backdrop-blur-md">
+          <span className="absolute right-2.5 top-2.5 rounded-full border border-white/40 bg-white/95 px-2.5 py-0.5 text-[10px] sm:text-xs font-bold text-amber-900 shadow-sm">
             Coming Soon
           </span>
         )}

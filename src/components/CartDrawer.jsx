@@ -4,6 +4,7 @@ import { useLanguage } from '../context/useLanguage'
 import { getWhatsAppUrl, shop } from '../data/site'
 import { trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
 import ProductImage from './ProductImage'
+import { CartIcon, WhatsAppIcon, CloseIcon, TrashIcon } from './Icons'
 
 function getFocusableElements(container) {
   return Array.from(
@@ -104,18 +105,18 @@ export default function CartDrawer() {
       year: 'numeric',
     })
 
-    let msg = `⚡ *JAI BABA ELECTRONIC — QUOTATION REQUEST*\n`
+    let msg = `*JAI BABA ELECTRONIC — QUOTATION REQUEST*\n`
     msg += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`
-    msg += `📅 *Date:* ${dateStr}\n`
+    msg += `Date: ${dateStr}\n`
     if (buyerName.trim()) {
-      msg += `👤 *Customer:* ${buyerName.trim()}\n`
+      msg += `Customer: ${buyerName.trim()}\n`
     }
-    msg += `🏷️ *Order Type:* ${buyerType === 'wholesale' ? '⚡ Wholesale / Dealer (Bulk Order)' : '🏠 Retail / Personal (Home Use)'}\n`
+    msg += `Order Type: ${buyerType === 'wholesale' ? 'Wholesale / Dealer (Bulk Order)' : 'Retail / Personal (Home Use)'}\n`
     if (notes.trim()) {
-      msg += `📍 *Location / Notes:* ${notes.trim()}\n`
+      msg += `Location / Notes: ${notes.trim()}\n`
     }
     msg += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`
-    msg += `📦 *Requested Products (${totalCount} item${totalCount > 1 ? 's' : ''}):*\n\n`
+    msg += `Requested Products (${totalCount} item${totalCount > 1 ? 's' : ''}):\n\n`
 
     items.forEach((item, index) => {
       const num = index + 1
@@ -128,7 +129,7 @@ export default function CartDrawer() {
     })
 
     msg += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`
-    msg += `💬 _"Hello! Please share your best price quotation, current stock availability, and delivery/pickup details for the items listed above. Thank you!"_`
+    msg += `_"Hello! Please share your best price quotation, current stock availability, and delivery/pickup details for the items listed above. Thank you!"_`
 
     const url = getWhatsAppUrl(msg)
     window.open(url, '_blank', 'noopener,noreferrer')
@@ -152,10 +153,10 @@ export default function CartDrawer() {
             ${isVisible ? 'translate-x-0' : 'translate-x-full'}`}
         >
           {/* Header */}
-          <div className="border-b border-stone-200 bg-stone-50/80 px-6 py-4 backdrop-blur-md">
+          <div className="border-b border-stone-200 bg-stone-50 px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="font-heading text-lg font-extrabold text-stone-900" id="slide-over-title">
+                <h2 className="font-heading text-lg font-bold text-stone-900" id="slide-over-title">
                   {t('enquiryDrawerTitle')}
                 </h2>
                 <p className="text-xs text-stone-500 font-medium">
@@ -165,10 +166,10 @@ export default function CartDrawer() {
               <button
                 type="button"
                 onClick={handleAnimatedClose}
-                className="rounded-full border border-stone-200 bg-white p-1.5 text-stone-500 hover:bg-stone-100 hover:text-stone-900 transition duration-200 cursor-pointer"
+                className="rounded-full border border-stone-200 bg-white p-1.5 text-stone-500 hover:bg-stone-100 hover:text-stone-900 transition duration-150 cursor-pointer"
               >
                 <span className="sr-only">{t('close')}</span>
-                ✕
+                <CloseIcon className="h-4 w-4" />
               </button>
             </div>
           </div>
@@ -177,8 +178,8 @@ export default function CartDrawer() {
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             {items.length === 0 ? (
               <div className="py-16 text-center">
-                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-amber-50 text-3xl shadow-inner">
-                  📋
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
+                  <CartIcon className="h-8 w-8" />
                 </div>
                 <h3 className="mt-5 font-heading text-base font-bold text-stone-900">{t('enquiryEmpty')}</h3>
                 <p className="mt-1.5 text-xs text-stone-500 max-w-xs mx-auto">
@@ -239,8 +240,9 @@ export default function CartDrawer() {
                         onClick={() => removeFromCart(item.id)}
                         className="rounded-lg p-1.5 text-stone-400 hover:bg-red-50 hover:text-red-600 transition cursor-pointer"
                         title="Remove item"
+                        aria-label="Remove item"
                       >
-                        🗑️
+                        <TrashIcon className="h-4 w-4" />
                       </button>
                     </div>
                   ))}
@@ -318,9 +320,9 @@ export default function CartDrawer() {
               <button
                 type="button"
                 onClick={handleSendWhatsApp}
-                className="glow-wa w-full flex items-center justify-center gap-2 rounded-xl bg-[#25D366] py-3.5 px-4 text-sm font-bold text-white shadow-md hover:bg-[#1fb855] hover:-translate-y-0.5 active:scale-95 transition duration-200 cursor-pointer"
+                className="btn-whatsapp w-full flex items-center justify-center gap-2 rounded-xl py-3 px-4 text-sm font-bold text-white shadow-xs transition duration-150 cursor-pointer"
               >
-                <span>💬</span>
+                <WhatsAppIcon className="h-4 w-4" />
                 <span>{t('sendItemsToWhatsApp')} ({totalCount})</span>
               </button>
 
