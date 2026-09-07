@@ -7,10 +7,7 @@ import RecentlyViewed from '../components/RecentlyViewed'
 import SEO from '../components/SEO'
 import { useLanguage } from '../context/useLanguage'
 import { getCategoryBySlug, getModelBySlug } from '../data/products'
-
-function slugify(text) {
-  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-')
-}
+import { slugify } from '../utils/slugify'
 
 export default function CategoryPage() {
   const { category: categorySlug, model: modelSlug } = useParams()

@@ -9,16 +9,9 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { categories } from '../src/data/products.js'
 import { shop } from '../src/data/site.js'
+import { slugify } from '../src/utils/slugify.js'
 
 const BASE_URL = shop.siteUrl.replace(/\/$/, '') // strip trailing slash
-
-/**
- * Slugify a model name to match the URL pattern used by the router.
- * Mirrors the logic in products.js getModelBySlug().
- */
-function slugify(name) {
-  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-}
 
 /** ISO-8601 date string for today (YYYY-MM-DD). */
 const today = new Date().toISOString().slice(0, 10)
@@ -40,12 +33,12 @@ for (const cat of categories) {
     changefreq: 'weekly',
   })
 
-  // 3. Individual model pages (deep-link query format: ?model=slug)
+  // 3. Individual model pages
   for (const brand of cat.brands ?? []) {
     for (const model of brand.models ?? []) {
       const modelSlug = slugify(model.modelName)
       urls.push({
-        loc: `${BASE_URL}/catalog/${cat.category}?model=${modelSlug}`,
+        loc: `${BASE_URL}/catalog/${cat.category}/${modelSlug}`,
         priority: '0.6',
         changefreq: 'monthly',
       })

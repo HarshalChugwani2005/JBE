@@ -1,3 +1,5 @@
+import { slugify } from '../utils/slugify.js'
+
 /**
  * Product catalog data — static source of truth for the site.
  * Schema: category → brands → models (see BACKEND_SCHEMA.md)
@@ -913,7 +915,7 @@ export function getModelBySlug(categorySlug, modelSlug) {
 
   for (const brand of category.brands) {
     for (const model of brand.models) {
-      const slug = model.modelName.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+      const slug = slugify(model.modelName)
       if (slug === modelSlug) {
         return { brand, model }
       }

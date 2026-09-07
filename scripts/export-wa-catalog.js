@@ -49,9 +49,7 @@ function generateCatalogCsv() {
         const condition = 'new'
         const price = '0.00 INR' // Quotation on WhatsApp
         const link = `${shop.siteUrl}/catalog/${cat.category}/${slugify(model.modelName)}`
-        const imageLink = model.image
-          ? `${shop.siteUrl}/assets/images/${cat.category}/${model.image}`
-          : `${shop.siteUrl}/og-image.png`
+        const imageLink = `${shop.siteUrl}/og/products/${cat.category}-${slugify(model.modelName)}.png`
         const brandName = brand.brand
         const googleCategory = 'Home & Garden > Household Appliances'
         const customLabel = cat.categoryLabel
