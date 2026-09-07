@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import CategoryCard from '../components/CategoryCard'
 import MapPreview from '../components/MapPreview'
+import ProductImage from '../components/ProductImage'
 import RecentlyViewed from '../components/RecentlyViewed'
 import RevealOnScroll from '../components/RevealOnScroll'
 import Section from '../components/Section'
@@ -25,6 +26,8 @@ export default function Home() {
   const featured = featuredCategorySlugs
     .map((slug) => categories.find((c) => c.category === slug))
     .filter(Boolean)
+  const heroProduct = categories
+    .find((category) => category.category === 'ceiling-fans')?.brands?.[0]?.models?.[0]
 
   return (
     <>
@@ -35,7 +38,8 @@ export default function Home() {
       <div className="-mx-4">
         {/* Storefront Hero */}
         <section className="hero-surface px-4 py-10 text-white sm:px-6 md:py-16">
-          <div className="mx-auto max-w-6xl">
+          <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-[1.1fr_0.9fr]">
+            <div>
             {/* Storefront Location Badge */}
             <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-black/20 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-amber-100">
               <MapPinIcon className="h-3.5 w-3.5 text-amber-300" />
@@ -84,6 +88,26 @@ export default function Home() {
                 <span>{t('heroWhatsAppUs')}</span>
               </a>
             </div>
+            </div>
+
+            {heroProduct && (
+              <div className="relative hidden md:block">
+                <div className="absolute -inset-4 rounded-4xl border border-white/15 bg-white/5" aria-hidden="true" />
+                <ProductImage
+                  category="ceiling-fans"
+                  product={heroProduct}
+                  alt={`${heroProduct.modelName} ceiling fan`}
+                  className="relative aspect-4/3 overflow-hidden rounded-3xl border border-white/20 bg-white/10 shadow-2xl"
+                  imgClassName="object-contain p-6"
+                  fallbackLabel="Featured product"
+                  loading="eager"
+                />
+                <div className="absolute bottom-4 left-4 rounded-xl border border-white/20 bg-stone-950/65 px-3 py-2 backdrop-blur-sm">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-200">Featured range</p>
+                  <p className="mt-0.5 text-sm font-bold text-white">{heroProduct.modelName}</p>
+                </div>
+              </div>
+            )}
           </div>
         </section>
 

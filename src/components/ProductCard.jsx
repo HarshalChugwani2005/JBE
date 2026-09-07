@@ -17,6 +17,7 @@ export default function ProductCard({
   category,
   categoryLabel,
   inStock = true,
+  specs = [],
 }) {
   const { addToCart, openCart } = useCart()
   const { t } = useLanguage()
@@ -80,7 +81,7 @@ export default function ProductCard({
             inStock,
           })
         }}
-        className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+        className="block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
         aria-label={`${brand ? `${brand} ` : ''}${modelName}`}
       >
         <div className="relative overflow-hidden bg-stone-100">
@@ -88,13 +89,13 @@ export default function ProductCard({
             category={category}
             product={{ image }}
             alt={`${brand ? `${brand} ` : ''}${modelName}`}
-            className="aspect-[4/3] w-full"
+            className="aspect-4/3 w-full"
             imgClassName="group-hover:scale-108 transition-transform duration-500 ease-out"
             fallbackLabel="Photo coming soon"
           />
 
           {/* Gradient Overlay on Hover */}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-stone-900/20 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-stone-900/20 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
           {/* Stock Badge */}
           <div className="absolute top-3 right-3 flex items-center gap-1.5">
@@ -134,6 +135,7 @@ export default function ProductCard({
             </button>
           </div>
           {brand && <p className="mt-0.5 text-xs font-semibold uppercase tracking-wider text-amber-700/90">{brand}</p>}
+          {specs[0] && <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-stone-500">{specs[0]}</p>}
         </div>
       </Link>
 

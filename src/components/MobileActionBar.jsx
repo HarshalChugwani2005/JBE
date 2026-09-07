@@ -51,7 +51,7 @@ export default function MobileActionBar() {
           className="relative flex flex-1 items-center justify-center gap-2 rounded-xl border border-amber-300 bg-amber-50 py-3 text-sm font-bold text-amber-900 transition active:scale-95 hover:bg-amber-100 cursor-pointer shadow-xs dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-300"
         >
           <CartIcon className="h-4 w-4" />
-          <span>{t('navCart')}</span>
+          <span>{totalCount > 0 ? `${t('navCart')} (${totalCount})` : t('navCart')}</span>
           {totalCount > 0 && (
             <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-600 px-1 text-[9px] font-bold text-white shadow-xs">
               {totalCount}

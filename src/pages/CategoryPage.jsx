@@ -20,6 +20,7 @@ export default function CategoryPage() {
   const query = searchParams.get('q') ?? ''
   const brand = searchParams.get('brand') ?? ''
   const tier = searchParams.get('tier') ?? ''
+  const sort = searchParams.get('sort') ?? ''
   const inStockOnly = searchParams.get('inStock') === '1'
 
   const allBrands = useMemo(() => {
@@ -66,10 +67,14 @@ export default function CategoryPage() {
 
       return {
         ...entry,
-        models,
+        models: [...models].sort((left, right) => {
+          if (sort === 'stock') return Number(right.inStock !== false) - Number(left.inStock !== false)
+          if (sort === 'name') return left.modelName.localeCompare(right.modelName)
+          return 0
+        }),
       }
     }).filter(Boolean)
-  }, [brand, category, inStockOnly, query, tier])
+  }, [brand, category, inStockOnly, query, sort, tier])
 
   const updateParams = (next) => {
     const params = new URLSearchParams(searchParams)
@@ -77,6 +82,7 @@ export default function CategoryPage() {
     const nextBrand = next.brand !== undefined ? next.brand : brand
     const nextTier = next.tier !== undefined ? next.tier : tier
     const nextInStock = next.inStock !== undefined ? next.inStock : inStockOnly
+    const nextSort = next.sort !== undefined ? next.sort : sort
 
     if (nextQuery.trim()) params.set('q', nextQuery)
     else params.delete('q')
@@ -89,6 +95,9 @@ export default function CategoryPage() {
 
     if (nextInStock) params.set('inStock', '1')
     else params.delete('inStock')
+
+    if (nextSort.trim()) params.set('sort', nextSort)
+    else params.delete('sort')
 
     setSearchParams(params, { replace: true })
   }
@@ -172,6 +181,8 @@ export default function CategoryPage() {
             onTierChange={(value) => updateParams({ tier: value })}
             inStockOnly={inStockOnly}
             onInStockChange={(value) => updateParams({ inStock: value })}
+            sortValue={sort}
+            onSortChange={(value) => updateParams({ sort: value })}
             resultsLabel={`${filteredBrands.length} of ${category.brands.length} brands shown`}
             onClear={clearFilters}
           />
@@ -202,6 +213,7 @@ export default function CategoryPage() {
                   category={categorySlug}
                   categoryLabel={category.categoryLabel}
                   inStock={model.inStock}
+                  specs={model.specs}
                 />
               ))}
             </div>

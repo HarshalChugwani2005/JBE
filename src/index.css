@@ -3,7 +3,7 @@
 @layer base {
   :root {
     --font-body: 'Inter', 'Noto Sans Devanagari', system-ui, -apple-system, sans-serif;
-    --font-heading: 'Inter', 'Noto Sans Devanagari', system-ui, -apple-system, sans-serif;
+    --font-heading: 'Manrope', 'Noto Sans Devanagari', system-ui, -apple-system, sans-serif;
     
     --color-primary-50: #fffbeb;
     --color-primary-100: #fef3c7;
@@ -245,6 +245,17 @@ html.dark .glass-input:focus {
 .reveal-on-scroll--visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Skeleton Loading Shimmer */

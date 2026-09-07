@@ -38,6 +38,7 @@ export default function Navbar() {
   const isMobile = useIsMobile(1024) // hamburger below 1024px
 
   const navContainerRef = useRef(null)
+  const headerRef = useRef(null)
   const linkRefs = useRef({})
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 })
 
@@ -45,6 +46,17 @@ export default function Navbar() {
   useEffect(() => {
     setMenuOpen(false)
   }, [location.pathname])
+
+  useEffect(() => {
+    if (!menuOpen) return
+
+    const handlePointerDown = (event) => {
+      if (!headerRef.current?.contains(event.target)) setMenuOpen(false)
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+    return () => document.removeEventListener('pointerdown', handlePointerDown)
+  }, [menuOpen])
 
   const navRoutes = useMemo(() => [
     { to: '/', label: t('navHome'), end: true, Icon: HomeIcon },
@@ -88,7 +100,7 @@ export default function Navbar() {
   }, [location.pathname, isMobile, navRoutes])
 
   return (
-    <header className="sticky top-0 z-40 border-b border-stone-200 bg-white/95 backdrop-blur-sm transition-all duration-200 shadow-xs dark:border-stone-800 dark:bg-stone-950/95">
+    <header ref={headerRef} className="sticky top-0 z-40 border-b border-stone-200 bg-white/95 backdrop-blur-sm transition-all duration-200 shadow-xs dark:border-stone-800 dark:bg-stone-950/95">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
 
         {/* Logo / Shop Identity */}
@@ -218,8 +230,9 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile drawer menu */}
-      {isMobile && menuOpen && (
-        <div className="border-t border-stone-200 bg-white px-4 py-4 dark:border-stone-800 dark:bg-stone-950">
+      {isMobile && (
+        <div className={`grid overflow-hidden border-t border-stone-200 bg-white px-4 transition-[grid-template-rows,opacity,padding] duration-200 dark:border-stone-800 dark:bg-stone-950 ${menuOpen ? 'grid-rows-[1fr] py-4 opacity-100' : 'grid-rows-[0fr] py-0 opacity-0'}`}>
+          <div className="min-h-0">
           {/* Nav links */}
           <nav className="flex flex-col gap-1">
             {navRoutes.map(({ to, label, end, Icon }) => (
@@ -269,6 +282,7 @@ export default function Navbar() {
               </span>
             )}
           </button>
+          </div>
         </div>
       )}
     </header>

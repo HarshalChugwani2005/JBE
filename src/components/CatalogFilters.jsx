@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useLanguage } from '../context/useLanguage'
 import { CheckIcon, SearchIcon } from './Icons'
 
@@ -16,8 +17,11 @@ export default function CatalogFilters({
   resultsLabel,
   clearLabel,
   onClear,
+  sortValue = '',
+  onSortChange,
 }) {
   const { t } = useLanguage()
+  const [filtersOpen, setFiltersOpen] = useState(false)
   const hasActiveFilters = Boolean(searchValue?.trim() || selectedBrand || selectedTier || inStockOnly)
 
   return (
@@ -38,8 +42,20 @@ export default function CatalogFilters({
         </label>
 
         <div className="flex flex-wrap items-center gap-3 text-sm text-stone-500 lg:flex-col lg:items-end">
-          {resultsLabel && <p className="text-xs font-semibold text-stone-500">{resultsLabel}</p>}
-          <div className="flex items-center gap-2">
+          <div className="flex w-full items-center justify-between gap-2 lg:w-auto lg:justify-end">
+            {resultsLabel && <p className="text-xs font-semibold text-stone-500">{resultsLabel}</p>}
+            <button
+              type="button"
+              onClick={() => setFiltersOpen((open) => !open)}
+              aria-expanded={filtersOpen}
+              className="inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-stone-50 px-3 py-1.5 text-xs font-bold text-stone-700 transition hover:border-amber-400 hover:bg-amber-50 hover:text-amber-900 lg:hidden"
+            >
+              <span>{t('filters')}</span>
+              <span aria-hidden="true">{filtersOpen ? '−' : '+'}</span>
+              {hasActiveFilters && <span className="h-1.5 w-1.5 rounded-full bg-amber-600" />}
+            </button>
+          </div>
+          <div className={`${filtersOpen ? 'flex' : 'hidden'} w-full items-center gap-2 lg:flex lg:w-auto`}>
             {onInStockChange && (
               <button
                 type="button"
@@ -69,7 +85,7 @@ export default function CatalogFilters({
 
       {/* Price Segment / Tier Filter Chips */}
       {onTierChange && (
-        <div className="mt-5 pt-4 border-t border-stone-100 flex flex-wrap items-center gap-2">
+        <div className={`${filtersOpen ? 'flex' : 'hidden'} mt-5 border-t border-stone-100 pt-4 flex-wrap items-center gap-2 lg:flex`}>
           <span className="text-xs font-bold uppercase tracking-wider text-stone-500 mr-1">
             {t('priceSegment')}:
           </span>
@@ -121,7 +137,7 @@ export default function CatalogFilters({
       )}
 
       {brands.length > 0 && (
-        <div className="mt-3 pt-3 border-t border-stone-100 flex flex-wrap gap-2 items-center">
+        <div className={`${filtersOpen ? 'flex' : 'hidden'} mt-3 border-t border-stone-100 pt-3 flex-wrap items-center gap-2 lg:flex`}>
           <span className="text-xs font-bold uppercase tracking-wider text-stone-500 mr-1">
             {t('allBrands')}:
           </span>
@@ -154,6 +170,42 @@ export default function CatalogFilters({
               </button>
             )
           })}
+        </div>
+      )}
+
+      {(hasActiveFilters || onSortChange) && (
+        <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-stone-100 pt-3">
+          {hasActiveFilters && <span className="text-xs font-semibold text-stone-500">Active:</span>}
+          {searchValue?.trim() && (
+            <button type="button" onClick={() => onSearchChange?.('')} className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-900 hover:bg-amber-100">
+              Search: {searchValue.trim()} ×
+            </button>
+          )}
+          {selectedBrand && (
+            <button type="button" onClick={() => onBrandChange?.('')} className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-900 hover:bg-amber-100">
+              {selectedBrand} ×
+            </button>
+          )}
+          {selectedTier && (
+            <button type="button" onClick={() => onTierChange?.('')} className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-900 hover:bg-amber-100">
+              {selectedTier} ×
+            </button>
+          )}
+          {inStockOnly && (
+            <button type="button" onClick={() => onInStockChange?.(false)} className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800 hover:bg-emerald-100">
+              {t('inStockOnly')} ×
+            </button>
+          )}
+          {onSortChange && (
+            <label className="ml-auto inline-flex items-center gap-2 text-xs font-semibold text-stone-500">
+              <span>{t('sort')}</span>
+              <select value={sortValue} onChange={(event) => onSortChange(event.target.value)} className="rounded-lg border border-stone-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-stone-700 outline-none focus:border-amber-500">
+                <option value="">{t('sortRecommended')}</option>
+                <option value="stock">{t('sortInStock')}</option>
+                <option value="name">{t('sortName')}</option>
+              </select>
+            </label>
+          )}
         </div>
       )}
     </div>

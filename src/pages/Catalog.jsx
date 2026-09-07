@@ -14,6 +14,7 @@ export default function Catalog() {
   const query = searchParams.get('q') ?? ''
   const brand = searchParams.get('brand') ?? ''
   const tier = searchParams.get('tier') ?? ''
+  const sort = searchParams.get('sort') ?? ''
   const inStockOnly = searchParams.get('inStock') === '1'
 
   const liveCount = categories.filter((c) => !c.comingSoon).length
@@ -32,7 +33,7 @@ export default function Catalog() {
     const normalizedQuery = query.trim().toLowerCase()
     const normalizedBrand = brand.trim().toLowerCase()
 
-    return categories.filter((category) => {
+    return [...categories].filter((category) => {
       const categoryMatchesBrand =
         !normalizedBrand || category.brands?.some((entry) => entry.brand?.toLowerCase() === normalizedBrand)
 
@@ -70,8 +71,16 @@ export default function Catalog() {
 
       const queryWords = normalizedQuery.split(/\s+/).filter(Boolean)
       return queryWords.every((word) => searchableText.includes(word))
+    }).sort((left, right) => {
+      if (sort === 'name') return left.categoryLabel.localeCompare(right.categoryLabel)
+      if (sort === 'stock') {
+        const leftStock = left.brands?.some((entry) => entry.models?.some((model) => model.inStock !== false))
+        const rightStock = right.brands?.some((entry) => entry.models?.some((model) => model.inStock !== false))
+        return Number(rightStock) - Number(leftStock)
+      }
+      return 0
     })
-  }, [brand, inStockOnly, query, tier])
+  }, [brand, inStockOnly, query, sort, tier])
 
   const updateParams = (next) => {
     const params = new URLSearchParams(searchParams)
@@ -79,6 +88,7 @@ export default function Catalog() {
     const nextBrand = next.brand !== undefined ? next.brand : brand
     const nextTier = next.tier !== undefined ? next.tier : tier
     const nextInStock = next.inStock !== undefined ? next.inStock : inStockOnly
+    const nextSort = next.sort !== undefined ? next.sort : sort
 
     if (nextQuery.trim()) params.set('q', nextQuery)
     else params.delete('q')
@@ -91,6 +101,9 @@ export default function Catalog() {
 
     if (nextInStock) params.set('inStock', '1')
     else params.delete('inStock')
+
+    if (nextSort.trim()) params.set('sort', nextSort)
+    else params.delete('sort')
 
     setSearchParams(params, { replace: true })
   }
@@ -125,6 +138,8 @@ export default function Catalog() {
             onTierChange={(value) => updateParams({ tier: value })}
             inStockOnly={inStockOnly}
             onInStockChange={(value) => updateParams({ inStock: value })}
+            sortValue={sort}
+            onSortChange={(value) => updateParams({ sort: value })}
             resultsLabel={`${filteredCategories.length} of ${categories.length} shown`}
             onClear={clearFilters}
           />

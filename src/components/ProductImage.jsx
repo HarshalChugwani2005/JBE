@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import CategoryIcon from './CategoryIcon'
+import { getCategoryVisual } from '../data/categoryVisuals'
 import { getProductImageUrls } from '../data/productImages'
 
 export default function ProductImage({
@@ -17,6 +18,7 @@ export default function ProductImage({
     return getProductImageUrls(category, product)
   }, [directSrc, category, product])
   const src = directSrc || sources[0] || null
+  const visual = getCategoryVisual(category)
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasError, setHasError] = useState(false)
 
@@ -28,11 +30,15 @@ export default function ProductImage({
   if (!src || hasError) {
     return (
       <div
-        className={`flex items-center justify-center gap-3 bg-stone-100 px-4 text-stone-500 ${className}`}
+        className={`relative flex items-center justify-center overflow-hidden bg-linear-to-br ${visual.gradient} px-4 text-white ${className}`}
         aria-label={fallbackLabel}
       >
-        <CategoryIcon slug={category} className="h-10 w-10 shrink-0" />
-        <span className="text-sm font-medium">{fallbackLabel}</span>
+        <div className="absolute inset-0 bg-black/10" aria-hidden="true" />
+        <div className="relative flex flex-col items-center gap-2 text-center">
+          <CategoryIcon slug={category} className="h-10 w-10 shrink-0 opacity-90" />
+          <span className="text-xs font-bold uppercase tracking-[0.14em] text-white/90">{visual.label}</span>
+          <span className="text-[11px] font-medium text-white/75">{fallbackLabel}</span>
+        </div>
       </div>
     )
   }
