@@ -2,15 +2,9 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../context/useLanguage'
 import { clearRecentlyViewed, getRecentlyViewed } from '../utils/recentlyViewed'
+import { slugify } from '../utils/slugify'
 import { ClockIcon } from './Icons'
 import ProductImage from './ProductImage'
-
-function slugify(text) {
-  return String(text || '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)+/g, '')
-}
 
 export default function RecentlyViewed({ currentModelName, className = '' }) {
   const { t } = useLanguage()
@@ -70,9 +64,9 @@ export default function RecentlyViewed({ currentModelName, className = '' }) {
           <Link
             key={item.id}
             to={`/catalog/${item.categorySlug}/${slugify(item.modelName)}`}
-            className="group flex-shrink-0 w-52 sm:w-auto flex flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] transition-all duration-200 hover:-translate-y-1 hover:border-amber-400/80 hover:shadow-[0_12px_24px_-4px_rgba(217,119,6,0.12)]"
+            className="group shrink-0 w-52 sm:w-auto flex flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] transition-all duration-200 hover:-translate-y-1 hover:border-amber-400/80 hover:shadow-[0_12px_24px_-4px_rgba(217,119,6,0.12)]"
           >
-            <div className="relative aspect-[4/3] bg-stone-100 overflow-hidden">
+            <div className="relative aspect-4/3 bg-stone-100 overflow-hidden">
               <ProductImage
                 category={item.categorySlug}
                 product={item}

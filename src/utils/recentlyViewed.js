@@ -5,7 +5,8 @@ export function getRecentlyViewed() {
   if (typeof window === 'undefined') return []
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? JSON.parse(raw) : []
+    const parsed = raw ? JSON.parse(raw) : []
+    return Array.isArray(parsed) ? parsed : []
   } catch (err) {
     console.error('Failed to read recently viewed:', err)
     return []

@@ -7,12 +7,14 @@ import { getCategoryVisual, getModelCount } from '../data/categoryVisuals'
 import CategoryIcon from './CategoryIcon'
 import { CloseIcon, SearchIcon } from './Icons'
 import ProductImage from './ProductImage'
+import { slugify } from '../utils/slugify'
 
-function slugify(text) {
-  return String(text || '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)+/g, '')
+function getFocusableElements(container) {
+  return Array.from(
+    container.querySelectorAll(
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    ),
+  )
 }
 
 export default function SearchPalette() {
@@ -23,6 +25,8 @@ export default function SearchPalette() {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const inputRef = useRef(null)
   const listRef = useRef(null)
+  const dialogRef = useRef(null)
+  const previouslyFocusedRef = useRef(null)
 
   // Flatten all categories and products for instant search
   const { allCategories, allProducts } = useMemo(() => {
@@ -100,15 +104,38 @@ export default function SearchPalette() {
   // Auto-focus input when opened
   useEffect(() => {
     if (isOpen) {
+      previouslyFocusedRef.current = document.activeElement
       setQuery('')
       setSelectedIndex(0)
       const timer = setTimeout(() => {
         inputRef.current?.focus()
       }, 50)
       document.body.classList.add('overflow-hidden')
+      const handleKeyDown = (event) => {
+        if (event.key !== 'Tab' || !dialogRef.current) return
+
+        const focusableElements = getFocusableElements(dialogRef.current)
+        if (focusableElements.length === 0) return
+
+        const firstElement = focusableElements[0]
+        const lastElement = focusableElements[focusableElements.length - 1]
+
+        if (event.shiftKey && document.activeElement === firstElement) {
+          event.preventDefault()
+          lastElement.focus()
+        } else if (!event.shiftKey && document.activeElement === lastElement) {
+          event.preventDefault()
+          firstElement.focus()
+        }
+      }
+
+      document.addEventListener('keydown', handleKeyDown)
+
       return () => {
         clearTimeout(timer)
+        document.removeEventListener('keydown', handleKeyDown)
         document.body.classList.remove('overflow-hidden')
+        previouslyFocusedRef.current?.focus?.()
       }
     }
   }, [isOpen])
@@ -161,7 +188,7 @@ export default function SearchPalette() {
       aria-modal="true"
       aria-label="Global Search Palette"
     >
-      <div className="mx-auto max-w-2xl overflow-hidden rounded-3xl bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)] ring-1 ring-stone-200/90 animate-modal-pop">
+      <div ref={dialogRef} className="mx-auto max-w-2xl overflow-hidden rounded-3xl bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)] ring-1 ring-stone-200/90 animate-modal-pop">
         {/* Search Input Bar */}
         <div className="relative flex items-center border-b border-stone-200/80 px-4 py-3.5 sm:px-6">
           <SearchIcon className="h-5 w-5 text-stone-400 mr-3 shrink-0" />
@@ -222,7 +249,7 @@ export default function SearchPalette() {
                     }`}
                   >
                     <div
-                      className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${item.visual.gradient} text-white shadow-xs`}
+                      className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-linear-to-br ${item.visual.gradient} text-white shadow-xs`}
                     >
                       <CategoryIcon slug={item.categorySlug} className="h-6 w-6" />
                     </div>

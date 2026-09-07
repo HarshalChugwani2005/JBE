@@ -1,6 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
+function getFocusableElements(container) {
+  return Array.from(
+    container.querySelectorAll(
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    ),
+  )
+}
+
 /**
  * Fullscreen image lightbox.
  *
@@ -15,6 +23,9 @@ export default function ImageLightbox({ images = [], startIndex = 0, alt = 'Prod
   const [zoomed, setZoomed] = useState(false)
   const [animDir, setAnimDir] = useState(null) // 'left' | 'right' | null
   const touchStartX = useRef(null)
+  const dialogRef = useRef(null)
+  const closeButtonRef = useRef(null)
+  const previouslyFocusedRef = useRef(null)
 
   const total = images.length
   const src = images[index] ?? null
@@ -36,13 +47,35 @@ export default function ImageLightbox({ images = [], startIndex = 0, alt = 'Prod
 
   // ── Keyboard ─────────────────────────────────────────────────────────────────
   useEffect(() => {
+    previouslyFocusedRef.current = document.activeElement
+
     const handleKey = (e) => {
       if (e.key === 'Escape') { onClose(); return }
       if (e.key === 'ArrowRight') { e.preventDefault(); goNext() }
       if (e.key === 'ArrowLeft') { e.preventDefault(); goPrev() }
+      if (e.key !== 'Tab' || !dialogRef.current) return
+
+      const focusableElements = getFocusableElements(dialogRef.current)
+      if (focusableElements.length === 0) return
+
+      const firstElement = focusableElements[0]
+      const lastElement = focusableElements[focusableElements.length - 1]
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault()
+        lastElement.focus()
+      } else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault()
+        firstElement.focus()
+      }
     }
-    window.addEventListener('keydown', handleKey)
-    return () => window.removeEventListener('keydown', handleKey)
+
+    document.addEventListener('keydown', handleKey)
+    const frame = requestAnimationFrame(() => closeButtonRef.current?.focus())
+    return () => {
+      cancelAnimationFrame(frame)
+      document.removeEventListener('keydown', handleKey)
+      previouslyFocusedRef.current?.focus?.()
+    }
   }, [goNext, goPrev, onClose])
 
   // ── Body scroll lock ─────────────────────────────────────────────────────────
@@ -71,6 +104,7 @@ export default function ImageLightbox({ images = [], startIndex = 0, alt = 'Prod
 
   const content = (
     <div
+      ref={dialogRef}
       className="lb-backdrop"
       role="dialog"
       aria-modal="true"
@@ -98,7 +132,7 @@ export default function ImageLightbox({ images = [], startIndex = 0, alt = 'Prod
               Zoom in
             </button>
           )}
-          <button type="button" className="lb-btn lb-btn-close" onClick={onClose} aria-label="Close image viewer">
+          <button ref={closeButtonRef} type="button" className="lb-btn lb-btn-close" onClick={onClose} aria-label="Close image viewer">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-4 w-4">
               <path strokeLinecap="round" d="M6 18 18 6M6 6l12 12" />
             </svg>

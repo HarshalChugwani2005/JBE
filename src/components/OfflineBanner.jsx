@@ -4,7 +4,9 @@ import { WifiOffIcon } from './Icons'
 
 export default function OfflineBanner() {
   const { t } = useLanguage()
-  const [isOffline, setIsOffline] = useState(!navigator.onLine)
+  const [isOffline, setIsOffline] = useState(() => (
+    typeof navigator !== 'undefined' ? !navigator.onLine : false
+  ))
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [showInstallBanner, setShowInstallBanner] = useState(false)
   const [installed, setInstalled] = useState(false)
@@ -20,7 +22,12 @@ export default function OfflineBanner() {
     const handleBeforeInstall = (e) => {
       e.preventDefault()
       setDeferredPrompt(e)
-      const dismissed = sessionStorage.getItem('jbe_pwa_dismissed')
+      let dismissed = null
+      try {
+        dismissed = sessionStorage.getItem('jbe_pwa_dismissed')
+      } catch {
+        // Storage may be blocked in privacy-restricted browsers.
+      }
       if (!dismissed) {
         setShowInstallBanner(true)
       }
@@ -55,7 +62,11 @@ export default function OfflineBanner() {
 
   const handleDismissInstall = () => {
     setShowInstallBanner(false)
-    sessionStorage.setItem('jbe_pwa_dismissed', 'true')
+    try {
+      sessionStorage.setItem('jbe_pwa_dismissed', 'true')
+    } catch {
+      // The banner is still dismissed for the current render when storage is unavailable.
+    }
   }
 
   return (

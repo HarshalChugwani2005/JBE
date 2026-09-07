@@ -1,4 +1,5 @@
 import { Component } from 'react'
+import { getWhatsAppUrl, shop } from '../data/site'
 import { AlertTriangleIcon, HomeIcon, RefreshIcon, WhatsAppIcon } from './Icons'
 
 export default class ErrorBoundary extends Component {
@@ -31,6 +32,7 @@ export default class ErrorBoundary extends Component {
   render() {
     if (this.state.hasError) {
       const { error, detailsOpen } = this.state
+      const whatsappNumber = shop.whatsapp.replace(/\D/g, '').slice(-10)
       return (
         <div className="relative flex min-h-screen flex-col items-center justify-center bg-stone-950 px-4 py-16">
           {/* Card */}
@@ -76,13 +78,13 @@ export default class ErrorBoundary extends Component {
 
             {/* WhatsApp fallback */}
             <a
-              href="https://wa.me/918421009925?text=Hi%2C%20the%20JBE%20website%20is%20showing%20an%20error.%20Please%20help!"
+              href={getWhatsAppUrl('Hi, the JBE website is showing an error. Please help!')}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366]/10 border border-[#25D366]/30 px-5 py-2.5 text-sm font-semibold text-[#25D366] transition-all duration-200 hover:bg-[#25D366]/20 active:scale-95 cursor-pointer w-full"
             >
               <WhatsAppIcon className="h-4 w-4" />
-              <span>Chat on WhatsApp — +91 84210 09925</span>
+              <span>Chat on WhatsApp — +91 {whatsappNumber}</span>
             </a>
 
             {/* Collapsible error details */}

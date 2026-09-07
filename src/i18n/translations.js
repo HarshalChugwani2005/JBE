@@ -114,9 +114,14 @@ export const translations = {
     submitting: 'Sending…',
     sendViaWhatsApp: 'Send via WhatsApp',
     fillAllFields: 'Please fill in all fields.',
+    invalidPhone: 'Please enter a valid 10-digit mobile number.',
     submissionSuccess: 'Thanks — your enquiry was sent successfully!',
 
     // Footer
+    address: 'Address',
+    quickLinks: 'Quick Links',
+    allPricesOnEnquiry: 'All prices available on enquiry.',
+    whatsappEnquiry: 'Enquire on WhatsApp',
     // PWA & Offline
     installApp: 'Install App',
     installAppDesc: 'Install Jai Baba Electronic app for faster access and offline catalog browsing.',
@@ -240,9 +245,14 @@ export const translations = {
     submitting: 'पाठवत आहे…',
     sendViaWhatsApp: 'व्हॉट्सॲपद्वारे पाठवा',
     fillAllFields: 'कृपया सर्व माहिती भरा.',
+    invalidPhone: 'कृपया १० अंकी वैध मोबाईल नंबर टाका.',
     submissionSuccess: 'धन्यवाद — तुमची चौकशी यशस्वीरीत्या पाठवली गेली!',
 
     // Footer
+    address: 'पत्ता',
+    quickLinks: 'जलद दुवे',
+    allPricesOnEnquiry: 'सर्व किंमती चौकशीवर उपलब्ध.',
+    whatsappEnquiry: 'व्हॉट्सॲपवर चौकशी करा',
     // PWA & Offline
     installApp: 'अ‍ॅप इन्स्टॉल करा',
     installAppDesc: 'जलद वापर आणि ऑफलाइन कॅटलॉगसाठी अ‍ॅप इन्स्टॉल करा.',
@@ -366,9 +376,14 @@ export const translations = {
     submitting: 'भेजा जा रहा है…',
     sendViaWhatsApp: 'व्हाट्सएप के जरिए भेजें',
     fillAllFields: 'कृपया सभी फ़ील्ड भरें।',
+    invalidPhone: 'कृपया 10 अंकों का वैध मोबाइल नंबर दर्ज करें।',
     submissionSuccess: 'धन्यवाद — आपकी पूछताछ सफलतापूर्वक भेजी गई!',
 
     // Footer
+    address: 'पता',
+    quickLinks: 'त्वरित लिंक',
+    allPricesOnEnquiry: 'सभी कीमतें पूछताछ पर उपलब्ध हैं।',
+    whatsappEnquiry: 'व्हाट्सएप पर पूछताछ करें',
     // PWA & Offline
     installApp: 'ऐप इंस्टॉल करें',
     installAppDesc: 'तेज़ इस्तेमाल और ऑफ़लाइन कैटलॉग देखने के लिए ऐप इंस्टॉल करें।',

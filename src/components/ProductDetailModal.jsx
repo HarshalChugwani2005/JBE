@@ -6,6 +6,7 @@ import { getPhoneUrl, getWhatsAppUrl, shop } from '../data/site'
 import { getProductImageUrls } from '../data/productImages'
 import { trackCallClick, trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
 import { addRecentlyViewed } from '../utils/recentlyViewed'
+import { slugify } from '../utils/slugify'
 import { AlertTriangleIcon, CartIcon, CloseIcon, PhoneIcon, ShareIcon, WhatsAppIcon } from './Icons'
 import ImageLightbox from './ImageLightbox'
 import ProductImage from './ProductImage'
@@ -18,17 +19,10 @@ function getFocusableElements(container) {
   )
 }
 
-function slugifyText(text) {
-  return String(text || '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)+/g, '')
-}
-
 function findImageIndexForColor(color, imageSources, colors, modelName) {
   if (!color || !imageSources.length) return 0
-  const colorSlug = slugifyText(color)
-  const modelSlug = slugifyText(modelName)
+  const colorSlug = slugify(color)
+  const modelSlug = slugify(modelName)
   const targetName = modelSlug ? `${modelSlug}-${colorSlug}` : colorSlug
 
   // 1. Exact match on clean filename base (e.g. "titan-brown" or "brown")
@@ -40,7 +34,7 @@ function findImageIndexForColor(color, imageSources, colors, modelName) {
   if (exactMatchIdx !== -1) return exactMatchIdx
 
   // 2. Index match if colors array aligns with imageSources
-  const colorIdx = (colors || []).findIndex((c) => slugifyText(c) === colorSlug)
+  const colorIdx = (colors || []).findIndex((c) => slugify(c) === colorSlug)
   if (colorIdx !== -1 && colorIdx < imageSources.length) {
     return colorIdx
   }
@@ -52,11 +46,11 @@ function findColorForImage(imageSource, colors, modelName) {
   if (!imageSource || !colors?.length) return null
   const filename = imageSource.split(/[?#]/)[0].split('/').pop().replace(/\.[^.]+$/, '').toLowerCase()
   const cleanFilename = filename.replace(/-[a-zA-Z0-9_-]{8,}$/, '')
-  const modelSlug = slugifyText(modelName)
+  const modelSlug = slugify(modelName)
 
   // 1. Exact match against target name
   for (const c of colors) {
-    const cSlug = slugifyText(c)
+    const cSlug = slugify(c)
     const targetName = modelSlug ? `${modelSlug}-${cSlug}` : cSlug
     if (cleanFilename === targetName || cleanFilename === cSlug || filename === targetName || filename === cSlug) {
       return c
@@ -66,7 +60,7 @@ function findColorForImage(imageSource, colors, modelName) {
   // 2. Fallback to longest color name matching
   const sortedColors = [...colors].sort((a, b) => b.length - a.length)
   for (const c of sortedColors) {
-    const cSlug = slugifyText(c)
+    const cSlug = slugify(c)
     if (cleanFilename === cSlug || cleanFilename.endsWith(`-${cSlug}`)) {
       return c
     }
@@ -88,6 +82,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
 
   const model = product?.model ?? product ?? null
   const brand = product?.brand ?? product?.brandName ?? null
+  const brandName = brand?.brand ?? brand ?? ''
   const categorySlug = product?.categorySlug ?? product?.category ?? ''
   const categoryLabel = product?.categoryLabel ?? ''
   const inStock = model?.inStock ?? true
@@ -153,7 +148,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
       document.body.classList.remove('overflow-hidden')
       previouslyFocusedRef.current?.focus?.()
     }
-  }, [isOpen, model, onClose])
+  }, [isOpen, model, onClose, categorySlug, categoryLabel, brandName, inStock])
 
   useEffect(() => {
     setActiveImageIndex(0)
@@ -162,7 +157,6 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
   if (!isOpen || !model) return null
 
   const modelName = model.modelName ?? 'Product Detail'
-  const brandName = brand?.brand ?? brand ?? ''
 
   const whatsappText = [
     `*JAI BABA ELECTRONIC — PRODUCT ENQUIRY*`,
@@ -302,7 +296,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
               ref={closeButtonRef}
               type="button"
               onClick={onClose}
-              className="rounded-full border border-stone-200 bg-white p-2 text-stone-600 transition duration-200 hover:border-amber-300 hover:text-stone-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer"
+              className="rounded-full border border-stone-200 bg-white p-2 text-stone-600 transition duration-200 hover:border-amber-300 hover:text-stone-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer"
               aria-label={t('close') || 'Close'}
             >
               <CloseIcon className="h-4 w-4" />
@@ -315,7 +309,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
             {/* Main image — click to open lightbox */}
             <button
               type="button"
-              className="group relative block w-full cursor-zoom-in rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+              className="group relative block w-full cursor-zoom-in rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
               onClick={() => activeImage && setLightboxOpen(true)}
               aria-label="Open fullscreen image viewer"
               title="Click to zoom"
@@ -325,7 +319,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                 category={categorySlug}
                 product={model}
                 alt={`${brandName ? `${brandName} ` : ''}${modelName}${selectedColor ? ` in ${selectedColor}` : ''}`}
-                className="aspect-[4/3] rounded-2xl border border-stone-200 bg-white shadow-xs"
+                className="aspect-4/3 rounded-2xl border border-stone-200 bg-white shadow-xs"
                 imgClassName="transition-transform duration-500 group-hover:scale-[1.03]"
                 fallbackLabel="Photo coming soon"
                 loading="eager"
@@ -349,7 +343,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                     key={source}
                     type="button"
                     onClick={() => handleThumbnailSelect(index)}
-                    className={`overflow-hidden rounded-xl border transition duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer ${
+                    className={`overflow-hidden rounded-xl border transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer ${
                       activeImageIndex === index
                         ? 'border-amber-500 ring-3 ring-amber-400/30 scale-102'
                         : 'border-stone-200 hover:border-amber-300'
@@ -409,7 +403,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                       key={color}
                       type="button"
                       onClick={() => handleColorSelect(color)}
-                      className={`rounded-full border px-3.5 py-1.5 text-xs font-semibold transition duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer ${
+                      className={`rounded-full border px-3.5 py-1.5 text-xs font-semibold transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer ${
                         selectedColor === color
                           ? 'border-amber-500 bg-amber-500 text-white shadow-xs'
                           : 'border-stone-200 bg-white text-stone-700 hover:border-amber-300 hover:bg-amber-50/50'

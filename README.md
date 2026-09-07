@@ -16,6 +16,14 @@ npm run build
 npm run preview
 ```
 
+## Tests
+
+```bash
+npm test
+```
+
+The test suite covers catalog slug resolution and basic catalog invariants. Catalog sync validates incoming data before overwriting the local catalog.
+
 ## Deploy to Vercel
 
 1. Push this repository to GitHub.

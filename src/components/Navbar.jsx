@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useCart } from '../context/useCart'
 import { useLanguage } from '../context/useLanguage'
@@ -46,11 +46,11 @@ export default function Navbar() {
     setMenuOpen(false)
   }, [location.pathname])
 
-  const navRoutes = [
+  const navRoutes = useMemo(() => [
     { to: '/', label: t('navHome'), end: true, Icon: HomeIcon },
     { to: '/catalog', label: t('navCatalog'), end: false, Icon: PackageIcon },
     { to: '/contact', label: t('navContact'), end: false, Icon: MapPinIcon },
-  ]
+  ], [t])
 
   // Update sliding indicator position
   useEffect(() => {
@@ -85,7 +85,7 @@ export default function Navbar() {
       clearTimeout(timer)
       window.removeEventListener('resize', updateIndicator)
     }
-  }, [location.pathname, isMobile, t])
+  }, [location.pathname, isMobile, navRoutes])
 
   return (
     <header className="sticky top-0 z-40 border-b border-stone-200 bg-white/95 backdrop-blur-sm transition-all duration-200 shadow-xs dark:border-stone-800 dark:bg-stone-950/95">

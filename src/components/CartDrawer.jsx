@@ -23,6 +23,7 @@ export default function CartDrawer() {
   const [buyerType, setBuyerType] = useState('wholesale') // 'wholesale' | 'retail'
   const [notes, setNotes] = useState('')
   const drawerRef = useRef(null)
+  const previouslyFocusedRef = useRef(null)
   // Animation state: track whether the panel is currently visible (CSS-wise)
   const [isVisible, setIsVisible] = useState(false)
   const closeTimerRef = useRef(null)
@@ -52,7 +53,11 @@ export default function CartDrawer() {
   useEffect(() => {
     if (!isOpen) return
 
+    previouslyFocusedRef.current = document.activeElement
     document.body.classList.add('overflow-hidden')
+    const frame = requestAnimationFrame(() => {
+      getFocusableElements(drawerRef.current)?.[0]?.focus()
+    })
 
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
@@ -83,8 +88,10 @@ export default function CartDrawer() {
     document.addEventListener('keydown', handleKeyDown)
 
     return () => {
+      cancelAnimationFrame(frame)
       document.removeEventListener('keydown', handleKeyDown)
       document.body.classList.remove('overflow-hidden')
+      previouslyFocusedRef.current?.focus?.()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])

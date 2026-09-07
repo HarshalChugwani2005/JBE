@@ -60,10 +60,10 @@ export default function ContactForm() {
 
     // Phone sanity check (standard 10-digit Indian mobile)
     const digitsOnly = cleanPhone.replace(/\D/g, '')
-    if (digitsOnly.length < 10) {
+    if (!/^\d{10}$/.test(digitsOnly)) {
       setStatus({
         type: 'error',
-        message: 'Please enter a valid 10-digit mobile number.',
+        message: t('invalidPhone'),
       })
       return
     }
