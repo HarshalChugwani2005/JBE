@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/generate-sitemap.js && node scripts/generate-og-image.js && vite build",
+    "build": "node scripts/generate-sitemap.js && node scripts/generate-og-image.js && vite build && node scripts/generate-static-seo.js",
     "lint": "oxlint",
+    "test": "node --test",
     "preview": "vite preview",
     "sitemap": "node scripts/generate-sitemap.js",
     "icons:pwa": "node scripts/generate-pwa-icons.js",
