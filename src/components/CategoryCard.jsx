@@ -34,7 +34,7 @@ export default function CategoryCard({ category, categoryLabel, comingSoon, bran
         )}
       </div>
       <div className="flex flex-1 flex-col p-3.5 sm:p-5">
-        <h3 className="font-heading text-base sm:text-lg font-bold text-stone-900 dark:text-white transition-colors duration-200 group-hover:text-amber-800 leading-tight">
+        <h3 className="font-heading text-base sm:text-lg font-bold text-stone-900 transition-colors duration-200 group-hover:text-amber-800 leading-tight">
           {categoryLabel}
         </h3>
 

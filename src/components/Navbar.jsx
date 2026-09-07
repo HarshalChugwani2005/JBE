@@ -112,8 +112,8 @@ export default function Navbar() {
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-600 text-white text-xs font-black tracking-wider shadow-xs">
             JBE
           </span>
-          <span className="font-heading font-bold text-stone-900 group-hover:text-amber-700 transition-colors leading-tight text-sm sm:text-base dark:text-stone-100 dark:group-hover:text-amber-400">
-            {isMobile ? 'Jai Baba' : shop.name}
+          <span className="font-heading font-bold text-stone-900 group-hover:text-amber-700 transition-colors leading-tight text-xs sm:text-base dark:text-stone-100 dark:group-hover:text-amber-400">
+            {shop.name}
           </span>
         </Link>
 

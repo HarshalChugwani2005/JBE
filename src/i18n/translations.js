@@ -35,7 +35,7 @@ export const translations = {
     copied: 'Link copied to clipboard!',
     itemAdded: 'Added to enquiry list!',
     close: 'Close',
-    backToCatalog: '← Back to Catalog',
+    backToCatalog: 'Back to Catalog',
     hours: 'Mon–Sat: 9:00 AM – 8:00 PM · Sun: 10:00 AM – 2:00 PM',
 
     // Hero
@@ -171,7 +171,7 @@ export const translations = {
     copied: 'लिंक क्लिपबोर्डवर कॉपी झाली!',
     itemAdded: 'चौकशी यादीत जोडले!',
     close: 'बंद करा',
-    backToCatalog: '← कॅटलॉगवर परत जा',
+    backToCatalog: 'कॅटलॉगवर परत जा',
     hours: 'सोम–शनि: सकाळी ९:०० – रात्री ८:०० · रवि: सकाळी १०:०० – दुपारी २:००',
 
     // Hero
@@ -307,7 +307,7 @@ export const translations = {
     copied: 'लिंक कॉपी हो गई!',
     itemAdded: 'पूछताछ सूची में जोड़ा गया!',
     close: 'बंद करें',
-    backToCatalog: '← कैटलॉग पर वापस जाएं',
+    backToCatalog: 'कैटलॉग पर वापस जाएं',
     hours: 'सोम–शनि: सुबह 9:00 – रात 8:00 · रवि: सुबह 10:00 – दोपहर 2:00',
 
     // Hero
