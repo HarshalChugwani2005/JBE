@@ -1016,3 +1016,484 @@ html.dark .footer-premium {
     animation: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   PREMIUM ANIMATIONS LIBRARY
+   Full suite of micro-interactions, entrance animations, and motion effects
+═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   1. FLOATING ANIMATION — gentle infinite levitation
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-8px) rotate(0.5deg); }
+  66%       { transform: translateY(-4px) rotate(-0.3deg); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   2. SHIMMER SWEEP — left-to-right light sheen on hover
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes shimmer-sweep {
+  0%   { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(250%) skewX(-15deg); }
+}
+
+.shimmer-on-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-on-hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 80%
+  );
+  transform: translateX(-100%) skewX(-15deg);
+  pointer-events: none;
+}
+
+.shimmer-on-hover:hover::after {
+  animation: shimmer-sweep 0.65s ease-out forwards;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   3. PAGE TRANSITION — smooth fade + rise when page loads
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-transition {
+  animation: page-enter 0.45s var(--ease-spring) forwards;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   4. STAGGER FADE-UP — used for grid items entering viewport
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes stagger-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.stagger-item {
+  opacity: 0;
+  animation: stagger-fade-up 0.5s var(--ease-spring) forwards;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0ms;   }
+.stagger-item:nth-child(2) { animation-delay: 60ms;  }
+.stagger-item:nth-child(3) { animation-delay: 120ms; }
+.stagger-item:nth-child(4) { animation-delay: 180ms; }
+.stagger-item:nth-child(5) { animation-delay: 240ms; }
+.stagger-item:nth-child(6) { animation-delay: 300ms; }
+.stagger-item:nth-child(7) { animation-delay: 360ms; }
+.stagger-item:nth-child(8) { animation-delay: 420ms; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   5. PING AMBER — pulsing availability dot
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes ping-amber {
+  0%   { transform: scale(1);   opacity: 1; }
+  75%  { transform: scale(2.2); opacity: 0; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+.ping-amber {
+  animation: ping-amber 1.6s ease-out infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   6. GRADIENT SHIFT — animated gradient background motion
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes gradient-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 5s ease infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   7. CART BADGE BOUNCE — micro-bounce when item is added
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes cart-bounce {
+  0%   { transform: scale(1); }
+  25%  { transform: scale(1.5) rotate(-10deg); }
+  50%  { transform: scale(0.88) rotate(5deg); }
+  75%  { transform: scale(1.12) rotate(-3deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.animate-cart-bounce {
+  animation: cart-bounce 0.45s var(--ease-bounce) forwards;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   8. SPIN-IN — used for icons/badges popping in
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes spin-in {
+  from { opacity: 0; transform: rotate(-120deg) scale(0.5); }
+  to   { opacity: 1; transform: rotate(0deg) scale(1); }
+}
+
+.animate-spin-in {
+  animation: spin-in 0.4s var(--ease-spring) forwards;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   9. SLIDE-IN — drawer / sidebar enter animations
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-in-up {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-down {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-in-right { animation: slide-in-right 0.35s var(--ease-spring) forwards; }
+.animate-slide-in-left  { animation: slide-in-left  0.35s var(--ease-spring) forwards; }
+.animate-slide-in-up    { animation: slide-in-up    0.35s var(--ease-spring) forwards; }
+.animate-slide-in-down  { animation: slide-in-down  0.28s var(--ease-spring) forwards; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   10. UNDERLINE DRAW — animated accent line below section titles
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes underline-draw {
+  from { transform: scaleX(0); transform-origin: left; }
+  to   { transform: scaleX(1); transform-origin: left; }
+}
+
+.section-heading-animated {
+  position: relative;
+  display: inline-block;
+}
+
+.section-heading-animated::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--clr-amber-500) 0%, var(--clr-amber-300) 60%, transparent 100%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease-spring);
+}
+
+.reveal-on-scroll--visible .section-heading-animated::after,
+.section-heading-animated.drawn::after {
+  transform: scaleX(1);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   11. TILT 3D — CSS perspective hover for cards
+   ───────────────────────────────────────────────────────────────────────────── */
+.tilt-card {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.tilt-card-inner {
+  transition: transform 0.4s var(--ease-spring), box-shadow 0.4s var(--ease-smooth);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.tilt-card:hover .tilt-card-inner {
+  transform: rotateY(-4deg) rotateX(2deg) translateZ(8px);
+  box-shadow: 8px 16px 32px -8px rgba(180, 83, 9, 0.2);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   12. IMAGE SCALE + OVERLAY — product image hover upgrade
+   ───────────────────────────────────────────────────────────────────────────── */
+.img-zoom-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.img-zoom-container img,
+.img-zoom-container .product-img {
+  transition: transform 0.6s var(--ease-spring);
+  will-change: transform;
+}
+
+.img-zoom-container:hover img,
+.img-zoom-container:hover .product-img {
+  transform: scale(1.08);
+}
+
+.img-zoom-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(12, 10, 9, 0.2) 0%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.img-zoom-container:hover::after {
+  opacity: 1;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   13. SCROLL-AWARE NAVBAR — deepening shadow on scroll
+   ───────────────────────────────────────────────────────────────────────────── */
+header.scrolled {
+  box-shadow:
+    0 1px 0 rgba(231, 229, 228, 0.8),
+    0 4px 20px -4px rgba(0, 0, 0, 0.10),
+    0 8px 32px -8px rgba(0, 0, 0, 0.06) !important;
+}
+
+html.dark header.scrolled {
+  box-shadow:
+    0 1px 0 rgba(68, 64, 60, 0.5),
+    0 4px 24px -4px rgba(0, 0, 0, 0.40),
+    0 8px 40px -8px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   14. HERO PRODUCT IMAGE — floating + entrance animation
+   ───────────────────────────────────────────────────────────────────────────── */
+.hero-product-enter {
+  animation: hero-product-in 0.8s var(--ease-spring) 0.2s both;
+}
+
+@keyframes hero-product-in {
+  from {
+    opacity: 0;
+    transform: translateX(40px) scale(0.92) rotateY(8deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1) rotateY(0deg);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   15. BUTTON RIPPLE — premium click feedback
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple .ripple-wave {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  background: rgba(255, 255, 255, 0.3);
+  animation: ripple 0.6s linear;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   16. REVEAL VARIANTS — directional scroll reveals
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Slide from left */
+.reveal-from-left {
+  opacity: 0;
+  transform: translateX(-32px);
+  transition:
+    opacity 700ms var(--ease-spring),
+    transform 700ms var(--ease-spring);
+  will-change: opacity, transform;
+}
+
+.reveal-from-left.reveal-on-scroll--visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Slide from right */
+.reveal-from-right {
+  opacity: 0;
+  transform: translateX(32px);
+  transition:
+    opacity 700ms var(--ease-spring),
+    transform 700ms var(--ease-spring);
+  will-change: opacity, transform;
+}
+
+.reveal-from-right.reveal-on-scroll--visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Scale up */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.92);
+  transition:
+    opacity 600ms var(--ease-spring),
+    transform 600ms var(--ease-spring);
+  will-change: opacity, transform;
+}
+
+.reveal-scale.reveal-on-scroll--visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   17. TOAST NOTIFICATION — slide in from bottom-right
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes toast-enter {
+  from { opacity: 0; transform: translateY(16px) scale(0.92); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes toast-exit {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(8px) scale(0.95); }
+}
+
+.toast-enter { animation: toast-enter 0.32s var(--ease-spring) forwards; }
+.toast-exit  { animation: toast-exit  0.22s var(--ease-smooth) forwards; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   18. INTERACTIVE PRESS — scale-down on active
+   ───────────────────────────────────────────────────────────────────────────── */
+.press-effect {
+  transition: transform var(--duration-fast) var(--ease-spring);
+}
+
+.press-effect:active {
+  transform: scale(0.95);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   19. MOBILE ACTION BAR — slide up on load
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes bar-slide-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.mobile-bar-enter {
+  animation: bar-slide-up 0.45s var(--ease-spring) 0.3s both;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   20. SEARCH PALETTE — backdrop + dialog entrance
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes palette-backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes palette-dialog-in {
+  from { opacity: 0; transform: scale(0.94) translateY(-12px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.palette-backdrop-enter {
+  animation: palette-backdrop-in 0.2s ease forwards;
+}
+
+.palette-dialog-enter {
+  animation: palette-dialog-in 0.28s var(--ease-spring) forwards;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Reduced Motion Overrides for new animations
+   ───────────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-float-slow,
+  .animate-gradient,
+  .animate-cart-bounce,
+  .animate-spin-in,
+  .hero-product-enter,
+  .mobile-bar-enter,
+  .palette-backdrop-enter,
+  .palette-dialog-enter,
+  .stagger-item,
+  .page-transition,
+  .shimmer-on-hover::after {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .reveal-from-left,
+  .reveal-from-right,
+  .reveal-scale {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .tilt-card:hover .tilt-card-inner {
+    transform: none !important;
+  }
+  .section-heading-animated::after {
+    transform: scaleX(1) !important;
+  }
+}
+

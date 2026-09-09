@@ -91,18 +91,20 @@ export default function Home() {
             </div>
 
             {heroProduct && (
-              <div className="relative hidden md:block">
+              <div className="relative hidden md:block hero-product-enter">
                 <div className="absolute -inset-4 rounded-4xl border border-white/15 bg-white/5" aria-hidden="true" />
-                <ProductImage
-                  category="ceiling-fans"
-                  product={heroProduct}
-                  alt={`${heroProduct.modelName} ceiling fan`}
-                  className="relative aspect-4/3 overflow-hidden rounded-3xl border border-white/20 bg-white/10 shadow-2xl"
-                  imgClassName="object-contain p-6"
-                  fallbackLabel="Featured product"
-                  loading="eager"
-                />
-                <div className="absolute bottom-4 left-4 rounded-xl border border-white/20 bg-stone-950/65 px-3 py-2 backdrop-blur-sm">
+                <div className="animate-float">
+                  <ProductImage
+                    category="ceiling-fans"
+                    product={heroProduct}
+                    alt={`${heroProduct.modelName} ceiling fan`}
+                    className="relative aspect-4/3 overflow-hidden rounded-3xl border border-white/20 bg-white/10 shadow-2xl"
+                    imgClassName="object-contain p-6"
+                    fallbackLabel="Featured product"
+                    loading="eager"
+                  />
+                </div>
+                <div className="absolute bottom-4 left-4 rounded-xl border border-white/20 bg-stone-950/65 px-3 py-2 backdrop-blur-sm animate-slide-in-up" style={{animationDelay:'0.6s'}}>
                   <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-200">Featured range</p>
                   <p className="mt-0.5 text-sm font-bold text-white">{heroProduct.modelName}</p>
                 </div>
@@ -119,22 +121,20 @@ export default function Home() {
           >
             <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
               {featured.map((cat, index) => (
-                <li key={cat.category}>
-                  <RevealOnScroll delay={index * 60}>
-                    <CategoryCard
-                      category={cat.category}
-                      categoryLabel={cat.categoryLabel}
-                      comingSoon={cat.comingSoon}
-                      brands={cat.brands}
-                    />
-                  </RevealOnScroll>
+                <li key={cat.category} className="stagger-item">
+                  <CategoryCard
+                    category={cat.category}
+                    categoryLabel={cat.categoryLabel}
+                    comingSoon={cat.comingSoon}
+                    brands={cat.brands}
+                  />
                 </li>
               ))}
             </ul>
             <div className="mt-8 text-center">
               <Link
                 to="/catalog"
-                className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-stone-200 bg-white px-6 py-2 text-sm font-semibold text-amber-900 shadow-xs transition duration-150 hover:border-amber-400 hover:bg-amber-50/50"
+                className="shimmer-on-hover inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-stone-200 bg-white px-6 py-2 text-sm font-semibold text-amber-900 shadow-xs transition duration-150 hover:border-amber-400 hover:bg-amber-50/50"
               >
                 <span>{t('viewAllCategories')}</span>
                 <ArrowRightIcon className="h-3.5 w-3.5 text-amber-700" />
@@ -148,9 +148,9 @@ export default function Home() {
             subtitle={t('aboutSubtitle')}
           >
             <div className="grid gap-6 md:grid-cols-2">
-              <RevealOnScroll>
-                <div className="rounded-2xl border border-stone-200 bg-white p-6 sm:p-7 shadow-xs">
-                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-800 mb-4">
+              <RevealOnScroll variant="left">
+                <div className="rounded-2xl border border-stone-200 bg-white p-6 sm:p-7 shadow-xs hover:shadow-md transition-shadow duration-300">
+                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-800 mb-4 animate-float-slow">
                     <StoreIcon className="h-5 w-5" />
                   </div>
                   <h3 className="font-heading text-lg font-bold text-stone-900">{t('wholesaleAndRetail')}</h3>
@@ -160,9 +160,9 @@ export default function Home() {
                 </div>
               </RevealOnScroll>
 
-              <RevealOnScroll delay={80}>
-                <div className="rounded-2xl border border-stone-200 bg-white p-6 sm:p-7 shadow-xs">
-                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-800 mb-4">
+              <RevealOnScroll variant="right" delay={80}>
+                <div className="rounded-2xl border border-stone-200 bg-white p-6 sm:p-7 shadow-xs hover:shadow-md transition-shadow duration-300">
+                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-800 mb-4 animate-float-slow" style={{animationDelay:'1s'}}>
                     <ShieldCheckIcon className="h-5 w-5" />
                   </div>
                   <h3 className="font-heading text-lg font-bold text-stone-900">{t('contactForPrice')}</h3>

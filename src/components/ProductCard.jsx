@@ -68,7 +68,7 @@ export default function ProductCard({
   }
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-amber-400/80 hover:shadow-[0_12px_24px_-4px_rgba(217,119,6,0.12)]">
+    <article className="group press-effect relative flex h-full flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-amber-400/80 hover:shadow-[0_12px_24px_-4px_rgba(217,119,6,0.12)]">
       <Link
         to={{ pathname: to, search }}
         onClick={() => {
@@ -84,25 +84,25 @@ export default function ProductCard({
         className="block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
         aria-label={`${brand ? `${brand} ` : ''}${modelName}`}
       >
-        <div className="relative overflow-hidden bg-stone-100">
+        <div className="shimmer-on-hover img-zoom-container relative overflow-hidden bg-stone-100">
           <ProductImage
             category={category}
             product={{ image }}
             alt={`${brand ? `${brand} ` : ''}${modelName}`}
             className="aspect-4/3 w-full"
-            imgClassName="group-hover:scale-108 transition-transform duration-500 ease-out"
+            imgClassName="transition-transform duration-600 ease-out"
             fallbackLabel="Photo coming soon"
           />
 
-          {/* Gradient Overlay on Hover */}
-          <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-stone-900/20 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          {/* Gradient overlay */}
+          <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-stone-900/25 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
           {/* Stock Badge */}
           <div className="absolute top-3 right-3 flex items-center gap-1.5">
             {inStock ? (
               <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-700 px-2.5 py-0.5 text-[11px] font-bold text-white shadow-xs">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
+                  <span className="absolute inline-flex h-full w-full ping-amber rounded-full bg-white opacity-75" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-white" />
                 </span>
                 {t('inStock')}

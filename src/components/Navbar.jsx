@@ -41,6 +41,14 @@ export default function Navbar() {
   const headerRef = useRef(null)
   const linkRefs = useRef({})
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 })
+  const [scrolled, setScrolled] = useState(false)
+
+  // Scroll-aware navbar shadow
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 8)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   // Close drawer on route change
   useEffect(() => {
@@ -100,7 +108,7 @@ export default function Navbar() {
   }, [location.pathname, isMobile, navRoutes])
 
   return (
-    <header ref={headerRef} className="sticky top-0 z-40 border-b border-stone-200 bg-white/95 backdrop-blur-sm transition-all duration-200 shadow-xs dark:border-stone-800 dark:bg-stone-950/95">
+    <header ref={headerRef} className={`sticky top-0 z-40 border-b border-stone-200 bg-white/95 backdrop-blur-sm transition-all duration-300 dark:border-stone-800 dark:bg-stone-950/95 ${scrolled ? 'scrolled' : ''}`}>
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
 
         {/* Logo / Shop Identity */}
@@ -109,7 +117,7 @@ export default function Navbar() {
           onClick={() => setMenuOpen(false)}
           className="group flex shrink-0 items-center gap-2.5 font-bold text-stone-900 tracking-tight transition duration-150 hover:opacity-95 dark:text-stone-100"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-600 text-white text-xs font-black tracking-wider shadow-xs">
+          <span className="shimmer-on-hover flex h-8 w-8 items-center justify-center rounded-lg bg-amber-600 text-white text-xs font-black tracking-wider shadow-sm transition-transform duration-200 group-hover:scale-110 group-hover:shadow-md">
             JBE
           </span>
           <span className="font-heading font-bold text-stone-900 group-hover:text-amber-700 transition-colors leading-tight text-xs sm:text-base dark:text-stone-100 dark:group-hover:text-amber-400">

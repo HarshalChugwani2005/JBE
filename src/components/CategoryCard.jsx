@@ -10,14 +10,13 @@ export default function CategoryCard({ category, categoryLabel, comingSoon, bran
   return (
     <Link
       to={{ pathname: `/catalog/${category}`, search }}
-      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1.5 hover:border-amber-400/80 hover:shadow-[0_16px_32px_-6px_rgba(217,119,6,0.14)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+      className="group press-effect flex h-full flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1.5 hover:border-amber-400/80 hover:shadow-[0_16px_32px_-6px_rgba(217,119,6,0.14)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
     >
       <div
-        className={`relative flex aspect-square sm:aspect-[4/3] items-center justify-center bg-gradient-to-br ${visual.gradient} text-white overflow-hidden`}
+        className={`shimmer-on-hover relative flex aspect-square sm:aspect-[4/3] items-center justify-center bg-gradient-to-br ${visual.gradient} text-white overflow-hidden`}
       >
-        {/* Subtle radial sheen */}
         <div className="absolute inset-0 bg-radial from-white/20 via-transparent to-black/10 pointer-events-none" />
-        <CategoryIcon slug={category} className="h-16 w-16 sm:h-14 sm:w-14 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:rotate-2 drop-shadow-md" />
+        <CategoryIcon slug={category} className="h-16 w-16 sm:h-14 sm:w-14 transition-all duration-500 ease-out group-hover:scale-115 group-hover:rotate-6 group-hover:drop-shadow-xl drop-shadow-md" />
 
         {/* Model count badge — top-left corner */}
         {!comingSoon && modelCount > 0 && (
@@ -57,7 +56,7 @@ export default function CategoryCard({ category, categoryLabel, comingSoon, bran
 
         {!comingSoon && brands.length > 0 && (
           <div className="mt-auto pt-2">
-            <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-amber-700/90 truncate">
+            <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-amber-700/90 truncate transition-all duration-300 group-hover:text-amber-800">
               {brands.map((b) => b.brand).join(' · ')}
             </p>
           </div>

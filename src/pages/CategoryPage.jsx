@@ -165,8 +165,8 @@ export default function CategoryPage() {
           <span>←</span>
           <span>{t('backToCatalog')}</span>
         </Link>
-        <h1 className="mt-3 font-heading text-3xl font-extrabold tracking-tight text-stone-900 sm:text-4xl">
-          {category.categoryLabel}
+        <h1 className="mt-3 font-heading text-3xl font-extrabold tracking-tight text-stone-900 sm:text-4xl animate-slide-in-down">
+          <span className="section-heading-animated drawn">{category.categoryLabel}</span>
         </h1>
 
         <div className="mt-6">
@@ -201,20 +201,21 @@ export default function CategoryPage() {
                 </span>
               )}
             </div>
-            <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {brandEntry.models.map((model) => (
-                <ProductCard
-                  key={model.modelName}
-                  to={`/catalog/${categorySlug}/${slugify(model.modelName)}`}
-                  search={search}
-                  modelName={model.modelName}
-                  brand={brandEntry.brand}
-                  image={model.image}
-                  category={categorySlug}
-                  categoryLabel={category.categoryLabel}
-                  inStock={model.inStock}
-                  specs={model.specs}
-                />
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {brandEntry.models.map((model, idx) => (
+                <div key={model.modelName} className="stagger-item">
+                  <ProductCard
+                    to={`/catalog/${categorySlug}/${slugify(model.modelName)}`}
+                    search={search}
+                    modelName={model.modelName}
+                    brand={brandEntry.brand}
+                    image={model.image}
+                    category={categorySlug}
+                    categoryLabel={category.categoryLabel}
+                    inStock={model.inStock}
+                    specs={model.specs}
+                  />
+                </div>
               ))}
             </div>
           </section>
