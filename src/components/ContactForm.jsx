@@ -72,7 +72,7 @@ export default function ContactForm() {
     if (!endpoint) {
       // Direct WhatsApp compose fallback
       handleWhatsAppRedirect({ name: cleanName, phone: cleanPhone, message: cleanMessage })
-      setStatus({ type: 'success', message: 'Opening WhatsApp with your enquiry…' })
+      setStatus({ type: 'success', message: t('contactWhatsAppOpening') })
       return
     }
 
@@ -96,18 +96,18 @@ export default function ContactForm() {
       } else {
         trackFormSubmit('failure')
         setStatus({
-          type: 'error',
-          message: 'Could not send via form service. You can send directly via WhatsApp instead.',
-          canWhatsApp: true,
-        })
+            type: 'error',
+            message: t('contactFormServiceError'),
+            canWhatsApp: true,
+          })
       }
     } catch {
       trackFormSubmit('failure')
       setStatus({
-        type: 'error',
-        message: `Network error. You can send your enquiry directly via WhatsApp.`,
-        canWhatsApp: true,
-      })
+          type: 'error',
+          message: t('contactNetworkError'),
+          canWhatsApp: true,
+        })
     } finally {
       setSubmitting(false)
     }
@@ -160,10 +160,10 @@ export default function ContactForm() {
               >
                 <WhatsAppIcon className="h-3.5 w-3.5" />
                 <span>
-                  {status.type === 'success'
-                    ? 'Also message on WhatsApp'
-                    : 'Send via WhatsApp instead'}
-                </span>
+                    {status.type === 'success'
+                      ? t('alsoOnWhatsApp')
+                      : t('sendViaWhatsAppInstead')}
+                  </span>
               </button>
             </div>
           )}
@@ -248,7 +248,7 @@ export default function ContactForm() {
 
       {!hasFormspree && (
         <p className="text-[11px] text-stone-400 leading-relaxed">
-          Clicking the button will open WhatsApp with your message pre-filled.
+          {t('whatsappPrefillHint')}
         </p>
       )}
     </form>

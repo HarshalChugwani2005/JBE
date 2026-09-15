@@ -8,14 +8,54 @@ import CategoryIcon from './CategoryIcon'
 import { CloseIcon, SearchIcon } from './Icons'
 import ProductImage from './ProductImage'
 import { slugify } from '../utils/slugify'
+import { getFocusableElements } from '../utils/focus'
 
-function getFocusableElements(container) {
-  return Array.from(
-    container.querySelectorAll(
-      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
-    ),
-  )
+// ─── Static search index ──────────────────────────────────────────────────────
+// Built once at module load time (data is static) — not inside the component
+// so it isn't reconstructed on every SearchPalette mount.
+function buildSearchIndex() {
+  const cats = []
+  const prods = []
+
+  for (const cat of categories) {
+    cats.push({
+      type: 'category',
+      id: `cat-${cat.category}`,
+      categorySlug: cat.category,
+      categoryLabel: cat.categoryLabel,
+      brandCount: cat.brands?.length || 0,
+      modelCount: getModelCount({ brands: cat.brands || [] }),
+      comingSoon: cat.comingSoon,
+      visual: getCategoryVisual(cat.category),
+    })
+
+    if (cat.comingSoon) continue
+
+    for (const b of cat.brands || []) {
+      for (const m of b.models || []) {
+        prods.push({
+          type: 'product',
+          id: `prod-${cat.category}-${slugify(b.brand)}-${slugify(m.modelName)}`,
+          modelName: m.modelName,
+          brand: b.brand,
+          categorySlug: cat.category,
+          categoryLabel: cat.categoryLabel,
+          image: m.image,
+          images: m.images,
+          inStock: m.inStock !== false,
+          specs: m.specs || [],
+          colors: m.colors || [],
+          warranty: m.warranty || b.warranty,
+        })
+      }
+    }
+  }
+
+  return { allCategories: cats, allProducts: prods }
 }
+
+const { allCategories: ALL_CATEGORIES, allProducts: ALL_PRODUCTS } = buildSearchIndex()
+// ─────────────────────────────────────────────────────────────────────────────
 
 export default function SearchPalette() {
   const { isOpen, closeSearch } = useSearch()
@@ -28,73 +68,30 @@ export default function SearchPalette() {
   const dialogRef = useRef(null)
   const previouslyFocusedRef = useRef(null)
 
-  // Flatten all categories and products for instant search
-  const { allCategories, allProducts } = useMemo(() => {
-    const cats = []
-    const prods = []
-
-    for (const cat of categories) {
-      cats.push({
-        type: 'category',
-        id: `cat-${cat.category}`,
-        categorySlug: cat.category,
-        categoryLabel: cat.categoryLabel,
-        brandCount: cat.brands?.length || 0,
-        modelCount: getModelCount({ brands: cat.brands || [] }),
-        comingSoon: cat.comingSoon,
-        visual: getCategoryVisual(cat.category),
-      })
-
-      if (cat.comingSoon) continue
-
-      for (const b of cat.brands || []) {
-        for (const m of b.models || []) {
-          prods.push({
-            type: 'product',
-            id: `prod-${cat.category}-${slugify(b.brand)}-${slugify(m.modelName)}`,
-            modelName: m.modelName,
-            brand: b.brand,
-            categorySlug: cat.category,
-            categoryLabel: cat.categoryLabel,
-            image: m.image,
-            images: m.images,
-            inStock: m.inStock !== false,
-            specs: m.specs || [],
-            colors: m.colors || [],
-            warranty: m.warranty || b.warranty,
-          })
-        }
-      }
-    }
-
-    return { allCategories: cats, allProducts: prods }
-  }, [])
-
   // Filter items based on query
   const filteredItems = useMemo(() => {
     const q = query.trim().toLowerCase()
     if (!q) {
-      // Default initial view: top categories and featured products
       return [
-        ...allCategories.slice(0, 4),
-        ...allProducts.slice(0, 6),
+        ...ALL_CATEGORIES.slice(0, 4),
+        ...ALL_PRODUCTS.slice(0, 6),
       ]
     }
 
     const words = q.split(/\s+/).filter(Boolean)
 
-    const matchedCats = allCategories.filter((cat) => {
+    const matchedCats = ALL_CATEGORIES.filter((cat) => {
       const text = `${cat.categoryLabel} ${cat.categorySlug}`.toLowerCase()
       return words.every((w) => text.includes(w))
     })
 
-    const matchedProds = allProducts.filter((prod) => {
+    const matchedProds = ALL_PRODUCTS.filter((prod) => {
       const text = `${prod.brand} ${prod.modelName} ${prod.categoryLabel} ${prod.specs.join(' ')} ${prod.colors.join(' ')}`.toLowerCase()
       return words.every((w) => text.includes(w))
     })
 
     return [...matchedCats, ...matchedProds]
-  }, [allCategories, allProducts, query])
+  }, [query])
 
   // Reset selection on query change
   useEffect(() => {
@@ -236,10 +233,8 @@ export default function SearchPalette() {
           {filteredItems.length === 0 ? (
             <div className="py-12 text-center text-stone-500">
               <SearchIcon className="mx-auto h-10 w-10 text-stone-300" />
-              <p className="mt-3 font-semibold text-stone-700">No matching products or categories</p>
-              <p className="mt-1 text-xs text-stone-400">
-                Try searching for "ZIPSY", "Titan", "Fan", "Cooler", or "Havells"
-              </p>
+              <p className="mt-3 font-semibold text-stone-700">{t('searchNoResults')}</p>
+              <p className="mt-1 text-xs text-stone-400">{t('searchNoResultsHint')}</p>
             </div>
           ) : (
             filteredItems.map((item, index) => {
@@ -277,12 +272,12 @@ export default function SearchPalette() {
                       </div>
                       <p className="text-xs text-stone-500 truncate">
                         {item.comingSoon
-                          ? 'Coming soon'
+                          ? t('comingSoon')
                           : `${item.modelCount} model${item.modelCount === 1 ? '' : 's'} available`}
                       </p>
                     </div>
                     <span className="text-xs font-semibold text-amber-700 opacity-60 group-hover:opacity-100">
-                      Jump →
+                      {t('searchJump')}
                     </span>
                   </div>
                 )
@@ -319,11 +314,11 @@ export default function SearchPalette() {
                       </span>
                       {item.inStock ? (
                         <span className="rounded-full bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
-                          In Stock
+                          {t('inStock')}
                         </span>
                       ) : (
                         <span className="rounded-full bg-stone-100 px-2 py-0.5 text-[10px] font-medium text-stone-600">
-                          Out of Stock
+                          {t('outOfStock')}
                         </span>
                       )}
                     </div>
@@ -338,7 +333,7 @@ export default function SearchPalette() {
                     </div>
                   </div>
                   <span className="text-xs font-semibold text-amber-700">
-                    View Specs →
+                    {t('viewSpecs')}
                   </span>
                 </div>
               )

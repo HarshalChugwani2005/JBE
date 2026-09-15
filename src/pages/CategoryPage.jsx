@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useMemo } from 'react'
 import ProductCard from '../components/ProductCard'
 import CatalogFilters from '../components/CatalogFilters'
@@ -6,6 +6,7 @@ import ProductDetailModal from '../components/ProductDetailModal'
 import RecentlyViewed from '../components/RecentlyViewed'
 import SEO from '../components/SEO'
 import { useLanguage } from '../context/useLanguage'
+import { useCatalogParams } from '../hooks/useCatalogParams'
 import { getCategoryBySlug, getModelBySlug } from '../data/products'
 import { slugify } from '../utils/slugify'
 
@@ -13,15 +14,10 @@ export default function CategoryPage() {
   const { category: categorySlug, model: modelSlug } = useParams()
   const navigate = useNavigate()
   const { search } = useLocation()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const { query, brand, tier, sort, inStockOnly, updateParams, clearFilters } = useCatalogParams()
   const { t } = useLanguage()
 
   const category = getCategoryBySlug(categorySlug)
-  const query = searchParams.get('q') ?? ''
-  const brand = searchParams.get('brand') ?? ''
-  const tier = searchParams.get('tier') ?? ''
-  const sort = searchParams.get('sort') ?? ''
-  const inStockOnly = searchParams.get('inStock') === '1'
 
   const allBrands = useMemo(() => {
     const brandNames = new Set(category?.brands?.map((entry) => entry.brand).filter(Boolean) ?? [])
@@ -75,34 +71,6 @@ export default function CategoryPage() {
       }
     }).filter(Boolean)
   }, [brand, category, inStockOnly, query, sort, tier])
-
-  const updateParams = (next) => {
-    const params = new URLSearchParams(searchParams)
-    const nextQuery = next.q !== undefined ? next.q : query
-    const nextBrand = next.brand !== undefined ? next.brand : brand
-    const nextTier = next.tier !== undefined ? next.tier : tier
-    const nextInStock = next.inStock !== undefined ? next.inStock : inStockOnly
-    const nextSort = next.sort !== undefined ? next.sort : sort
-
-    if (nextQuery.trim()) params.set('q', nextQuery)
-    else params.delete('q')
-
-    if (nextBrand.trim()) params.set('brand', nextBrand)
-    else params.delete('brand')
-
-    if (nextTier.trim()) params.set('tier', nextTier)
-    else params.delete('tier')
-
-    if (nextInStock) params.set('inStock', '1')
-    else params.delete('inStock')
-
-    if (nextSort.trim()) params.set('sort', nextSort)
-    else params.delete('sort')
-
-    setSearchParams(params, { replace: true })
-  }
-
-  const clearFilters = () => setSearchParams(new URLSearchParams(), { replace: true })
 
   if (!category) {
     return (

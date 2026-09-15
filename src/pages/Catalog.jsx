@@ -1,21 +1,17 @@
 import { useMemo } from 'react'
-import { useLocation, useSearchParams } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import CategoryCard from '../components/CategoryCard'
 import CatalogFilters from '../components/CatalogFilters'
 import Section from '../components/Section'
 import SEO from '../components/SEO'
 import { useLanguage } from '../context/useLanguage'
+import { useCatalogParams } from '../hooks/useCatalogParams'
 import { categories } from '../data/products'
 
 export default function Catalog() {
   const { t } = useLanguage()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const { query, brand, tier, sort, inStockOnly, updateParams, clearFilters } = useCatalogParams()
   const { search } = useLocation()
-  const query = searchParams.get('q') ?? ''
-  const brand = searchParams.get('brand') ?? ''
-  const tier = searchParams.get('tier') ?? ''
-  const sort = searchParams.get('sort') ?? ''
-  const inStockOnly = searchParams.get('inStock') === '1'
 
   const liveCount = categories.filter((c) => !c.comingSoon).length
 
@@ -81,34 +77,6 @@ export default function Catalog() {
       return 0
     })
   }, [brand, inStockOnly, query, sort, tier])
-
-  const updateParams = (next) => {
-    const params = new URLSearchParams(searchParams)
-    const nextQuery = next.q !== undefined ? next.q : query
-    const nextBrand = next.brand !== undefined ? next.brand : brand
-    const nextTier = next.tier !== undefined ? next.tier : tier
-    const nextInStock = next.inStock !== undefined ? next.inStock : inStockOnly
-    const nextSort = next.sort !== undefined ? next.sort : sort
-
-    if (nextQuery.trim()) params.set('q', nextQuery)
-    else params.delete('q')
-
-    if (nextBrand.trim()) params.set('brand', nextBrand)
-    else params.delete('brand')
-
-    if (nextTier.trim()) params.set('tier', nextTier)
-    else params.delete('tier')
-
-    if (nextInStock) params.set('inStock', '1')
-    else params.delete('inStock')
-
-    if (nextSort.trim()) params.set('sort', nextSort)
-    else params.delete('sort')
-
-    setSearchParams(params, { replace: true })
-  }
-
-  const clearFilters = () => setSearchParams(new URLSearchParams(), { replace: true })
 
   return (
     <>

@@ -5,14 +5,7 @@ import { getWhatsAppUrl, shop } from '../data/site'
 import { trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
 import ProductImage from './ProductImage'
 import { CartIcon, WhatsAppIcon, CloseIcon, TrashIcon } from './Icons'
-
-function getFocusableElements(container) {
-  return Array.from(
-    container.querySelectorAll(
-      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    )
-  )
-}
+import { getFocusableElements } from '../utils/focus'
 
 const ANIM_DURATION = 300 // ms — must match the CSS transition duration
 

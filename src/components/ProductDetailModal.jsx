@@ -10,14 +10,7 @@ import { slugify } from '../utils/slugify'
 import { AlertTriangleIcon, CartIcon, CloseIcon, PhoneIcon, ShareIcon, WhatsAppIcon } from './Icons'
 import ImageLightbox from './ImageLightbox'
 import ProductImage from './ProductImage'
-
-function getFocusableElements(container) {
-  return Array.from(
-    container.querySelectorAll(
-      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    )
-  )
-}
+import { getFocusableElements } from '../utils/focus'
 
 function findImageIndexForColor(color, imageSources, colors, modelName) {
   if (!color || !imageSources.length) return 0

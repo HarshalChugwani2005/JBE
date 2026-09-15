@@ -121,8 +121,17 @@ export const translations = {
     fillAllFields: 'Please fill in all fields.',
     invalidPhone: 'Please enter a valid 10-digit mobile number.',
     submissionSuccess: 'Thanks — your enquiry was sent successfully!',
-
-    // Footer
+    // Contact Form status messages
+    contactWhatsAppOpening: 'Opening WhatsApp with your enquiry…',
+    contactFormServiceError: 'Could not send via form service. You can send directly via WhatsApp instead.',
+    contactNetworkError: 'Network error. You can send your enquiry directly via WhatsApp.',
+    alsoOnWhatsApp: 'Also message on WhatsApp',
+    sendViaWhatsAppInstead: 'Send via WhatsApp instead',
+    whatsappPrefillHint: 'Clicking the button will open WhatsApp with your message pre-filled.',
+    // Search palette
+    searchNoResults: 'No matching products or categories',
+    searchNoResultsHint: 'Try searching for “ZIPSY”, “Titan”, “Fan”, “Cooler”, or “Havells”',
+    searchJump: 'Jump →',
     address: 'Address',
     quickLinks: 'Quick Links',
     allPricesOnEnquiry: 'All prices available on enquiry.',
@@ -257,8 +266,17 @@ export const translations = {
     fillAllFields: 'कृपया सर्व माहिती भरा.',
     invalidPhone: 'कृपया १० अंकी वैध मोबाईल नंबर टाका.',
     submissionSuccess: 'धन्यवाद — तुमची चौकशी यशस्वीरीत्या पाठवली गेली!',
-
-    // Footer
+    // Contact Form status messages
+    contactWhatsAppOpening: 'WhatsApp उघडत आहे…',
+    contactFormServiceError: 'फॉर्म सेवा उपलब्ध नाही. थेट व्हॉट्सअॅपवर पाठवा.',
+    contactNetworkError: 'नेटवर्क त्रुटी. थेट व्हॉट्सअॅपवर चौकशी पाठवा.',
+    alsoOnWhatsApp: 'व्हॉट्सअॅपवर संदेश पाठवा',
+    sendViaWhatsAppInstead: 'व्हॉट्सअॅपवर पाठवा',
+    whatsappPrefillHint: 'बटण दाबल्यावर WhatsApp आपोआप उघडेल.',
+    // Search palette
+    searchNoResults: 'कोणतेही उत्पादन किंवा श्रेणी सापडली नाही',
+    searchNoResultsHint: '“ZIPSY”, “Titan”, “पंखा”, “कूलर” असे शोधा',
+    searchJump: 'पहा →',
     address: 'पत्ता',
     quickLinks: 'जलद दुवे',
     allPricesOnEnquiry: 'सर्व किंमती चौकशीवर उपलब्ध.',
@@ -393,8 +411,17 @@ export const translations = {
     fillAllFields: 'कृपया सभी फ़ील्ड भरें।',
     invalidPhone: 'कृपया 10 अंकों का वैध मोबाइल नंबर दर्ज करें।',
     submissionSuccess: 'धन्यवाद — आपकी पूछताछ सफलतापूर्वक भेजी गई!',
-
-    // Footer
+    // Contact Form status messages
+    contactWhatsAppOpening: 'WhatsApp खुल रहा है…',
+    contactFormServiceError: 'फॉर्म सेवा उपलब्ध नहीं. सीधे व्हाट्सएप पर भेजें.',
+    contactNetworkError: 'नेटवर्क त्रुटि. सीधे व्हाट्सएप पर पूछताछ भेजें.',
+    alsoOnWhatsApp: 'व्हाट्सएप पर संदेश भेजें',
+    sendViaWhatsAppInstead: 'व्हाट्सएप से भेजें',
+    whatsappPrefillHint: 'बटन दबाने पर WhatsApp खुदबखुद खुल जाएगा.',
+    // Search palette
+    searchNoResults: 'कोई मिलता उत्पाद या श्रेणी नहीं मिली',
+    searchNoResultsHint: '“ZIPSY”, “Titan”, “पंखा”, “कूलर” खोजें',
+    searchJump: 'देखें →',
     address: 'पता',
     quickLinks: 'त्वरित लिंक',
     allPricesOnEnquiry: 'सभी कीमतें पूछताछ पर उपलब्ध हैं।',
