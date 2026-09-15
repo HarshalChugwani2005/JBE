@@ -201,6 +201,10 @@ export default function SearchPalette() {
             placeholder={t('searchPlaceholder') || 'Search fans, coolers, appliances, brands...'}
             className="w-full bg-transparent text-sm sm:text-base text-stone-900 placeholder:text-stone-400 outline-none"
             aria-autocomplete="list"
+            aria-controls="search-palette-results"
+            aria-activedescendant={
+              filteredItems.length > 0 ? `search-result-${selectedIndex}` : undefined
+            }
           />
           {query && (
             <button
@@ -222,7 +226,13 @@ export default function SearchPalette() {
         </div>
 
         {/* Results List */}
-        <div ref={listRef} className="max-h-[60vh] overflow-y-auto p-3 sm:p-4 space-y-1.5">
+        <div
+          ref={listRef}
+          id="search-palette-results"
+          role="listbox"
+          aria-label="Search results"
+          className="max-h-[60vh] overflow-y-auto p-3 sm:p-4 space-y-1.5"
+        >
           {filteredItems.length === 0 ? (
             <div className="py-12 text-center text-stone-500">
               <SearchIcon className="mx-auto h-10 w-10 text-stone-300" />
@@ -239,7 +249,10 @@ export default function SearchPalette() {
                 return (
                   <div
                     key={item.id}
+                    id={`search-result-${index}`}
                     data-index={index}
+                    role="option"
+                    aria-selected={isSelected}
                     onClick={() => handleSelect(item)}
                     onMouseEnter={() => setSelectedIndex(index)}
                     className={`flex items-center gap-3.5 rounded-2xl p-3 cursor-pointer transition duration-150 ${
@@ -278,7 +291,10 @@ export default function SearchPalette() {
               return (
                 <div
                   key={item.id}
+                  id={`search-result-${index}`}
                   data-index={index}
+                  role="option"
+                  aria-selected={isSelected}
                   onClick={() => handleSelect(item)}
                   onMouseEnter={() => setSelectedIndex(index)}
                   className={`flex items-center gap-3.5 rounded-2xl p-3 cursor-pointer transition duration-150 ${
