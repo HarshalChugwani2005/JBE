@@ -87,8 +87,8 @@ export default class ErrorBoundary extends Component {
               <span>Chat on WhatsApp — +91 {whatsappNumber}</span>
             </a>
 
-            {/* Collapsible error details */}
-            {error && (
+            {/* Collapsible error details — only in dev mode */}
+            {import.meta.env.DEV && error && (
               <div className="mt-6 text-left">
                 <button
                   type="button"

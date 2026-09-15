@@ -3,6 +3,19 @@ import { slugify } from '../utils/slugify.js'
 /**
  * Product catalog data — static source of truth for the site.
  * Schema: category → brands → models (see BACKEND_SCHEMA.md)
+ *
+ * SCALING NOTE: This file is currently ~35 KB and ships in the main bundle.
+ * This is acceptable for the current catalog size (<150 products).
+ * If the catalog grows significantly, migrate to per-category files:
+ *
+ *   src/data/categories/ceiling-fans.js
+ *   src/data/categories/coolers.js
+ *   ...
+ *
+ * Then lazy-load them inside the already-lazy CategoryPage route:
+ *   const data = await import(`../data/categories/${categorySlug}.js`)
+ *
+ * This would code-split the catalog data alongside the route chunks.
  */
 
 export const categories = [

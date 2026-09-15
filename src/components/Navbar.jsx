@@ -179,7 +179,7 @@ export default function Navbar() {
             {!isMobile && <span className="text-stone-500 font-normal dark:text-stone-400">Search...</span>}
             {!isMobile && (
               <kbd className="rounded border border-stone-200 bg-white px-1.5 py-0.5 font-mono text-[10px] text-stone-400 shadow-2xs dark:border-stone-700 dark:bg-stone-900 dark:text-stone-400">
-                ⌘K
+                {/Mac|iPhone|iPad|iPod/i.test(typeof navigator !== 'undefined' ? navigator.platform : '') ? '⌘K' : 'Ctrl+K'}
               </kbd>
             )}
           </button>
