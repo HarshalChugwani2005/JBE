@@ -1,11 +1,22 @@
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { getCategoryVisual, getModelCount } from '../data/categoryVisuals'
+import { getImageSrcSet, getProductImageUrls } from '../data/productImages'
 import CategoryIcon from './CategoryIcon'
 import { PackageIcon } from './Icons'
 
 export default function CategoryCard({ category, categoryLabel, comingSoon, brands = [], search = '' }) {
   const visual = getCategoryVisual(category)
   const modelCount = getModelCount({ brands })
+  const cover = useMemo(() => {
+    for (const brand of brands) {
+      for (const model of brand.models ?? []) {
+        const [url] = getProductImageUrls(category, model)
+        if (url) return url
+      }
+    }
+    return null
+  }, [category, brands])
 
   return (
     <Link
@@ -13,10 +24,33 @@ export default function CategoryCard({ category, categoryLabel, comingSoon, bran
       className="group press-effect flex h-full flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1.5 hover:border-amber-400/80 hover:shadow-[0_16px_32px_-6px_rgba(217,119,6,0.14)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
     >
       <div
-        className={`shimmer-on-hover relative flex aspect-square sm:aspect-[4/3] items-center justify-center bg-gradient-to-br ${visual.gradient} text-white overflow-hidden`}
+        className={`shimmer-on-hover relative flex aspect-square sm:aspect-[4/3] items-center justify-center overflow-hidden ${
+          cover
+            ? 'bg-gradient-to-b from-stone-50 to-amber-50/60 dark:from-stone-800 dark:to-stone-900'
+            : `bg-gradient-to-br ${visual.gradient} text-white`
+        }`}
       >
-        <div className="absolute inset-0 bg-radial from-white/20 via-transparent to-black/10 pointer-events-none" />
-        <CategoryIcon slug={category} className="h-16 w-16 sm:h-14 sm:w-14 transition-all duration-500 ease-out group-hover:scale-115 group-hover:rotate-6 group-hover:drop-shadow-xl drop-shadow-md" />
+        {cover ? (
+          <>
+            <img
+              src={cover}
+              srcSet={getImageSrcSet(cover)}
+              sizes="(min-width: 1024px) 300px, 50vw"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-contain p-5 sm:p-6 mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 ease-out group-hover:scale-105"
+            />
+            <span className={`absolute bottom-2.5 right-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br ${visual.gradient} text-white shadow-md`}>
+              <CategoryIcon slug={category} className="h-4 w-4" />
+            </span>
+          </>
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-radial from-white/20 via-transparent to-black/10 pointer-events-none" />
+            <CategoryIcon slug={category} className="h-16 w-16 sm:h-14 sm:w-14 transition-all duration-500 ease-out group-hover:scale-115 group-hover:rotate-6 group-hover:drop-shadow-xl drop-shadow-md" />
+          </>
+        )}
 
         {/* Model count badge — top-left corner */}
         {!comingSoon && modelCount > 0 && (

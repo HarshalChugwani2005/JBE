@@ -170,7 +170,7 @@ export default function CategoryPage() {
               )}
             </div>
           <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {brandEntry.models.map((model, idx) => (
+              {brandEntry.models.map((model) => (
                 <div key={model.modelName} className="stagger-item">
                   <ProductCard
                     to={`/catalog/${categorySlug}/${slugify(model.modelName)}`}

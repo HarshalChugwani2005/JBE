@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Drive `dark:` utilities from the `html.dark` class set by ThemeProvider,
+   not the OS media query — otherwise OS-dark visitors on the light theme get
+   light-on-light text. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ═══════════════════════════════════════════════════════════════════════════════
    JBE DESIGN SYSTEM — Advanced CSS & Premium Color Palette
    Built for: Jai Baba Electronic, Malkapur

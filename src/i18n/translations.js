@@ -50,7 +50,7 @@ export const translations = {
     featuredCategories: 'Featured Categories',
     featuredCategoriesSubtitle:
       'Tap a category to explore models and enquire. More ranges are being added regularly.',
-    viewAllCategories: 'View all categories →',
+    viewAllCategories: 'View all categories',
     aboutTitle: 'About Us',
     aboutSubtitle:
       'Your neighborhood electronics shop — trusted by homes and dealers across Malkapur.',
@@ -195,7 +195,7 @@ export const translations = {
     featuredCategories: 'प्रमुख श्रेणी',
     featuredCategoriesSubtitle:
       'मॉडेल्स पाहण्यासाठी श्रेणीवर टॅप करा आणि चौकशी करा. नवीन उत्पादने सतत जोडली जात आहेत.',
-    viewAllCategories: 'सर्व श्रेणी पहा →',
+    viewAllCategories: 'सर्व श्रेणी पहा',
     aboutTitle: 'आमच्याबद्दल',
     aboutSubtitle:
       'तुमचे विश्‍वासू इलेक्ट्रॉनिक्स दुकान — मलकापूरमधील घरे आणि डिलर्सचा विश्वास.',
@@ -340,7 +340,7 @@ export const translations = {
     featuredCategories: 'प्रमुख श्रेणियां',
     featuredCategoriesSubtitle:
       'मॉडल देखने के लिए श्रेणी चुनें और पूछताछ करें। नए उत्पाद नियमित रूप से जोड़े जा रहे हैं।',
-    viewAllCategories: 'सभी श्रेणियां देखें →',
+    viewAllCategories: 'सभी श्रेणियां देखें',
     aboutTitle: 'हमारे बारे में',
     aboutSubtitle:
       'आपकी भरोसेमंद इलेक्ट्रॉनिक्स दुकान — मलकापुर के घरों और डीलरों का विश्वास।',

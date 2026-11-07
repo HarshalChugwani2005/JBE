@@ -90,7 +90,7 @@ export default function Catalog() {
             {t('catalogTitle')}
           </h1>
           <p className="mt-2.5 max-w-2xl text-stone-600 text-sm sm:text-base">
-            {t('catalogSubtitle')} <span className="font-bold text-amber-900 bg-amber-100/80 px-2 py-0.5 rounded-full">{liveCount} {t('allCategories').toLowerCase()}</span> available.
+            {t('catalogSubtitle')} <span className="font-bold text-amber-900 bg-amber-100/80 px-2 py-0.5 rounded-full">{t('allCategories')}: {liveCount}</span>
           </p>
         </header>
 

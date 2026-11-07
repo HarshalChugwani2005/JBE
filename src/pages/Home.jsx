@@ -122,7 +122,7 @@ export default function Home() {
             subtitle={t('featuredCategoriesSubtitle')}
           >
             <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-              {featured.map((cat, index) => (
+              {featured.map((cat) => (
                 <li key={cat.category} className="stagger-item">
                   <CategoryCard
                     category={cat.category}
