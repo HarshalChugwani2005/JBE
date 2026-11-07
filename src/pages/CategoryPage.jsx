@@ -110,7 +110,7 @@ export default function CategoryPage() {
 
   const seoTitle = activeModalModel
     ? `${activeBrandName ? `${activeBrandName} ` : ''}${modelName} | ${category.categoryLabel}`
-    : `${category.categoryLabel} | Jai Baba Electronic`
+    : category.categoryLabel
 
   const seoDescription = activeModalModel
     ? `${activeBrandName ? `${activeBrandName} ` : ''}${modelName} (${category.categoryLabel}). ${activeModalModel.model.specs?.slice(0, 3).join(', ') || ''}. Genuine wholesale and retail pricing on enquiry at Jai Baba Electronic Malkapur.`
