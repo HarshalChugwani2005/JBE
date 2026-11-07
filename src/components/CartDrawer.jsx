@@ -117,25 +117,25 @@ export default function CartDrawer() {
       <div className="fixed inset-y-0 right-0 flex max-w-full pl-6 sm:pl-10">
         <div
           ref={drawerRef}
-          className={`w-screen max-w-md transform bg-white dark:bg-stone-900 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] flex flex-col
+          className={`w-screen max-w-md transform bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] flex flex-col
             transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
             ${isVisible ? 'translate-x-0' : 'translate-x-full'}`}
         >
           {/* Header */}
-          <div className="border-b border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-900/80 px-6 py-4">
+          <div className="border-b border-stone-200 bg-stone-50 px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="font-heading text-lg font-bold text-stone-900 dark:text-stone-100" id="slide-over-title">
+                <h2 className="font-heading text-lg font-bold text-stone-900" id="slide-over-title">
                   {t('enquiryDrawerTitle')}
                 </h2>
-                <p className="text-xs text-stone-500 dark:text-stone-400 font-medium">
+                <p className="text-xs text-stone-500 font-medium">
                   {totalCount} {t('readyForQuotation')}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={handleAnimatedClose}
-                className="rounded-full border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 p-1.5 text-stone-500 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-700 hover:text-stone-900 dark:hover:text-stone-100 transition duration-150 cursor-pointer"
+                className="rounded-full border border-stone-200 bg-white p-1.5 text-stone-500 hover:bg-stone-100 hover:text-stone-900 transition duration-150 cursor-pointer"
               >
                 <span className="sr-only">{t('close')}</span>
                 <CloseIcon className="h-4 w-4" />
@@ -144,14 +144,14 @@ export default function CartDrawer() {
           </div>
 
           {/* Body */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-white dark:bg-stone-900">
+          <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-white">
             {items.length === 0 ? (
               <div className="py-16 text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
                   <CartIcon className="h-8 w-8" />
                 </div>
-                <h3 className="mt-5 font-heading text-base font-bold text-stone-900 dark:text-stone-100">{t('enquiryEmpty')}</h3>
-                <p className="mt-1.5 text-xs text-stone-500 dark:text-stone-400 max-w-xs mx-auto">
+                <h3 className="mt-5 font-heading text-base font-bold text-stone-900">{t('enquiryEmpty')}</h3>
+                <p className="mt-1.5 text-xs text-stone-500 max-w-xs mx-auto">
                   {t('enquiryEmptySubtitle')}
                 </p>
                 <button
@@ -167,8 +167,8 @@ export default function CartDrawer() {
                 {/* Item List */}
                 <div className="space-y-3">
                   {items.map((item) => (
-                    <div key={item.id} className="flex gap-3 items-center rounded-2xl border border-stone-200/80 dark:border-stone-700/80 bg-stone-50/50 dark:bg-stone-800/50 p-3 transition hover:border-amber-300/80 hover:bg-white dark:hover:bg-stone-800 hover:shadow-xs">
-                      <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 shadow-xs">
+                    <div key={item.id} className="flex gap-3 items-center rounded-2xl border border-stone-200/80 bg-stone-50/50 p-3 transition hover:border-amber-300/80 hover:bg-white hover:shadow-xs">
+                      <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-xs">
                         <ProductImage
                           category={item.categorySlug}
                           product={item}
@@ -180,7 +180,7 @@ export default function CartDrawer() {
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-heading text-sm font-bold text-stone-900 dark:text-stone-100 truncate">
+                        <h4 className="font-heading text-sm font-bold text-stone-900 truncate">
                           {item.brand ? `${item.brand} ` : ''}{item.modelName}
                         </h4>
                         {item.selectedColor && (
@@ -190,15 +190,15 @@ export default function CartDrawer() {
                           <button
                             type="button"
                             onClick={() => updateQuantity(item.id, (item.quantity || 1) - 1)}
-                            className="h-6 w-6 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-xs font-bold text-stone-700 dark:text-stone-300 hover:border-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40 hover:text-amber-900 dark:hover:text-amber-300 transition active:scale-90 cursor-pointer"
+                            className="h-6 w-6 rounded-lg border border-stone-200 bg-white text-xs font-bold text-stone-700 hover:border-amber-400 hover:bg-amber-50 hover:text-amber-900 transition active:scale-90 cursor-pointer"
                           >
                             -
                           </button>
-                          <span className="text-xs font-bold text-stone-800 dark:text-stone-200 min-w-4 text-center">{item.quantity || 1}</span>
+                          <span className="text-xs font-bold text-stone-800 min-w-4 text-center">{item.quantity || 1}</span>
                           <button
                             type="button"
                             onClick={() => updateQuantity(item.id, (item.quantity || 1) + 1)}
-                            className="h-6 w-6 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-xs font-bold text-stone-700 dark:text-stone-300 hover:border-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40 hover:text-amber-900 dark:hover:text-amber-300 transition active:scale-90 cursor-pointer"
+                            className="h-6 w-6 rounded-lg border border-stone-200 bg-white text-xs font-bold text-stone-700 hover:border-amber-400 hover:bg-amber-50 hover:text-amber-900 transition active:scale-90 cursor-pointer"
                           >
                             +
                           </button>
@@ -219,13 +219,13 @@ export default function CartDrawer() {
                 </div>
 
                 {/* Enquiry Preferences Form */}
-                <div className="rounded-2xl border border-stone-200/90 dark:border-stone-700/80 bg-stone-50/80 dark:bg-stone-800/60 p-4 space-y-3.5 shadow-xs">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-stone-400">
+                <div className="rounded-2xl border border-stone-200/90 bg-stone-50/80 p-4 space-y-3.5 shadow-xs">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-stone-600">
                     {t('enquiryDetails')}
                   </h4>
 
                   <div>
-                    <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1.5">{t('pricingInterest')}</label>
+                    <label className="block text-xs font-semibold text-stone-700 mb-1.5">{t('pricingInterest')}</label>
                     <div className="grid grid-cols-2 gap-2">
                       <button
                         type="button"
@@ -253,7 +253,7 @@ export default function CartDrawer() {
                   </div>
 
                   <div>
-                    <label htmlFor="drawer-name" className="block text-xs font-semibold text-stone-700 dark:text-stone-300">
+                    <label htmlFor="drawer-name" className="block text-xs font-semibold text-stone-700">
                       {t('yourNameOptional')}
                     </label>
                     <input
@@ -267,7 +267,7 @@ export default function CartDrawer() {
                   </div>
 
                   <div>
-                    <label htmlFor="drawer-notes" className="block text-xs font-semibold text-stone-700 dark:text-stone-300">
+                    <label htmlFor="drawer-notes" className="block text-xs font-semibold text-stone-700">
                       {t('notesCity')}
                     </label>
                     <input
@@ -286,7 +286,7 @@ export default function CartDrawer() {
 
           {/* Footer CTA */}
           {items.length > 0 && (
-            <div className="border-t border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 p-5 sm:p-6 space-y-3 shadow-lg">
+            <div className="border-t border-stone-200 bg-white p-5 sm:p-6 space-y-3 shadow-lg">
               <button
                 type="button"
                 onClick={handleSendWhatsApp}
@@ -296,15 +296,15 @@ export default function CartDrawer() {
                 <span>{t('sendItemsToWhatsApp')} ({totalCount})</span>
               </button>
 
-              <div className="flex items-center justify-between text-xs text-stone-500 dark:text-stone-400 pt-1">
+              <div className="flex items-center justify-between text-xs text-stone-500 pt-1">
                 <button
                   type="button"
                   onClick={clearCart}
-                  className="text-stone-500 dark:text-stone-400 hover:text-red-600 dark:hover:text-red-400 transition cursor-pointer font-medium"
+                  className="text-stone-500 hover:text-red-600 transition cursor-pointer font-medium"
                 >
                   {t('clearAll')}
                 </button>
-                <span>{t('directQuoteFrom')} <strong className="font-semibold text-stone-700 dark:text-stone-300">{shop.name}</strong></span>
+                <span>{t('directQuoteFrom')} <strong className="font-semibold text-stone-700">{shop.name}</strong></span>
               </div>
             </div>
           )}

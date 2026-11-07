@@ -20,7 +20,7 @@ export default function MobileActionBar() {
   return (
     <aside
       aria-label="Quick actions"
-      className="mobile-bar-enter fixed bottom-0 left-0 right-0 z-40 border-t border-stone-200 bg-white/95 backdrop-blur-sm px-3 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] md:hidden dark:bg-stone-900/95 dark:border-stone-800"
+      className="mobile-bar-enter fixed bottom-0 left-0 right-0 z-40 border-t border-stone-200 bg-white/95 backdrop-blur-sm px-3 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] md:hidden"
     >
       <div className="mx-auto flex max-w-md items-center justify-between gap-2.5">
         {/* Call Shop */}
@@ -49,7 +49,7 @@ export default function MobileActionBar() {
         <button
           type="button"
           onClick={toggleCart}
-          className="relative flex flex-1 items-center justify-center gap-2 rounded-xl border border-amber-300 bg-amber-50 py-3 text-sm font-bold text-amber-900 transition active:scale-95 hover:bg-amber-100 cursor-pointer shadow-xs dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-300"
+          className="relative flex flex-1 items-center justify-center gap-2 rounded-xl border border-amber-300 bg-amber-50 py-3 text-sm font-bold text-amber-900 transition active:scale-95 hover:bg-amber-100 cursor-pointer shadow-xs"
         >
           <CartIcon className="h-4 w-4" />
           <span>{totalCount > 0 ? `${t('navCart')} (${totalCount})` : t('navCart')}</span>

@@ -1,10 +1,5 @@
 @import "tailwindcss";
 
-/* Drive `dark:` utilities from the `html.dark` class set by ThemeProvider,
-   not the OS media query — otherwise OS-dark visitors on the light theme get
-   light-on-light text. */
-@custom-variant dark (&:where(.dark, .dark *));
-
 /* ═══════════════════════════════════════════════════════════════════════════════
    JBE DESIGN SYSTEM — Advanced CSS & Premium Color Palette
    Built for: Jai Baba Electronic, Malkapur
@@ -13,6 +8,7 @@
 
 @layer base {
   :root {
+    color-scheme: light;
     /* ── Typography ─────────────────────────────────────────────────── */
     --font-body: 'Inter', 'Noto Sans Devanagari', system-ui, -apple-system, sans-serif;
     --font-heading: 'Plus Jakarta Sans', 'Manrope', 'Noto Sans Devanagari', system-ui, -apple-system, sans-serif;
@@ -108,30 +104,6 @@
   }
 
   /* ── Dark Mode Token Override ───────────────────────────────────────── */
-  html.dark {
-    --bg-page:        var(--clr-stone-950);
-    --bg-surface:     var(--clr-stone-900);
-    --bg-elevated:    var(--clr-stone-800);
-    --bg-muted:       var(--clr-stone-800);
-    --bg-subtle:      #111110;
-
-    --text-primary:   var(--clr-stone-50);
-    --text-secondary: var(--clr-stone-400);
-    --text-muted:     var(--clr-stone-500);
-    --text-inverted:  var(--clr-stone-950);
-
-    --border-subtle:  var(--clr-stone-800);
-    --border-default: var(--clr-stone-700);
-    --border-strong:  var(--clr-stone-600);
-
-    --accent-light:   rgba(245, 158, 11, 0.12);
-    --accent-glow:    rgba(245, 158, 11, 0.22);
-
-    --shadow-xs:   0 1px 2px 0 rgba(0, 0, 0, 0.22);
-    --shadow-sm:   0 1px 4px 0 rgba(0, 0, 0, 0.32), 0 1px 2px -1px rgba(0, 0, 0, 0.22);
-    --shadow-md:   0 4px 12px -2px rgba(0, 0, 0, 0.42), 0 2px 6px -2px rgba(0, 0, 0, 0.32);
-    --shadow-lg:   0 10px 28px -4px rgba(0, 0, 0, 0.52), 0 4px 10px -3px rgba(0, 0, 0, 0.38);
-  }
 
   html {
     scroll-behavior: smooth;
@@ -204,11 +176,6 @@
   z-index: 0;
 }
 
-html.dark .nav-pill-indicator {
-  background: rgba(217, 119, 6, 0.25);
-  box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.35);
-}
-
 /* ─────────────────────────────────────────────────────────────────────────────
    Gradient Text — Metallic Gold
    ───────────────────────────────────────────────────────────────────────────── */
@@ -220,26 +187,12 @@ html.dark .nav-pill-indicator {
   font-weight: 800;
 }
 
-html.dark .gradient-text {
-  background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 50%, #fb923c 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
 .gradient-text-amber {
   background: linear-gradient(135deg, #b45309 0%, #d97706 60%, #f59e0b 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-weight: 700;
-}
-
-html.dark .gradient-text-amber {
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 60%, #fcd34d 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -253,14 +206,6 @@ html.dark .gradient-text-amber {
   box-shadow: var(--shadow-sm);
 }
 
-html.dark .glass-surface {
-  background: rgba(28, 25, 23, 0.88);
-  backdrop-filter: blur(12px) saturate(120%);
-  -webkit-backdrop-filter: blur(12px) saturate(120%);
-  border-color: rgba(68, 64, 60, 0.55);
-  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.45);
-}
-
 .glass-card, .store-card {
   background: #ffffff;
   border: 1px solid var(--clr-stone-200);
@@ -271,21 +216,10 @@ html.dark .glass-surface {
     transform var(--duration-base) var(--ease-spring);
 }
 
-html.dark .glass-card, html.dark .store-card {
-  background: rgba(28, 25, 23, 0.92);
-  border-color: rgba(68, 64, 60, 0.55);
-  box-shadow: var(--shadow-sm);
-}
-
 .glass-card:hover, .store-card:hover {
   border-color: rgba(217, 119, 6, 0.50);
   box-shadow: var(--shadow-amber-sm), inset 0 1px 0 rgba(255, 255, 255, 0.9);
   transform: translateY(-2px);
-}
-
-html.dark .glass-card:hover, html.dark .store-card:hover {
-  border-color: rgba(245, 158, 11, 0.45);
-  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(245, 158, 11, 0.15);
 }
 
 .glass-pill {
@@ -293,11 +227,6 @@ html.dark .glass-card:hover, html.dark .store-card:hover {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(231, 229, 228, 0.7);
-}
-
-html.dark .glass-pill {
-  background: rgba(41, 37, 36, 0.9);
-  border-color: rgba(68, 64, 60, 0.6);
 }
 
 .glass-input {
@@ -308,23 +237,11 @@ html.dark .glass-pill {
     box-shadow var(--duration-fast) var(--ease-smooth);
 }
 
-html.dark .glass-input {
-  background: rgba(28, 25, 23, 0.85);
-  border-color: rgba(68, 64, 60, 0.7);
-  color: var(--clr-stone-100);
-}
-
 .glass-input:focus {
   background: #ffffff;
   border-color: var(--clr-amber-500);
   outline: none;
   box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18), var(--shadow-sm);
-}
-
-html.dark .glass-input:focus {
-  background: rgba(28, 25, 23, 0.98);
-  border-color: var(--clr-amber-500);
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.22);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -451,8 +368,6 @@ html.dark .glass-input:focus {
   transform: translateY(0);
 }
 
-
-
 /* ─────────────────────────────────────────────────────────────────────────────
    Skeleton Shimmer Loading
    ───────────────────────────────────────────────────────────────────────────── */
@@ -474,17 +389,6 @@ html.dark .glass-input:focus {
   animation: skeleton-shimmer 1.6s ease-in-out infinite;
 }
 
-html.dark .skeleton-shimmer {
-  background-image: linear-gradient(
-    105deg,
-    var(--clr-stone-800) 0%,
-    var(--clr-stone-700) 20%,
-    var(--clr-stone-600) 40%,
-    var(--clr-stone-700) 60%,
-    var(--clr-stone-800) 80%
-  );
-}
-
 .image-loading-shimmer {
   background-image: linear-gradient(
     105deg,
@@ -496,17 +400,6 @@ html.dark .skeleton-shimmer {
   );
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.6s ease-in-out infinite;
-}
-
-html.dark .image-loading-shimmer {
-  background-image: linear-gradient(
-    105deg,
-    var(--clr-stone-900) 0%,
-    var(--clr-stone-800) 30%,
-    var(--clr-stone-700) 50%,
-    var(--clr-stone-800) 70%,
-    var(--clr-stone-900) 100%
-  );
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -803,77 +696,9 @@ html.dark .image-loading-shimmer {
   transform: scale(1.08);
 }
 
-/* ─────────────────────────────────────────────────────────────────────────────
-   Dark Theme System (html.dark)
-   ───────────────────────────────────────────────────────────────────────────── */
-
-html.dark {
-  color-scheme: dark;
-}
-
-html.dark body {
-  background-color: var(--clr-stone-950);
-  color: var(--clr-stone-50);
-}
-
-html.dark ::-webkit-scrollbar-track {
-  background: var(--clr-stone-900);
-}
-
-html.dark ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--clr-amber-600), var(--clr-amber-800));
-  border: 2px solid var(--clr-stone-900);
-}
-
-html.dark ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, var(--clr-amber-500), var(--clr-amber-700));
-}
-
-html.dark * {
-  scrollbar-color: var(--clr-amber-600) var(--clr-stone-900);
-}
-
-
 /* Header, Navbar, MobileActionBar in Dark Mode */
-html.dark header {
-  background-color: rgba(12, 10, 9, 0.90) !important;
-  border-color: rgba(68, 64, 60, 0.55) !important;
-  box-shadow: 0 1px 0 rgba(68, 64, 60, 0.4), 0 4px 16px rgba(0,0,0,0.25) !important;
-}
-
-html.dark aside[aria-label="Quick actions"] {
-  background-color: rgba(12, 10, 9, 0.95) !important;
-  border-color: rgba(68, 64, 60, 0.55) !important;
-}
 
 /* Card backgrounds and text colors in Dark Mode */
-html.dark article,
-html.dark .bg-white {
-  background-color: var(--clr-stone-900);
-  border-color: rgba(68, 64, 60, 0.55);
-}
-
-html.dark .bg-stone-50,
-html.dark .bg-stone-100 {
-  background-color: var(--clr-stone-800);
-}
-
-html.dark .border-stone-200,
-html.dark .border-stone-100,
-html.dark .border-stone-300 {
-  border-color: var(--clr-stone-700);
-}
-
-html.dark .text-stone-900 { color: var(--clr-stone-50);  }
-html.dark .text-stone-800 { color: var(--clr-stone-100); }
-html.dark .text-stone-700 { color: var(--clr-stone-200); }
-html.dark .text-stone-600 { color: var(--clr-stone-400); }
-html.dark .text-stone-500 { color: var(--clr-stone-500); }
-
-html.dark footer {
-  background-color: var(--clr-stone-950);
-  border-color: var(--clr-stone-800);
-}
 /* ─────────────────────────────────────────────────────────────────────────────
    Premium Component Utilities
    ───────────────────────────────────────────────────────────────────────────── */
@@ -911,12 +736,6 @@ html.dark footer {
   border: 1px solid var(--clr-amber-200);
 }
 
-html.dark .badge-amber {
-  background: linear-gradient(135deg, rgba(245,158,11,0.18) 0%, rgba(245,158,11,0.10) 100%);
-  color: var(--clr-amber-300);
-  border-color: rgba(245, 158, 11, 0.30);
-}
-
 /* ── Unified Focus Ring ────────────────────────────────────────────────── */
 :focus-visible {
   outline: 2.5px solid var(--clr-amber-500);
@@ -937,26 +756,10 @@ html.dark .badge-amber {
   border: none;
 }
 
-html.dark .divider-glow {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(245, 158, 11, 0.4) 30%,
-    rgba(245, 158, 11, 0.25) 50%,
-    rgba(245, 158, 11, 0.4) 70%,
-    transparent 100%
-  );
-}
-
 /* ── Footer: Rich Surface ────────────────────────────────────────────────── */
 .footer-premium {
   background: linear-gradient(180deg, #fafaf9 0%, #f5f5f4 100%);
   border-top: 1px solid var(--clr-stone-200);
-}
-
-html.dark .footer-premium {
-  background: linear-gradient(180deg, var(--clr-stone-950) 0%, #060504 100%);
-  border-top-color: var(--clr-stone-800);
 }
 
 /* ── Amber Glow Orb (Decorative) ─────────────────────────────────────── */
@@ -1307,13 +1110,6 @@ header.scrolled {
     0 1px 0 rgba(231, 229, 228, 0.8),
     0 4px 20px -4px rgba(0, 0, 0, 0.10),
     0 8px 32px -8px rgba(0, 0, 0, 0.06) !important;
-}
-
-html.dark header.scrolled {
-  box-shadow:
-    0 1px 0 rgba(68, 64, 60, 0.5),
-    0 4px 24px -4px rgba(0, 0, 0, 0.40),
-    0 8px 40px -8px rgba(0, 0, 0, 0.25) !important;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────

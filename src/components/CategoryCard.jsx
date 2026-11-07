@@ -26,7 +26,7 @@ export default function CategoryCard({ category, categoryLabel, comingSoon, bran
       <div
         className={`shimmer-on-hover relative flex aspect-square sm:aspect-[4/3] items-center justify-center overflow-hidden ${
           cover
-            ? 'bg-gradient-to-b from-stone-50 to-amber-50/60 dark:from-stone-800 dark:to-stone-900'
+            ? 'bg-gradient-to-b from-stone-50 to-amber-50/60'
             : `bg-gradient-to-br ${visual.gradient} text-white`
         }`}
       >
@@ -39,7 +39,7 @@ export default function CategoryCard({ category, categoryLabel, comingSoon, bran
               alt=""
               loading="lazy"
               decoding="async"
-              className="h-full w-full object-contain p-5 sm:p-6 mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 ease-out group-hover:scale-105"
+              className="h-full w-full object-contain p-5 sm:p-6 mix-blend-multiply transition-transform duration-500 ease-out group-hover:scale-105"
             />
             <span className={`absolute bottom-2.5 right-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br ${visual.gradient} text-white shadow-md`}>
               <CategoryIcon slug={category} className="h-4 w-4" />

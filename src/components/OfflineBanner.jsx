@@ -1,9 +1,29 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useLanguage } from '../context/useLanguage'
 import { WifiOffIcon } from './Icons'
 
+// The install prompt waits until the visitor has shown interest (a second page
+// or some time on site) instead of covering the page on first load.
+const INSTALL_MIN_PAGE_VIEWS = 2
+const INSTALL_MIN_TIME_MS = 45_000
+const INSTALL_DISMISS_KEY = 'jbe_pwa_dismissed_at'
+const INSTALL_DISMISS_DAYS = 14
+
+function wasDismissedRecently() {
+  try {
+    const at = Number(localStorage.getItem(INSTALL_DISMISS_KEY))
+    return at > 0 && Date.now() - at < INSTALL_DISMISS_DAYS * 24 * 60 * 60 * 1000
+  } catch {
+    return false
+  }
+}
+
 export default function OfflineBanner() {
   const { t } = useLanguage()
+  const { pathname } = useLocation()
+  const pageViews = useRef(0)
+  const [engaged, setEngaged] = useState(false)
   const [isOffline, setIsOffline] = useState(() => (
     typeof navigator !== 'undefined' ? !navigator.onLine : false
   ))
@@ -22,13 +42,7 @@ export default function OfflineBanner() {
     const handleBeforeInstall = (e) => {
       e.preventDefault()
       setDeferredPrompt(e)
-      let dismissed = null
-      try {
-        dismissed = sessionStorage.getItem('jbe_pwa_dismissed')
-      } catch {
-        // Storage may be blocked in privacy-restricted browsers.
-      }
-      if (!dismissed) {
+      if (!wasDismissedRecently()) {
         setShowInstallBanner(true)
       }
     }
@@ -50,6 +64,17 @@ export default function OfflineBanner() {
     }
   }, [])
 
+  // Count distinct page views; the second one marks the visitor as engaged.
+  useEffect(() => {
+    pageViews.current += 1
+    if (pageViews.current >= INSTALL_MIN_PAGE_VIEWS) setEngaged(true)
+  }, [pathname])
+
+  useEffect(() => {
+    const timer = setTimeout(() => setEngaged(true), INSTALL_MIN_TIME_MS)
+    return () => clearTimeout(timer)
+  }, [])
+
   const handleInstallClick = async () => {
     if (!deferredPrompt) return
     deferredPrompt.prompt()
@@ -63,7 +88,7 @@ export default function OfflineBanner() {
   const handleDismissInstall = () => {
     setShowInstallBanner(false)
     try {
-      sessionStorage.setItem('jbe_pwa_dismissed', 'true')
+      localStorage.setItem(INSTALL_DISMISS_KEY, String(Date.now()))
     } catch {
       // The banner is still dismissed for the current render when storage is unavailable.
     }
@@ -85,21 +110,21 @@ export default function OfflineBanner() {
       )}
 
       {/* PWA Install Banner */}
-      {showInstallBanner && !installed && (
+      {showInstallBanner && engaged && !installed && (
         <aside
           role="region"
           aria-label="App Installation Prompt"
-          className="fixed bottom-20 md:bottom-6 right-4 z-40 max-w-sm rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 p-4 shadow-xl shadow-stone-900/10 animate-in fade-in slide-in-from-bottom-4 duration-300"
+          className="fixed bottom-20 md:bottom-6 right-4 z-40 max-w-sm rounded-2xl bg-white border border-stone-200 p-4 shadow-xl shadow-stone-900/10 animate-in fade-in slide-in-from-bottom-4 duration-300"
         >
           <div className="flex items-start gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-600 text-white text-xs font-black tracking-tight shadow-sm">
               JBE
             </div>
             <div className="flex-1 min-w-0 pr-1">
-              <h4 className="text-xs font-bold text-stone-900 dark:text-white">
+              <h4 className="text-xs font-bold text-stone-900">
                 {t('installApp')}
               </h4>
-              <p className="mt-0.5 text-[11px] leading-tight text-stone-600 dark:text-stone-300">
+              <p className="mt-0.5 text-[11px] leading-tight text-stone-600">
                 {t('installAppDesc')}
               </p>
               <div className="mt-2.5 flex items-center gap-2">
@@ -113,7 +138,7 @@ export default function OfflineBanner() {
                 <button
                   type="button"
                   onClick={handleDismissInstall}
-                  className="rounded-lg px-2 py-1.5 text-xs font-medium text-stone-500 hover:text-stone-800 dark:text-stone-400 dark:hover:text-stone-200 transition cursor-pointer"
+                  className="rounded-lg px-2 py-1.5 text-xs font-medium text-stone-500 hover:text-stone-800 transition cursor-pointer"
                 >
                   {t('dismiss')}
                 </button>
