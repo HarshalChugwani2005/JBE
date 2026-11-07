@@ -2,11 +2,13 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import { imagetools } from 'vite-imagetools'
 
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    imagetools({ removeMetadata: true }),
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'auto',

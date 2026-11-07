@@ -1,9 +1,35 @@
-const imageModules = import.meta.glob('../assets/images/**/*.{avif,webp,jpg,jpeg,png,gif,svg}', {
+/**
+ * Product image resolver.
+ *
+ * Raster images (jpg/png/webp/avif) are optimised at build time by vite-imagetools:
+ * converted to WebP and resized to 400/800/1200px (never upscaled). Each image gets
+ *   - `src`    → largest WebP (used as the default / lightbox source)
+ *   - `srcSet` → responsive WebP set so cards & thumbnails download small files
+ * SVG and GIF files are passed through untouched.
+ */
+const rasterSrcModules = import.meta.glob('../assets/images/**/*.{jpg,jpeg,png,webp,avif}', {
+  eager: true,
+  import: 'default',
+  query: '?w=1200&format=webp&quality=78&withoutEnlargement',
+})
+
+const rasterSrcSetModules = import.meta.glob('../assets/images/**/*.{jpg,jpeg,png,webp,avif}', {
+  eager: true,
+  import: 'default',
+  query: '?w=400;800;1200&format=webp&quality=78&withoutEnlargement&as=srcset',
+})
+
+const passthroughModules = import.meta.glob('../assets/images/**/*.{gif,svg}', {
   eager: true,
   import: 'default',
 })
 
 const supportedExtensions = ['webp', 'jpg', 'jpeg', 'png', 'avif', 'gif', 'svg']
+
+/** Resolved URL → original file base name (e.g. "titan-brown"), for color matching. */
+const urlToBaseName = new Map()
+/** Resolved URL → responsive srcset string. */
+const urlToSrcSet = new Map()
 
 function isExternalSource(value) {
   return typeof value === 'string' && /^(https?:)?\/\//.test(value)
@@ -24,6 +50,34 @@ function getExtension(value) {
   return match ? match[1].toLowerCase() : ''
 }
 
+/** Removes duplicate width descriptors (small sources are not upscaled, so widths can repeat). */
+function dedupeSrcSet(srcSet) {
+  if (typeof srcSet !== 'string') return undefined
+  const seen = new Set()
+  const entries = srcSet
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter((entry) => {
+      const url = entry.split(/\s+/)[0]
+      if (!url || seen.has(url)) return false
+      seen.add(url)
+      return true
+    })
+  return entries.length > 1 ? entries.join(', ') : undefined
+}
+
+function lookupModule(key) {
+  if (rasterSrcModules[key]) {
+    const url = rasterSrcModules[key]
+    if (!urlToSrcSet.has(url)) {
+      const srcSet = dedupeSrcSet(rasterSrcSetModules[key])
+      if (srcSet) urlToSrcSet.set(url, srcSet)
+    }
+    return url
+  }
+  return passthroughModules[key] || null
+}
+
 function resolveLocalImage(categorySlug, candidate) {
   if (!candidate) return null
 
@@ -37,9 +91,10 @@ function resolveLocalImage(categorySlug, candidate) {
     : supportedExtensions.map((ext) => `${baseName}.${ext}`)
 
   for (const name of lookupOrder) {
-    const key = `${dir}/${name}`
-    if (imageModules[key]) {
-      return imageModules[key]
+    const url = lookupModule(`${dir}/${name}`)
+    if (url) {
+      urlToBaseName.set(url, baseName.toLowerCase())
+      return url
     }
   }
 
@@ -66,4 +121,18 @@ export function getProductImageUrls(categorySlug, product) {
       return resolveLocalImage(categorySlug, candidate)
     })
     .filter(Boolean)
+}
+
+/** Responsive srcset for a URL returned by getProductImageUrls (undefined if none). */
+export function getImageSrcSet(url) {
+  return urlToSrcSet.get(url)
+}
+
+/**
+ * Original file base name for a resolved image URL (e.g. "titan-brown").
+ * Falls back to parsing the URL for external sources.
+ */
+export function getImageBaseName(url) {
+  if (!url) return ''
+  return urlToBaseName.get(url) ?? getBaseName(url).toLowerCase()
 }

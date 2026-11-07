@@ -72,6 +72,7 @@ export default function RecentlyViewed({ currentModelName, className = '' }) {
                 product={item}
                 alt={item.modelName}
                 className="h-full w-full object-cover"
+                sizes="200px"
                 imgClassName="group-hover:scale-105 transition-transform duration-300"
                 fallbackLabel=""
               />

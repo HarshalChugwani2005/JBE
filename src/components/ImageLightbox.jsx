@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { getImageSrcSet } from '../data/productImages'
 
 function getFocusableElements(container) {
   return Array.from(
@@ -205,7 +206,7 @@ export default function ImageLightbox({ images = [], startIndex = 0, alt = 'Prod
               aria-current={i === index ? 'true' : undefined}
               className={`lb-thumb${i === index ? ' lb-thumb-active' : ''}`}
             >
-              <img src={imgSrc} alt="" className="h-full w-full object-cover" loading="lazy" draggable={false} />
+              <img src={imgSrc} srcSet={getImageSrcSet(imgSrc)} sizes="80px" alt="" className="h-full w-full object-cover" loading="lazy" decoding="async" draggable={false} />
             </button>
           ))}
         </div>

@@ -304,6 +304,7 @@ export default function SearchPalette() {
                       product={item}
                       alt={item.modelName}
                       className="h-full w-full object-cover"
+                      sizes="96px"
                       fallbackLabel=""
                     />
                   </div>

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import CategoryIcon from './CategoryIcon'
 import { getCategoryVisual } from '../data/categoryVisuals'
-import { getProductImageUrls } from '../data/productImages'
+import { getImageSrcSet, getProductImageUrls } from '../data/productImages'
 
 export default function ProductImage({
   src: directSrc,
@@ -12,12 +12,14 @@ export default function ProductImage({
   imgClassName = '',
   fallbackLabel = 'Photo coming soon',
   loading = 'lazy',
+  sizes = '(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw',
 }) {
   const sources = useMemo(() => {
     if (directSrc) return [directSrc]
     return getProductImageUrls(category, product)
   }, [directSrc, category, product])
   const src = directSrc || sources[0] || null
+  const srcSet = src ? getImageSrcSet(src) : undefined
   const visual = getCategoryVisual(category)
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasError, setHasError] = useState(false)
@@ -48,8 +50,11 @@ export default function ProductImage({
       {!isLoaded && <div className="absolute inset-0 skeleton-shimmer" aria-hidden="true" />}
       <img
         src={src}
+        srcSet={srcSet}
+        sizes={srcSet ? sizes : undefined}
         alt={alt}
         loading={loading}
+        decoding="async"
         onLoad={() => setIsLoaded(true)}
         onError={() => setHasError(true)}
         className={`h-full w-full object-cover transition duration-500 ease-out ${
