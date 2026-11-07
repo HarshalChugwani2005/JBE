@@ -2,12 +2,13 @@ import ContactForm from '../components/ContactForm'
 import MapPreview from '../components/MapPreview'
 import SEO from '../components/SEO'
 import { useLanguage } from '../context/useLanguage'
+import { buildGreeting } from '../i18n/whatsappMessages'
 import { shop, getWhatsAppUrl, getPhoneUrl } from '../data/site'
 import { trackCallClick, trackWhatsAppClick } from '../utils/analytics'
 import { WhatsAppIcon, PhoneIcon } from '../components/Icons'
 
 export default function Contact() {
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
 
   return (
     <>
@@ -52,7 +53,7 @@ export default function Contact() {
 
               <div className="mt-6 flex flex-col sm:flex-row flex-wrap gap-3">
                 <a
-                  href={getWhatsAppUrl()}
+                  href={getWhatsAppUrl(buildGreeting(lang))}
                   onClick={() => trackWhatsAppClick('contact_page')}
                   target="_blank"
                   rel="noreferrer"

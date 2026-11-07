@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/useCart'
 import { useLanguage } from '../context/useLanguage'
+import { buildStockCheckMessage } from '../i18n/whatsappMessages'
 import { useToast } from '../context/useToast'
 import { getWhatsAppUrl } from '../data/site'
 import { trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
@@ -20,7 +21,7 @@ export default function ProductCard({
   specs = [],
 }) {
   const { addToCart, openCart } = useCart()
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
   const { showToast } = useToast()
 
   const handleQuickAdd = (e) => {
@@ -151,9 +152,7 @@ export default function ProductCard({
         {inStock === false ? (
           /* OOS: replace button with a WhatsApp ask link */
           <a
-            href={getWhatsAppUrl(
-              `*JAI BABA ELECTRONIC — STOCK CHECK*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n*Product:* ${brand ? `${brand} ` : ''}${modelName}\n*Category:* ${categoryLabel}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n_"Hello! Could you please let me know when this model will be available in stock? Thank you!"_`
-            )}
+            href={getWhatsAppUrl(buildStockCheckMessage(lang, { brand, modelName, categoryLabel }))}
             onClick={(e) => {
               e.stopPropagation()
               trackWhatsAppClick('product_card_oos', { modelName, brand, category })

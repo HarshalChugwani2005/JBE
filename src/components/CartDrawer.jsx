@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useCart } from '../context/useCart'
 import { useLanguage } from '../context/useLanguage'
+import { buildQuoteMessage } from '../i18n/whatsappMessages'
 import { getWhatsAppUrl, shop } from '../data/site'
 import { trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
 import ProductImage from './ProductImage'
@@ -11,7 +12,7 @@ const ANIM_DURATION = 300 // ms — must match the CSS transition duration
 
 export default function CartDrawer() {
   const { items, isOpen, closeCart, removeFromCart, updateQuantity, clearCart, totalCount } = useCart()
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
   const [buyerName, setBuyerName] = useState('')
   const [buyerType, setBuyerType] = useState('wholesale') // 'wholesale' | 'retail'
   const [notes, setNotes] = useState('')
@@ -98,39 +99,7 @@ export default function CartDrawer() {
     trackWhatsAppClick('enquiry_cart', { itemCount: totalCount, buyerType })
     trackEnquiryCartAction('submit_enquiry', { totalCount, buyerType })
 
-    const now = new Date()
-    const dateStr = now.toLocaleDateString('en-IN', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    })
-
-    let msg = `*JAI BABA ELECTRONIC — QUOTATION REQUEST*\n`
-    msg += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`
-    msg += `Date: ${dateStr}\n`
-    if (buyerName.trim()) {
-      msg += `Customer: ${buyerName.trim()}\n`
-    }
-    msg += `Order Type: ${buyerType === 'wholesale' ? 'Wholesale / Dealer (Bulk Order)' : 'Retail / Personal (Home Use)'}\n`
-    if (notes.trim()) {
-      msg += `Location / Notes: ${notes.trim()}\n`
-    }
-    msg += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`
-    msg += `Requested Products (${totalCount} item${totalCount > 1 ? 's' : ''}):\n\n`
-
-    items.forEach((item, index) => {
-      const num = index + 1
-      msg += `*${num}. ${item.brand ? `${item.brand} ` : ''}${item.modelName}*\n`
-      msg += `   • Category: ${item.categoryLabel || item.categorySlug}\n`
-      if (item.selectedColor) {
-        msg += `   • Color: ${item.selectedColor}\n`
-      }
-      msg += `   • Quantity: *${item.quantity || 1} unit${(item.quantity || 1) > 1 ? 's' : ''}*\n\n`
-    })
-
-    msg += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`
-    msg += `_"Hello! Please share your best price quotation, current stock availability, and delivery/pickup details for the items listed above. Thank you!"_`
-
+    const msg = buildQuoteMessage(lang, { items, totalCount, buyerName, buyerType, notes })
     const url = getWhatsAppUrl(msg)
     window.open(url, '_blank', 'noopener,noreferrer')
   }
@@ -205,6 +174,7 @@ export default function CartDrawer() {
                           product={item}
                           alt={item.modelName}
                           className="h-full w-full object-cover"
+                          sizes="96px"
                           fallbackLabel=""
                         />
                       </div>

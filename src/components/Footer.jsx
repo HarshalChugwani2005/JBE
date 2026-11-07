@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../context/useLanguage'
+import { buildGreeting } from '../i18n/whatsappMessages'
 import { getWhatsAppUrl, getPhoneUrl, shop } from '../data/site'
 import { WhatsAppIcon, PhoneIcon } from './Icons'
 
 export default function Footer() {
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
 
   return (
     <footer className="mt-auto border-t border-stone-200/80 bg-white pb-20 md:pb-0 dark:bg-stone-950 dark:border-stone-800">
@@ -33,7 +34,7 @@ export default function Footer() {
             <p className="font-heading text-xs font-bold uppercase tracking-wider text-stone-900 dark:text-stone-100">{t('contactDetails')}</p>
             <div className="mt-2 flex flex-col gap-2">
               <a
-                href={getWhatsAppUrl()}
+                href={getWhatsAppUrl(buildGreeting(lang))}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#25D366] hover:underline transition duration-150"

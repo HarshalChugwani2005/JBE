@@ -1,8 +1,11 @@
+import { useLanguage } from '../context/useLanguage'
 import { getWhatsAppUrl } from '../data/site'
+import { buildGreeting } from '../i18n/whatsappMessages'
 import { trackWhatsAppClick } from '../utils/analytics'
 
 export default function WhatsAppButton() {
-  const url = getWhatsAppUrl()
+  const { lang } = useLanguage()
+  const url = getWhatsAppUrl(buildGreeting(lang))
   const isExternal = url.startsWith('http')
 
   return (

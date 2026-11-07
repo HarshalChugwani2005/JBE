@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLanguage } from '../context/useLanguage'
+import { buildContactMessage } from '../i18n/whatsappMessages'
 import { getWhatsAppUrl, shop } from '../data/site'
 import { trackFormSubmit } from '../utils/analytics'
 import { WhatsAppIcon, CheckCircleIcon, InfoIcon, CloseIcon } from './Icons'
@@ -7,7 +8,7 @@ import { WhatsAppIcon, CheckCircleIcon, InfoIcon, CloseIcon } from './Icons'
 const hasFormspree = Boolean(shop.formspreeUrl?.trim())
 
 export default function ContactForm() {
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
   const [form, setForm] = useState({ name: '', phone: '', message: '' })
   const [status, setStatus] = useState(null)   // { type: 'success'|'error', message: string, canWhatsApp?: boolean }
   const [submitting, setSubmitting] = useState(false)
@@ -26,19 +27,7 @@ export default function ContactForm() {
     setForm((s) => ({ ...s, [e.target.name]: e.target.value }))
   }
 
-  const getWhatsAppMessage = (data = form) => {
-    return [
-      `JAI BABA ELECTRONIC — DIRECT ENQUIRY`,
-      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-      `Customer Name: ${data.name || 'Not provided'}`,
-      `Phone Number: ${data.phone || 'Not provided'}`,
-      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-      `Requirement / Message:`,
-      data.message || '',
-      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-      `"Looking forward to hearing from you soon. Thank you!"`,
-    ].join('\n')
-  }
+  const getWhatsAppMessage = (data = form) => buildContactMessage(lang, data)
 
   const handleWhatsAppRedirect = (data = form) => {
     trackFormSubmit('whatsapp_redirect')

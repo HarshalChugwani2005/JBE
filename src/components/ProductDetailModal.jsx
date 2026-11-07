@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useCart } from '../context/useCart'
 import { useLanguage } from '../context/useLanguage'
+import { buildProductEnquiryMessage, buildStockCheckMessage } from '../i18n/whatsappMessages'
 import { useToast } from '../context/useToast'
 import { getPhoneUrl, getWhatsAppUrl, shop } from '../data/site'
-import { getProductImageUrls } from '../data/productImages'
+import { getImageBaseName, getImageSrcSet, getProductImageUrls } from '../data/productImages'
 import { trackCallClick, trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
 import { addRecentlyViewed } from '../utils/recentlyViewed'
 import { slugify } from '../utils/slugify'
@@ -20,8 +21,8 @@ function findImageIndexForColor(color, imageSources, colors, modelName) {
 
   // 1. Exact match on clean filename base (e.g. "titan-brown" or "brown")
   const exactMatchIdx = imageSources.findIndex((url) => {
-    const filename = url.split(/[?#]/)[0].split('/').pop().replace(/\.[^.]+$/, '').toLowerCase()
-    const cleanFilename = filename.replace(/-[a-zA-Z0-9_-]{8,}$/, '')
+    const filename = getImageBaseName(url)
+    const cleanFilename = filename
     return cleanFilename === targetName || cleanFilename === colorSlug || filename === targetName || filename === colorSlug
   })
   if (exactMatchIdx !== -1) return exactMatchIdx
@@ -37,8 +38,8 @@ function findImageIndexForColor(color, imageSources, colors, modelName) {
 
 function findColorForImage(imageSource, colors, modelName) {
   if (!imageSource || !colors?.length) return null
-  const filename = imageSource.split(/[?#]/)[0].split('/').pop().replace(/\.[^.]+$/, '').toLowerCase()
-  const cleanFilename = filename.replace(/-[a-zA-Z0-9_-]{8,}$/, '')
+  const filename = getImageBaseName(imageSource)
+  const cleanFilename = filename
   const modelSlug = slugify(modelName)
 
   // 1. Exact match against target name
@@ -64,7 +65,7 @@ function findColorForImage(imageSource, colors, modelName) {
 
 export default function ProductDetailModal({ isOpen, onClose, product }) {
   const { addToCart, openCart } = useCart()
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
   const { showToast } = useToast()
   const dialogRef = useRef(null)
   const closeButtonRef = useRef(null)
@@ -151,25 +152,16 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
 
   const modelName = model.modelName ?? 'Product Detail'
 
-  const whatsappText = [
-    `*JAI BABA ELECTRONIC — PRODUCT ENQUIRY*`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `*Model:* ${brandName ? `${brandName} ` : ''}${modelName}`,
-    `*Category:* ${categoryLabel || categorySlug}`,
-    selectedColor ? `*Selected Color:* ${selectedColor}` : null,
-    model?.specs?.[0] ? `*Key Spec:* ${model.specs[0]}` : null,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `_"Hello! Please share current wholesale and retail pricing, warranty details, and availability for this model. Thank you!"_`,
-  ].filter(Boolean).join('\n')
+  const productLabel = categoryLabel || categorySlug
+  const whatsappText = buildProductEnquiryMessage(lang, {
+    brand: brandName,
+    modelName,
+    categoryLabel: productLabel,
+    selectedColor,
+    keySpec: model?.specs?.[0],
+  })
 
-  const oosWhatsappText = [
-    `*JAI BABA ELECTRONIC — STOCK AVAILABILITY CHECK*`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `*Product:* ${brandName ? `${brandName} ` : ''}${modelName}`,
-    `*Category:* ${categoryLabel || categorySlug}`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `_"Hello! Could you please let me know when this model will be available in stock? Thank you!"_`,
-  ].join('\n')
+  const oosWhatsappText = buildStockCheckMessage(lang, { brand: brandName, modelName, categoryLabel: productLabel })
 
   const whatsappHref = getWhatsAppUrl(whatsappText)
   const phoneHref = getPhoneUrl()
@@ -313,6 +305,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                 product={model}
                 alt={`${brandName ? `${brandName} ` : ''}${modelName}${selectedColor ? ` in ${selectedColor}` : ''}`}
                 className="aspect-4/3 rounded-2xl border border-stone-200 bg-white shadow-xs"
+                sizes="(min-width: 768px) 560px, 100vw"
                 imgClassName="transition-transform duration-500 group-hover:scale-[1.03]"
                 fallbackLabel="Photo coming soon"
                 loading="eager"
@@ -343,7 +336,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                     }`}
                     aria-label={`View image ${index + 1} of ${imageSources.length}`}
                   >
-                    <img src={source} alt="" className="h-16 sm:h-20 w-full object-cover" loading="lazy" />
+                    <img src={source} srcSet={getImageSrcSet(source)} sizes="120px" alt="" className="h-16 sm:h-20 w-full object-cover" loading="lazy" decoding="async" />
                   </button>
                 ))}
               </div>

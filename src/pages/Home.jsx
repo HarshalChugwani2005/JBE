@@ -7,6 +7,7 @@ import RevealOnScroll from '../components/RevealOnScroll'
 import Section from '../components/Section'
 import SEO from '../components/SEO'
 import { useLanguage } from '../context/useLanguage'
+import { buildGreeting } from '../i18n/whatsappMessages'
 import { categories } from '../data/products'
 import { featuredCategorySlugs, getWhatsAppUrl, shop } from '../data/site'
 import { trackWhatsAppClick } from '../utils/analytics'
@@ -22,7 +23,7 @@ import {
 } from '../components/Icons'
 
 export default function Home() {
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
   const featured = featuredCategorySlugs
     .map((slug) => categories.find((c) => c.category === slug))
     .filter(Boolean)
@@ -78,7 +79,7 @@ export default function Home() {
                 <ArrowRightIcon className="h-4 w-4" />
               </Link>
               <a
-                href={getWhatsAppUrl()}
+                href={getWhatsAppUrl(buildGreeting(lang))}
                 onClick={() => trackWhatsAppClick('hero_section')}
                 target="_blank"
                 rel="noreferrer"
@@ -99,6 +100,7 @@ export default function Home() {
                     product={heroProduct}
                     alt={`${heroProduct.modelName} ceiling fan`}
                     className="relative aspect-4/3 overflow-hidden rounded-3xl border border-white/20 bg-white/10 shadow-2xl"
+                    sizes="(min-width: 768px) 50vw, 100vw"
                     imgClassName="object-contain p-6"
                     fallbackLabel="Featured product"
                     loading="eager"

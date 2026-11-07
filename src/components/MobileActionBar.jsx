@@ -1,12 +1,13 @@
 import { useCart } from '../context/useCart'
 import { useLanguage } from '../context/useLanguage'
+import { buildGreeting } from '../i18n/whatsappMessages'
 import { getPhoneUrl, getWhatsAppUrl, shop } from '../data/site'
 import { trackCallClick, trackWhatsAppClick } from '../utils/analytics'
 import { CartIcon, PhoneIcon, WhatsAppIcon } from './Icons'
 
 export default function MobileActionBar() {
   const { totalCount, toggleCart } = useCart()
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
 
   const handleCall = () => {
     trackCallClick('mobile_action_bar', shop.primaryPhone)
@@ -34,7 +35,7 @@ export default function MobileActionBar() {
 
         {/* WhatsApp */}
         <a
-          href={getWhatsAppUrl()}
+          href={getWhatsAppUrl(buildGreeting(lang))}
           onClick={handleWhatsApp}
           target="_blank"
           rel="noreferrer"
