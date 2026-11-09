@@ -102,7 +102,7 @@ export default function OfflineBanner() {
           role="status"
           aria-live="polite"
           aria-label={t('offlineRegionLabel')}
-          className="fixed bottom-16 md:bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-full bg-stone-900 text-white px-4 py-2 text-xs md:text-sm font-medium shadow-2xl border border-stone-700 animate-in fade-in slide-in-from-bottom-3 duration-300"
+          className="fixed bottom-16 md:bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-full bg-stone-900 text-white px-4 py-2 text-xs md:text-sm font-medium shadow-2xl border border-stone-700 animate-slide-in-up"
         >
           <WifiOffIcon className="h-4 w-4 text-amber-400 shrink-0" />
           <span>{t('offlineNotice')}</span>
@@ -114,7 +114,7 @@ export default function OfflineBanner() {
         <aside
           role="region"
           aria-label={t('installRegionLabel')}
-          className="fixed bottom-20 md:bottom-6 right-4 z-40 max-w-sm rounded-2xl bg-white border border-stone-200 p-4 shadow-xl shadow-stone-900/10 animate-in fade-in slide-in-from-bottom-4 duration-300"
+          className="fixed bottom-20 md:bottom-6 right-4 z-40 max-w-sm rounded-2xl bg-white border border-stone-200 p-4 shadow-xl shadow-stone-900/10 animate-slide-in-up"
         >
           <div className="flex items-start gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-700 text-white text-xs font-black tracking-tight shadow-sm" aria-hidden="true">

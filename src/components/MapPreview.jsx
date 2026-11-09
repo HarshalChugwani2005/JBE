@@ -11,7 +11,7 @@ export default function MapPreview({ compact = false, headingLevel: Heading = 'h
   const { t } = useLanguage()
 
   return (
-    <div className={`glass-card overflow-hidden rounded-2xl shadow-[0_2px_12px_-3px_rgba(0,0,0,0.05)] ${compact ? '' : 'grid gap-0 md:grid-cols-5'}`}>
+    <div className={`glass-card overflow-hidden rounded-2xl ${compact ? '' : 'grid gap-0 md:grid-cols-5'}`}>
       <div className={compact ? 'relative aspect-video w-full' : 'relative min-h-55 md:col-span-3 md:min-h-70'}>
         <iframe
           title={t('mapFrameTitle', { name: shop.name })}

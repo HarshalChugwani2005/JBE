@@ -109,7 +109,7 @@ export default function ImageLightbox({ images = [], startIndex = 0, alt = '', o
           <span className="lb-counter" aria-live="polite">{index + 1} / {total}</span>
         )}
         <div className="lb-header-right">
-          <button type="button" className="lb-btn lb-btn-zoom" onClick={handleImageClick} aria-pressed={zoomed}>
+          <button type="button" className="lb-btn" onClick={handleImageClick} aria-pressed={zoomed}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4" aria-hidden="true">
               <circle cx="11" cy="11" r="8" />
               <path strokeLinecap="round" d={zoomed ? 'm21 21-4.35-4.35M8 11h6' : 'm21 21-4.35-4.35M11 8v6M8 11h6'} />

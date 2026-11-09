@@ -47,7 +47,7 @@ export default function CatalogFilters({
   )
 
   return (
-    <div className="store-card rounded-2xl p-4 sm:p-6 shadow-[0_2px_12px_-3px_rgba(0,0,0,0.04)]">
+    <div className="store-card rounded-2xl p-4 sm:p-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <label className="block flex-1">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-stone-600 flex items-center gap-1.5 mb-1.5">
