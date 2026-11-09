@@ -19,7 +19,7 @@ export default function MobileActionBar() {
 
   return (
     <aside
-      aria-label="Quick actions"
+      aria-label={t('quickActions')}
       className="mobile-bar-enter fixed bottom-0 left-0 right-0 z-40 border-t border-stone-200 bg-white/95 backdrop-blur-sm px-3 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] md:hidden"
     >
       <div className="mx-auto flex max-w-md items-center justify-between gap-2.5">
@@ -27,7 +27,7 @@ export default function MobileActionBar() {
         <a
           href={getPhoneUrl(shop.primaryPhone)}
           onClick={handleCall}
-          className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-stone-200 bg-stone-50 py-3 text-sm font-bold text-stone-800 transition active:scale-95 hover:bg-stone-100"
+          className="btn btn-secondary flex-1 px-2 py-3"
         >
           <PhoneIcon className="h-4 w-4" />
           <span>{t('callPrimary')}</span>
@@ -39,7 +39,7 @@ export default function MobileActionBar() {
           onClick={handleWhatsApp}
           target="_blank"
           rel="noreferrer"
-          className="shimmer-on-hover press-effect flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#25D366] py-3 text-sm font-bold text-white shadow-sm transition active:scale-95 hover:bg-[#1fb855]"
+          className="btn btn-whatsapp flex-1 px-2 py-3"
         >
           <WhatsAppIcon className="h-4 w-4" />
           <span>WhatsApp</span>
@@ -49,12 +49,13 @@ export default function MobileActionBar() {
         <button
           type="button"
           onClick={toggleCart}
-          className="relative flex flex-1 items-center justify-center gap-2 rounded-xl border border-amber-300 bg-amber-50 py-3 text-sm font-bold text-amber-900 transition active:scale-95 hover:bg-amber-100 cursor-pointer shadow-xs"
+          className="btn flex-1 border border-amber-300 bg-amber-50 px-2 py-3 text-amber-900 hover:bg-amber-100"
+          aria-label={t('enquiryListCount', { count: totalCount })}
         >
           <CartIcon className="h-4 w-4" />
-          <span>{totalCount > 0 ? `${t('navCart')} (${totalCount})` : t('navCart')}</span>
+          <span>{t('navCart')}</span>
           {totalCount > 0 && (
-            <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-600 px-1 text-[9px] font-bold text-white shadow-xs">
+            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-700 px-1 text-[10px] font-bold text-white shadow-xs" aria-hidden="true">
               {totalCount}
             </span>
           )}

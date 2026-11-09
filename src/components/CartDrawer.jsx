@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useCart } from '../context/useCart'
 import { useLanguage } from '../context/useLanguage'
 import { buildQuoteMessage } from '../i18n/whatsappMessages'
@@ -6,13 +7,13 @@ import { getWhatsAppUrl, shop } from '../data/site'
 import { trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
 import ProductImage from './ProductImage'
 import { CartIcon, WhatsAppIcon, CloseIcon, TrashIcon } from './Icons'
-import { getFocusableElements } from '../utils/focus'
+import { getFocusableElements, trapTabKey } from '../utils/focus'
 
 const ANIM_DURATION = 300 // ms — must match the CSS transition duration
 
 export default function CartDrawer() {
   const { items, isOpen, closeCart, removeFromCart, updateQuantity, clearCart, totalCount } = useCart()
-  const { t, lang } = useLanguage()
+  const { t, tCategory, lang } = useLanguage()
   const [buyerName, setBuyerName] = useState('')
   const [buyerType, setBuyerType] = useState('wholesale') // 'wholesale' | 'retail'
   const [notes, setNotes] = useState('')
@@ -59,24 +60,7 @@ export default function CartDrawer() {
         handleAnimatedClose()
         return
       }
-
-      if (event.key !== 'Tab' || !drawerRef.current) return
-
-      const focusableElements = getFocusableElements(drawerRef.current)
-      if (focusableElements.length === 0) return
-
-      const firstElement = focusableElements[0]
-      const lastElement = focusableElements[focusableElements.length - 1]
-
-      if (event.shiftKey) {
-        if (document.activeElement === firstElement) {
-          event.preventDefault()
-          lastElement.focus()
-        }
-      } else if (document.activeElement === lastElement) {
-        event.preventDefault()
-        firstElement.focus()
-      }
+      trapTabKey(event, drawerRef.current)
     }
 
     document.addEventListener('keydown', handleKeyDown)
@@ -99,10 +83,24 @@ export default function CartDrawer() {
     trackWhatsAppClick('enquiry_cart', { itemCount: totalCount, buyerType })
     trackEnquiryCartAction('submit_enquiry', { totalCount, buyerType })
 
-    const msg = buildQuoteMessage(lang, { items, totalCount, buyerName, buyerType, notes })
+    const localizedItems = items.map((item) => ({
+      ...item,
+      categoryLabel: tCategory(item.categorySlug, item.categoryLabel),
+    }))
+    const msg = buildQuoteMessage(lang, { items: localizedItems, totalCount, buyerName, buyerType, notes })
     const url = getWhatsAppUrl(msg)
     window.open(url, '_blank', 'noopener,noreferrer')
   }
+
+  const buyerTypeClass = (active) =>
+    `min-h-11 rounded-xl border px-3 py-2 text-xs font-bold transition duration-200 cursor-pointer ${
+      active
+        ? 'border-amber-700 bg-amber-700 text-white shadow-xs'
+        : 'border-stone-200 bg-white text-stone-700 hover:border-amber-300 hover:bg-amber-50/40'
+    }`
+
+  const quantityButtonClass =
+    'h-8 w-8 rounded-lg border border-stone-200 bg-white text-xs font-bold text-stone-700 hover:border-amber-400 hover:bg-amber-50 hover:text-amber-900 transition active:scale-90 cursor-pointer'
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
@@ -112,6 +110,7 @@ export default function CartDrawer() {
           isVisible ? 'opacity-100' : 'opacity-0'
         }`}
         onClick={handleAnimatedClose}
+        aria-hidden="true"
       />
 
       <div className="fixed inset-y-0 right-0 flex max-w-full pl-6 sm:pl-10">
@@ -128,14 +127,14 @@ export default function CartDrawer() {
                 <h2 className="font-heading text-lg font-bold text-stone-900" id="slide-over-title">
                   {t('enquiryDrawerTitle')}
                 </h2>
-                <p className="text-xs text-stone-500 font-medium">
+                <p className="text-xs text-stone-600 font-medium">
                   {t('itemsReady', { count: totalCount })}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={handleAnimatedClose}
-                className="rounded-full border border-stone-200 bg-white p-1.5 text-stone-500 hover:bg-stone-100 hover:text-stone-900 transition duration-150 cursor-pointer"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-600 hover:bg-stone-100 hover:text-stone-900 transition duration-150 cursor-pointer"
               >
                 <span className="sr-only">{t('close')}</span>
                 <CloseIcon className="h-4 w-4" />
@@ -151,28 +150,24 @@ export default function CartDrawer() {
                   <CartIcon className="h-8 w-8" />
                 </div>
                 <h3 className="mt-5 font-heading text-base font-bold text-stone-900">{t('enquiryEmpty')}</h3>
-                <p className="mt-1.5 text-xs text-stone-500 max-w-xs mx-auto">
+                <p className="mt-1.5 text-xs text-stone-600 max-w-xs mx-auto">
                   {t('enquiryEmptySubtitle')}
                 </p>
-                <button
-                  type="button"
-                  onClick={closeCart}
-                  className="mt-6 inline-flex items-center rounded-xl bg-gradient-to-r from-amber-600 to-orange-500 px-5 py-2.5 text-xs font-bold text-white shadow-md hover:from-amber-700 hover:to-orange-600 transition duration-200 active:scale-95 cursor-pointer"
-                >
+                <Link to="/catalog" onClick={closeCart} className="btn btn-primary mt-6">
                   {t('heroBrowseCatalog')}
-                </button>
+                </Link>
               </div>
             ) : (
               <>
                 {/* Item List */}
-                <div className="space-y-3">
+                <ul className="space-y-3">
                   {items.map((item) => (
-                    <div key={item.id} className="flex gap-3 items-center rounded-2xl border border-stone-200/80 bg-stone-50/50 p-3 transition hover:border-amber-300/80 hover:bg-white hover:shadow-xs">
-                      <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-xs">
+                    <li key={item.id} className="flex gap-3 items-center rounded-2xl border border-stone-200/80 bg-stone-50/50 p-3 transition hover:border-amber-300/80 hover:bg-white hover:shadow-xs">
+                      <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-xs">
                         <ProductImage
                           category={item.categorySlug}
                           product={item}
-                          alt={item.modelName}
+                          alt=""
                           className="h-full w-full object-cover"
                           sizes="96px"
                           fallbackLabel=""
@@ -180,25 +175,29 @@ export default function CartDrawer() {
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-heading text-sm font-bold text-stone-900 truncate">
+                        <h3 className="font-heading text-sm font-bold text-stone-900 truncate">
                           {item.brand ? `${item.brand} ` : ''}{item.modelName}
-                        </h4>
+                        </h3>
                         {item.selectedColor && (
-                          <p className="text-xs text-amber-700 font-semibold">{t('selectedColor')}: {item.selectedColor}</p>
+                          <p className="text-xs text-amber-800 font-semibold">{t('selectedColor')}: {item.selectedColor}</p>
                         )}
                         <div className="mt-1.5 flex items-center gap-2">
                           <button
                             type="button"
                             onClick={() => updateQuantity(item.id, (item.quantity || 1) - 1)}
-                            className="h-6 w-6 rounded-lg border border-stone-200 bg-white text-xs font-bold text-stone-700 hover:border-amber-400 hover:bg-amber-50 hover:text-amber-900 transition active:scale-90 cursor-pointer"
+                            aria-label={t('decreaseQuantity', { name: item.modelName })}
+                            className={quantityButtonClass}
                           >
-                            -
+                            −
                           </button>
-                          <span className="text-xs font-bold text-stone-800 min-w-4 text-center">{item.quantity || 1}</span>
+                          <span className="text-xs font-bold text-stone-800 min-w-4 text-center" aria-live="polite">
+                            {item.quantity || 1}
+                          </span>
                           <button
                             type="button"
                             onClick={() => updateQuantity(item.id, (item.quantity || 1) + 1)}
-                            className="h-6 w-6 rounded-lg border border-stone-200 bg-white text-xs font-bold text-stone-700 hover:border-amber-400 hover:bg-amber-50 hover:text-amber-900 transition active:scale-90 cursor-pointer"
+                            aria-label={t('increaseQuantity', { name: item.modelName })}
+                            className={quantityButtonClass}
                           >
                             +
                           </button>
@@ -208,44 +207,40 @@ export default function CartDrawer() {
                       <button
                         type="button"
                         onClick={() => removeFromCart(item.id)}
-                        className="rounded-lg p-1.5 text-stone-400 hover:bg-red-50 hover:text-red-600 transition cursor-pointer"
-                        title="Remove item"
-                        aria-label="Remove item"
+                        className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-stone-500 hover:bg-red-50 hover:text-red-600 transition cursor-pointer"
+                        title={t('removeItem', { name: item.modelName })}
+                        aria-label={t('removeItem', { name: item.modelName })}
                       >
                         <TrashIcon className="h-4 w-4" />
                       </button>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
 
                 {/* Enquiry Preferences Form */}
                 <div className="rounded-2xl border border-stone-200/90 bg-stone-50/80 p-4 space-y-3.5 shadow-xs">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-stone-600">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-stone-600">
                     {t('enquiryDetails')}
-                  </h4>
+                  </h3>
 
                   <div>
-                    <label className="block text-xs font-semibold text-stone-700 mb-1.5">{t('pricingInterest')}</label>
-                    <div className="grid grid-cols-2 gap-2">
+                    <p id="drawer-pricing-label" className="block text-xs font-semibold text-stone-700 mb-1.5">
+                      {t('pricingInterest')}
+                    </p>
+                    <div className="grid grid-cols-2 gap-2" role="group" aria-labelledby="drawer-pricing-label">
                       <button
                         type="button"
                         onClick={() => setBuyerType('wholesale')}
-                        className={`rounded-xl border px-3 py-2 text-xs font-bold transition duration-200 cursor-pointer ${
-                          buyerType === 'wholesale'
-                            ? 'border-amber-600 bg-amber-600 text-white shadow-xs'
-                            : 'border-stone-200 bg-white text-stone-700 hover:border-amber-300 hover:bg-amber-50/40'
-                        }`}
+                        aria-pressed={buyerType === 'wholesale'}
+                        className={buyerTypeClass(buyerType === 'wholesale')}
                       >
                         {t('wholesaleBulk')}
                       </button>
                       <button
                         type="button"
                         onClick={() => setBuyerType('retail')}
-                        className={`rounded-xl border px-3 py-2 text-xs font-bold transition duration-200 cursor-pointer ${
-                          buyerType === 'retail'
-                            ? 'border-amber-600 bg-amber-600 text-white shadow-xs'
-                            : 'border-stone-200 bg-white text-stone-700 hover:border-amber-300 hover:bg-amber-50/40'
-                        }`}
+                        aria-pressed={buyerType === 'retail'}
+                        className={buyerTypeClass(buyerType === 'retail')}
                       >
                         {t('retailHome')}
                       </button>
@@ -259,9 +254,10 @@ export default function CartDrawer() {
                     <input
                       id="drawer-name"
                       type="text"
+                      autoComplete="name"
                       value={buyerName}
                       onChange={(e) => setBuyerName(e.target.value)}
-                      placeholder="e.g. Ramesh Patil"
+                      placeholder={t('buyerNamePlaceholder')}
                       className="glass-input mt-1 w-full rounded-xl px-3 py-2 text-xs text-stone-900"
                     />
                   </div>
@@ -275,7 +271,7 @@ export default function CartDrawer() {
                       type="text"
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
-                      placeholder="e.g. Malkapur, need delivery this weekend"
+                      placeholder={t('buyerNotesPlaceholder')}
                       className="glass-input mt-1 w-full rounded-xl px-3 py-2 text-xs text-stone-900"
                     />
                   </div>
@@ -287,24 +283,20 @@ export default function CartDrawer() {
           {/* Footer CTA */}
           {items.length > 0 && (
             <div className="border-t border-stone-200 bg-white p-5 sm:p-6 space-y-3 shadow-lg">
-              <button
-                type="button"
-                onClick={handleSendWhatsApp}
-                className="btn-whatsapp w-full flex items-center justify-center gap-2 rounded-xl py-3 px-4 text-sm font-bold text-white shadow-xs transition duration-150 cursor-pointer"
-              >
+              <button type="button" onClick={handleSendWhatsApp} className="btn btn-whatsapp w-full py-3">
                 <WhatsAppIcon className="h-4 w-4" />
                 <span>{t('sendItemsToWhatsApp')} ({totalCount})</span>
               </button>
 
-              <div className="flex items-center justify-between text-xs text-stone-500 pt-1">
+              <div className="flex items-center justify-between text-xs text-stone-600 pt-1">
                 <button
                   type="button"
                   onClick={clearCart}
-                  className="text-stone-500 hover:text-red-600 transition cursor-pointer font-medium"
+                  className="min-h-11 text-stone-600 hover:text-red-600 transition cursor-pointer font-medium"
                 >
                   {t('clearAll')}
                 </button>
-                <span>{t('directQuoteFrom')} <strong className="font-semibold text-stone-700">{shop.name}</strong></span>
+                <span>{t('directQuoteFrom')} <strong className="font-semibold text-stone-800">{shop.name}</strong></span>
               </div>
             </div>
           )}

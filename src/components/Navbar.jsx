@@ -28,6 +28,9 @@ function useIsMobile(breakpoint = 1024) {
   return isMobile
 }
 
+const searchShortcut =
+  typeof navigator !== 'undefined' && /Mac|iPhone|iPad|iPod/i.test(navigator.platform) ? '⌘K' : 'Ctrl+K'
+
 export default function Navbar() {
   const { totalCount, toggleCart } = useCart()
   const { openSearch } = useSearch()
@@ -126,7 +129,7 @@ export default function Navbar() {
 
         {/* Desktop Nav — only shown when not mobile */}
         {!isMobile && (
-          <div className="relative" role="navigation">
+          <div className="relative" role="navigation" aria-label={t('mainNavigation')}>
             <ul
               ref={navContainerRef}
               className="relative flex items-center gap-1 rounded-full border border-stone-200/80 bg-stone-100/70 p-1 backdrop-blur-xs"
@@ -171,14 +174,14 @@ export default function Navbar() {
           <button
             type="button"
             onClick={openSearch}
-            className="inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1.5 text-xs font-semibold text-stone-600 transition duration-150 hover:border-amber-400 hover:bg-white hover:text-stone-900 cursor-pointer"
-            aria-label="Search catalog (Ctrl+K)"
+            className="inline-flex min-h-9 min-w-9 items-center justify-center gap-1.5 rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1.5 text-xs font-semibold text-stone-600 transition duration-150 hover:border-amber-400 hover:bg-white hover:text-stone-900 cursor-pointer"
+            aria-label={t('searchButtonLabel', { shortcut: searchShortcut })}
           >
-            <SearchIcon className="h-3.5 w-3.5 text-stone-500" />
-            {!isMobile && <span className="text-stone-500 font-normal">Search...</span>}
+            <SearchIcon className="h-3.5 w-3.5 text-stone-600" />
+            {!isMobile && <span className="text-stone-600 font-normal">{t('searchShort')}</span>}
             {!isMobile && (
-              <kbd className="rounded border border-stone-200 bg-white px-1.5 py-0.5 font-mono text-[10px] text-stone-400 shadow-2xs">
-                {/Mac|iPhone|iPad|iPod/i.test(typeof navigator !== 'undefined' ? navigator.platform : '') ? '⌘K' : 'Ctrl+K'}
+              <kbd className="rounded border border-stone-200 bg-white px-1.5 py-0.5 font-mono text-[10px] text-stone-500 shadow-2xs" aria-hidden="true">
+                {searchShortcut}
               </kbd>
             )}
           </button>
@@ -191,7 +194,7 @@ export default function Navbar() {
                 type="button"
                 onClick={toggleCart}
                 className="relative inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-stone-50 px-3 py-1.5 text-xs font-semibold text-stone-800 transition duration-150 hover:border-amber-400 hover:bg-white hover:text-amber-900 cursor-pointer"
-                aria-label={`Enquiry List with ${totalCount} items`}
+                aria-label={t('enquiryListCount', { count: totalCount })}
               >
                 <CartIcon className="h-3.5 w-3.5 text-stone-600" />
                 <span>{t('navCart')}</span>
@@ -209,8 +212,8 @@ export default function Navbar() {
             <button
               type="button"
               onClick={toggleCart}
-              className="relative inline-flex items-center justify-center h-9 w-9 rounded-full border border-stone-200 bg-stone-50 text-stone-700 transition duration-150 hover:border-amber-400 hover:bg-white cursor-pointer"
-              aria-label={`Enquiry List with ${totalCount} items`}
+              className="relative inline-flex items-center justify-center h-10 w-10 rounded-full border border-stone-200 bg-stone-50 text-stone-700 transition duration-150 hover:border-amber-400 hover:bg-white cursor-pointer"
+              aria-label={t('enquiryListCount', { count: totalCount })}
             >
               <CartIcon className="h-4 w-4" />
               {totalCount > 0 && (
@@ -226,8 +229,10 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setMenuOpen((o) => !o)}
-              className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-stone-200 bg-stone-50 text-stone-700 transition duration-150 hover:border-amber-400 hover:bg-white cursor-pointer"
-              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              className="inline-flex items-center justify-center h-10 w-10 rounded-full border border-stone-200 bg-stone-50 text-stone-700 transition duration-150 hover:border-amber-400 hover:bg-white cursor-pointer"
+              aria-label={menuOpen ? t('closeMenu') : t('openMenu')}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
             >
               {menuOpen ? <CloseIcon className="h-4 w-4" /> : <MenuIcon className="h-4 w-4" />}
             </button>
@@ -237,10 +242,14 @@ export default function Navbar() {
 
       {/* Mobile drawer menu */}
       {isMobile && (
-        <div className={`grid overflow-hidden border-t border-stone-200 bg-white px-4 transition-[grid-template-rows,opacity,padding] duration-200 ${menuOpen ? 'grid-rows-[1fr] py-4 opacity-100' : 'grid-rows-[0fr] py-0 opacity-0'}`}>
+        <div
+          id="mobile-menu"
+          inert={!menuOpen}
+          className={`grid overflow-hidden border-t border-stone-200 bg-white px-4 transition-[grid-template-rows,opacity,padding] duration-200 ${menuOpen ? 'grid-rows-[1fr] py-4 opacity-100' : 'grid-rows-[0fr] py-0 opacity-0'}`}
+        >
           <div className="min-h-0">
           {/* Nav links */}
-          <nav className="flex flex-col gap-1">
+          <nav className="flex flex-col gap-1" aria-label={t('mainNavigation')}>
             {navRoutes.map(({ to, label, end, Icon }) => (
               <NavLink
                 key={to}
@@ -255,7 +264,7 @@ export default function Navbar() {
                   }`
                 }
               >
-                <Icon className="h-4 w-4 text-stone-500" />
+                <Icon className="h-4 w-4 text-stone-600" />
                 {label}
               </NavLink>
             ))}
@@ -263,10 +272,10 @@ export default function Navbar() {
 
           <div className="my-4 border-t border-stone-100" />
 
-          {/* Language & theme */}
+          {/* Language */}
           <div className="flex items-center justify-between px-1">
-            <span className="text-xs font-bold uppercase tracking-wider text-stone-400">
-              Language
+            <span className="text-xs font-bold uppercase tracking-wider text-stone-600">
+              {t('language')}
             </span>
             <div className="flex items-center gap-2">
               <LanguageSelector />
@@ -277,6 +286,7 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => { setMenuOpen(false); toggleCart() }}
+            aria-label={t('enquiryListCount', { count: totalCount })}
             className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl border border-amber-300 bg-amber-50 py-3.5 text-sm font-bold text-amber-900 transition hover:bg-amber-100 cursor-pointer"
           >
             <CartIcon className="h-4 w-4 text-amber-800" />

@@ -133,8 +133,8 @@ export default function ContactForm() {
             <button
               type="button"
               onClick={() => setStatus(null)}
-              className="ml-auto shrink-0 opacity-60 hover:opacity-100 transition cursor-pointer p-0.5"
-              aria-label="Dismiss"
+              className="-m-2 ml-auto inline-flex h-8 w-8 shrink-0 items-center justify-center opacity-70 hover:opacity-100 transition cursor-pointer"
+              aria-label={t('dismiss')}
             >
               <CloseIcon className="h-3.5 w-3.5" />
             </button>
@@ -145,7 +145,7 @@ export default function ContactForm() {
               <button
                 type="button"
                 onClick={() => handleWhatsAppRedirect(lastSubmitted || form)}
-                className="btn-whatsapp inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold text-white shadow-xs"
+                className="btn btn-whatsapp px-4 text-xs"
               >
                 <WhatsAppIcon className="h-3.5 w-3.5" />
                 <span>
@@ -169,8 +169,9 @@ export default function ContactForm() {
           type="text"
           value={form.name}
           onChange={handleChange}
-          placeholder="e.g. Rahul Sharma"
-          className="w-full rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600"
+          autoComplete="name"
+          placeholder={t('contactNamePlaceholder')}
+          className="w-full rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 text-sm text-stone-900 placeholder:text-stone-500 outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600"
           required
           disabled={submitting}
         />
@@ -186,8 +187,10 @@ export default function ContactForm() {
           type="tel"
           value={form.phone}
           onChange={handleChange}
-          placeholder="e.g. 9876543210"
-          className="w-full rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600"
+          inputMode="numeric"
+          autoComplete="tel-national"
+          placeholder={t('contactPhonePlaceholder')}
+          className="w-full rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 text-sm text-stone-900 placeholder:text-stone-500 outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600"
           required
           disabled={submitting}
         />
@@ -204,7 +207,7 @@ export default function ContactForm() {
           value={form.message}
           onChange={handleChange}
           placeholder={t('messagePlaceholder')}
-          className="w-full rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none resize-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600"
+          className="w-full rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 text-sm text-stone-900 placeholder:text-stone-500 outline-none resize-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600"
           required
           disabled={submitting}
         />
@@ -214,11 +217,11 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-600 px-6 py-2.5 text-sm font-bold text-white shadow-xs hover:bg-amber-700 disabled:opacity-60 disabled:cursor-not-allowed transition duration-150 active:scale-[0.99] cursor-pointer min-w-36"
+          className="btn btn-primary min-w-36 px-6"
         >
           {submitting ? (
             <>
-              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden="true" />
               {t('submitting')}
             </>
           ) : hasFormspree ? (
@@ -230,13 +233,13 @@ export default function ContactForm() {
             </>
           )}
         </button>
-        <p className="text-xs text-stone-500">
-          Or call: <strong className="font-bold text-stone-800">+91 {shop.primaryPhone}</strong>
+        <p className="text-xs text-stone-600">
+          {t('orCall')} <strong className="font-bold text-stone-800">+91 {shop.primaryPhone}</strong>
         </p>
       </div>
 
       {!hasFormspree && (
-        <p className="text-[11px] text-stone-400 leading-relaxed">
+        <p className="text-[11px] text-stone-600 leading-relaxed">
           {t('whatsappPrefillHint')}
         </p>
       )}

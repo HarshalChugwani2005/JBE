@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useCart } from '../context/useCart'
 import { useLanguage } from '../context/useLanguage'
 import { buildProductEnquiryMessage, buildStockCheckMessage } from '../i18n/whatsappMessages'
@@ -11,7 +11,7 @@ import { slugify } from '../utils/slugify'
 import { AlertTriangleIcon, CartIcon, CloseIcon, PhoneIcon, ShareIcon, WhatsAppIcon } from './Icons'
 import ImageLightbox from './ImageLightbox'
 import ProductImage from './ProductImage'
-import { getFocusableElements } from '../utils/focus'
+import { trapTabKey } from '../utils/focus'
 
 function findImageIndexForColor(color, imageSources, colors, modelName) {
   if (!color || !imageSources.length) return 0
@@ -65,7 +65,7 @@ function findColorForImage(imageSource, colors, modelName) {
 
 export default function ProductDetailModal({ isOpen, onClose, product }) {
   const { addToCart, openCart } = useCart()
-  const { t, lang } = useLanguage()
+  const { t, tCategory, lang } = useLanguage()
   const { showToast } = useToast()
   const dialogRef = useRef(null)
   const closeButtonRef = useRef(null)
@@ -73,6 +73,12 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
   const [activeImageIndex, setActiveImageIndex] = useState(0)
   const [selectedColor, setSelectedColor] = useState(null)
   const [lightboxOpen, setLightboxOpen] = useState(false)
+  // The lightbox owns the keyboard while open (Escape / Tab must not also reach this dialog).
+  const lightboxOpenRef = useRef(false)
+  useEffect(() => {
+    lightboxOpenRef.current = lightboxOpen
+  }, [lightboxOpen])
+  const closeLightbox = useCallback(() => setLightboxOpen(false), [])
 
   const model = product?.model ?? product ?? null
   const brand = product?.brand ?? product?.brandName ?? null
@@ -108,29 +114,14 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
     })
 
     const handleKeyDown = (event) => {
+      if (lightboxOpenRef.current) return
       if (event.key === 'Escape') {
         event.preventDefault()
         onClose()
         return
       }
 
-      if (event.key !== 'Tab' || !dialogRef.current) return
-
-      const focusableElements = getFocusableElements(dialogRef.current)
-      if (focusableElements.length === 0) return
-
-      const firstElement = focusableElements[0]
-      const lastElement = focusableElements[focusableElements.length - 1]
-
-      if (event.shiftKey) {
-        if (document.activeElement === firstElement) {
-          event.preventDefault()
-          lastElement.focus()
-        }
-      } else if (document.activeElement === lastElement) {
-        event.preventDefault()
-        firstElement.focus()
-      }
+      trapTabKey(event, dialogRef.current)
     }
 
     document.addEventListener('keydown', handleKeyDown)
@@ -150,9 +141,10 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
 
   if (!isOpen || !model) return null
 
-  const modelName = model.modelName ?? 'Product Detail'
+  const modelName = model.modelName ?? t('product')
+  const productName = `${brandName ? `${brandName} ` : ''}${modelName}`
 
-  const productLabel = categoryLabel || categorySlug
+  const productLabel = tCategory(categorySlug, categoryLabel || categorySlug)
   const whatsappText = buildProductEnquiryMessage(lang, {
     brand: brandName,
     modelName,
@@ -170,8 +162,8 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
 
   const handleShare = async () => {
     const productUrl = window.location.href
-    const shareTitle = `${brandName ? `${brandName} ` : ''}${modelName} | Jai Baba Electronic`
-    const shareText = `Check out ${brandName ? `${brandName} ` : ''}${modelName} at Jai Baba Electronic Malkapur`
+    const shareTitle = `${productName} | Jai Baba Electronic`
+    const shareText = t('shareText', { name: productName })
 
     if (navigator.share) {
       try {
@@ -190,7 +182,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
       await navigator.clipboard.writeText(productUrl)
       showToast(t('copied'), 'success')
     } catch {
-      showToast('Could not copy link', 'info')
+      showToast(t('copyFailed'), 'info')
     }
   }
 
@@ -203,10 +195,12 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
       selectedColor,
     })
     trackEnquiryCartAction('add_item', { modelName, brand: brandName, category: categorySlug, selectedColor })
-    showToast(`${brandName ? `${brandName} ` : ''}${modelName} ${t('itemAdded')}`, 'success')
+    showToast(`${productName} ${t('itemAdded')}`, 'success')
     openCart()
     onClose()
   }
+
+  const [contactNoteBefore, contactNoteAfter = ''] = t('modalContactNote').split('{phone}')
 
   const handleColorSelect = (color) => {
     setSelectedColor(color)
@@ -245,12 +239,12 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
         <div className="flex items-center justify-between border-b border-stone-200/90 bg-stone-50/70 px-5 py-4 sm:px-6">
           <div>
             <div className="flex items-center gap-2">
-              <p className="text-xs font-bold uppercase tracking-[0.24em] text-amber-700">
-                {categoryLabel || categorySlug || 'Product'}
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-amber-800">
+                {productLabel || t('product')}
               </p>
               {inStock ? (
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-800">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-pulse" aria-hidden="true" />
                   {t('inStock')}
                 </span>
               ) : inStock === false ? (
@@ -271,8 +265,9 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
             <button
               type="button"
               onClick={handleShare}
-              className="inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-semibold text-stone-700 transition duration-200 hover:border-amber-300 hover:bg-stone-50 cursor-pointer"
+              className="inline-flex min-h-10 items-center gap-1.5 rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-semibold text-stone-700 transition duration-200 hover:border-amber-300 hover:bg-stone-50 cursor-pointer"
               title={t('share')}
+              aria-label={t('shareProduct', { name: productName })}
             >
               <ShareIcon className="h-4 w-4" />
               <span className="hidden sm:inline">{t('share')}</span>
@@ -281,8 +276,8 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
               ref={closeButtonRef}
               type="button"
               onClick={onClose}
-              className="rounded-full border border-stone-200 bg-white p-2 text-stone-600 transition duration-200 hover:border-amber-300 hover:text-stone-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer"
-              aria-label={t('close') || 'Close'}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-600 transition duration-200 hover:border-amber-300 hover:text-stone-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer"
+              aria-label={t('close')}
             >
               <CloseIcon className="h-4 w-4" />
             </button>
@@ -296,28 +291,27 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
               type="button"
               className="group relative block w-full cursor-zoom-in rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
               onClick={() => activeImage && setLightboxOpen(true)}
-              aria-label="Open fullscreen image viewer"
-              title="Click to zoom"
+              aria-label={t('openImageViewer')}
+              title={t('clickToZoom')}
             >
               <ProductImage
                 src={activeImage}
                 category={categorySlug}
                 product={model}
-                alt={`${brandName ? `${brandName} ` : ''}${modelName}${selectedColor ? ` in ${selectedColor}` : ''}`}
+                alt={selectedColor ? t('productInColor', { name: productName, color: selectedColor }) : productName}
                 className="aspect-4/3 rounded-2xl border border-stone-200 bg-white shadow-xs"
                 sizes="(min-width: 768px) 560px, 100vw"
                 imgClassName="transition-transform duration-500 group-hover:scale-[1.03]"
-                fallbackLabel="Photo coming soon"
                 loading="eager"
               />
               {/* Zoom hint badge */}
               {activeImage && (
                 <span className="pointer-events-none absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full border border-white/20 bg-stone-900/80 px-2.5 py-1 text-[11px] font-semibold text-white/90 opacity-0 transition-opacity duration-200 group-hover:opacity-100" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-3.5 w-3.5">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-3.5 w-3.5" aria-hidden="true">
                     <circle cx="11" cy="11" r="8" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-4.35-4.35M11 8v6M8 11h6" />
                   </svg>
-                  Zoom
+                  {t('zoom')}
                 </span>
               )}
             </button>
@@ -334,7 +328,8 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                         ? 'border-amber-500 ring-3 ring-amber-400/30 scale-102'
                         : 'border-stone-200 hover:border-amber-300'
                     }`}
-                    aria-label={`View image ${index + 1} of ${imageSources.length}`}
+                    aria-label={t('viewImageOf', { index: index + 1, total: imageSources.length })}
+                    aria-pressed={activeImageIndex === index}
                   >
                     <img src={source} srcSet={getImageSrcSet(source)} sizes="120px" alt="" className="h-16 sm:h-20 w-full object-cover" loading="lazy" decoding="async" />
                   </button>
@@ -363,7 +358,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
             </div>
 
             <div className="mt-5">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-stone-500">{t('keySpecs')}</p>
+              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-stone-600">{t('keySpecs')}</h3>
               {model?.specs?.length > 0 ? (
                 <ul className="mt-3 space-y-2 text-sm text-stone-700">
                   {model.specs.map((spec) => (
@@ -374,7 +369,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                   ))}
                 </ul>
               ) : (
-                <p className="mt-3 rounded-xl bg-stone-50 px-3 py-2 text-sm text-stone-500">
+                <p className="mt-3 rounded-xl bg-stone-50 px-3 py-2 text-sm text-stone-600">
                   {t('noSpecsAvailable')}
                 </p>
               )}
@@ -382,16 +377,17 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
 
             {model?.colors?.length > 0 && (
               <div className="mt-5">
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-stone-500">{t('availableColors')}</p>
-                <div className="mt-2.5 flex flex-wrap gap-2">
+                <h3 id="product-colors-label" className="text-xs font-bold uppercase tracking-[0.2em] text-stone-600">{t('availableColors')}</h3>
+                <div className="mt-2.5 flex flex-wrap gap-2" role="group" aria-labelledby="product-colors-label">
                   {model.colors.map((color) => (
                     <button
                       key={color}
                       type="button"
                       onClick={() => handleColorSelect(color)}
-                      className={`rounded-full border px-3.5 py-1.5 text-xs font-semibold transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer ${
+                      aria-pressed={selectedColor === color}
+                      className={`min-h-9 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 cursor-pointer ${
                         selectedColor === color
-                          ? 'border-amber-500 bg-amber-500 text-white shadow-xs'
+                          ? 'border-amber-700 bg-amber-700 text-white shadow-xs'
                           : 'border-stone-200 bg-white text-stone-700 hover:border-amber-300 hover:bg-amber-50/50'
                       }`}
                     >
@@ -405,15 +401,15 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
             <div className="mt-7 grid gap-2.5 sm:grid-cols-3">
               {inStock === false ? (
                 /* OOS: show a disabled badge in place of Add to List */
-                <div className="inline-flex items-center justify-center gap-1.5 rounded-xl border-2 border-stone-200 bg-stone-50 px-4 py-3 text-sm font-bold text-stone-400 cursor-not-allowed select-none">
-                  <AlertTriangleIcon className="h-4 w-4 text-stone-400" />
+                <div className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border-2 border-stone-200 bg-stone-50 px-4 py-3 text-sm font-bold text-stone-600 cursor-not-allowed select-none">
+                  <AlertTriangleIcon className="h-4 w-4 text-stone-500" />
                   <span>{t('outOfStock')}</span>
                 </div>
               ) : (
                 <button
                   type="button"
                   onClick={handleAddToList}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-xl border-2 border-amber-600 bg-amber-50 px-4 py-3 text-sm font-bold text-amber-900 transition duration-200 hover:bg-amber-100 hover:shadow-xs active:scale-95 cursor-pointer"
+                  className="btn border-2 border-amber-700 bg-amber-50 px-4 py-3 text-amber-900 hover:bg-amber-100"
                 >
                   <CartIcon className="h-4 w-4" />
                   <span>{t('addToList')}</span>
@@ -424,7 +420,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                 onClick={() => trackWhatsAppClick('product_modal', { modelName, brand: brandName })}
                 target={isExternalWhatsApp ? '_blank' : undefined}
                 rel={isExternalWhatsApp ? 'noopener noreferrer' : undefined}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-bold text-white shadow-xs transition duration-200 hover:bg-[#1fb855] hover:-translate-y-0.5 active:scale-95"
+                className="btn btn-whatsapp px-4 py-3"
               >
                 <WhatsAppIcon className="h-4 w-4" />
                 <span>{inStock === false ? t('askAvailabilityWa') : t('whatsappEnquiry')}</span>
@@ -434,14 +430,18 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                 onClick={() => trackCallClick('product_modal', shop.primaryPhone)}
                 target={isExternalPhone ? '_blank' : undefined}
                 rel={isExternalPhone ? 'noopener noreferrer' : undefined}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm font-bold text-stone-800 transition duration-200 hover:border-stone-300 hover:bg-stone-50"
+                className="btn btn-secondary px-4 py-3"
               >
                 <PhoneIcon className="h-4 w-4" />
                 <span>{t('callSeller')}</span>
               </a>
             </div>
 
-            <p className="mt-5 text-xs text-stone-500">Contact <span className="font-semibold text-stone-800">+91 {shop.primaryPhone}</span> for wholesale pricing and stock availability.</p>
+            <p className="mt-5 text-xs text-stone-600">
+              {contactNoteBefore}
+              <span className="font-semibold text-stone-800">+91 {shop.primaryPhone}</span>
+              {contactNoteAfter}
+            </p>
             {selectedColor && (
               <p className="mt-1 text-xs text-amber-800 font-medium">{t('selectedColor')}: {selectedColor}</p>
             )}
@@ -454,8 +454,8 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
         <ImageLightbox
           images={imageSources}
           startIndex={activeImageIndex}
-          alt={`${brandName ? `${brandName} ` : ''}${modelName}`}
-          onClose={() => setLightboxOpen(false)}
+          alt={productName}
+          onClose={closeLightbox}
         />
       )}
     </div>

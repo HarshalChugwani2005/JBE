@@ -1,14 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { useLanguage } from '../context/useLanguage'
 import { getImageSrcSet } from '../data/productImages'
-
-function getFocusableElements(container) {
-  return Array.from(
-    container.querySelectorAll(
-      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
-    ),
-  )
-}
+import { trapTabKey } from '../utils/focus'
 
 /**
  * Fullscreen image lightbox.
@@ -19,7 +13,8 @@ function getFocusableElements(container) {
  *   alt         – string     – base alt text (index is appended automatically)
  *   onClose     – () => void – called when the user closes the lightbox
  */
-export default function ImageLightbox({ images = [], startIndex = 0, alt = 'Product image', onClose }) {
+export default function ImageLightbox({ images = [], startIndex = 0, alt = '', onClose }) {
+  const { t } = useLanguage()
   const [index, setIndex] = useState(startIndex)
   const [zoomed, setZoomed] = useState(false)
   const [animDir, setAnimDir] = useState(null) // 'left' | 'right' | null
@@ -27,9 +22,15 @@ export default function ImageLightbox({ images = [], startIndex = 0, alt = 'Prod
   const dialogRef = useRef(null)
   const closeButtonRef = useRef(null)
   const previouslyFocusedRef = useRef(null)
+  const onCloseRef = useRef(onClose)
 
   const total = images.length
   const src = images[index] ?? null
+  const name = alt || t('product')
+
+  useEffect(() => {
+    onCloseRef.current = onClose
+  }, [onClose])
 
   // ── Navigation ───────────────────────────────────────────────────────────────
   const go = useCallback(
@@ -46,38 +47,28 @@ export default function ImageLightbox({ images = [], startIndex = 0, alt = 'Prod
   const goNext = useCallback(() => go('right'), [go])
   const goPrev = useCallback(() => go('left'), [go])
 
-  // ── Keyboard ─────────────────────────────────────────────────────────────────
+  // ── Focus: remember the opener once, restore it on unmount ──────────────────
   useEffect(() => {
     previouslyFocusedRef.current = document.activeElement
-
-    const handleKey = (e) => {
-      if (e.key === 'Escape') { onClose(); return }
-      if (e.key === 'ArrowRight') { e.preventDefault(); goNext() }
-      if (e.key === 'ArrowLeft') { e.preventDefault(); goPrev() }
-      if (e.key !== 'Tab' || !dialogRef.current) return
-
-      const focusableElements = getFocusableElements(dialogRef.current)
-      if (focusableElements.length === 0) return
-
-      const firstElement = focusableElements[0]
-      const lastElement = focusableElements[focusableElements.length - 1]
-      if (e.shiftKey && document.activeElement === firstElement) {
-        e.preventDefault()
-        lastElement.focus()
-      } else if (!e.shiftKey && document.activeElement === lastElement) {
-        e.preventDefault()
-        firstElement.focus()
-      }
-    }
-
-    document.addEventListener('keydown', handleKey)
     const frame = requestAnimationFrame(() => closeButtonRef.current?.focus())
     return () => {
       cancelAnimationFrame(frame)
-      document.removeEventListener('keydown', handleKey)
       previouslyFocusedRef.current?.focus?.()
     }
-  }, [goNext, goPrev, onClose])
+  }, [])
+
+  // ── Keyboard ─────────────────────────────────────────────────────────────────
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === 'Escape') { e.preventDefault(); onCloseRef.current?.(); return }
+      if (e.key === 'ArrowRight') { e.preventDefault(); goNext(); return }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); goPrev(); return }
+      trapTabKey(e, dialogRef.current)
+    }
+
+    document.addEventListener('keydown', handleKey)
+    return () => document.removeEventListener('keydown', handleKey)
+  }, [goNext, goPrev])
 
   // ── Body scroll lock ─────────────────────────────────────────────────────────
   useEffect(() => {
@@ -109,7 +100,7 @@ export default function ImageLightbox({ images = [], startIndex = 0, alt = 'Prod
       className="lb-backdrop"
       role="dialog"
       aria-modal="true"
-      aria-label={`Image viewer — ${alt}`}
+      aria-label={t('imageViewerLabel', { name })}
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
     >
       {/* ── Header controls ── */}
@@ -118,34 +109,26 @@ export default function ImageLightbox({ images = [], startIndex = 0, alt = 'Prod
           <span className="lb-counter" aria-live="polite">{index + 1} / {total}</span>
         )}
         <div className="lb-header-right">
-          {zoomed ? (
-            <button type="button" className="lb-btn lb-btn-zoom" onClick={handleImageClick} aria-label="Zoom out">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">
-                <circle cx="11" cy="11" r="8" /><path strokeLinecap="round" d="m21 21-4.35-4.35M8 11h6" />
-              </svg>
-              Zoom out
-            </button>
-          ) : (
-            <button type="button" className="lb-btn lb-btn-zoom" onClick={handleImageClick} aria-label="Zoom in">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">
-                <circle cx="11" cy="11" r="8" /><path strokeLinecap="round" d="m21 21-4.35-4.35M11 8v6M8 11h6" />
-              </svg>
-              Zoom in
-            </button>
-          )}
-          <button ref={closeButtonRef} type="button" className="lb-btn lb-btn-close" onClick={onClose} aria-label="Close image viewer">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-4 w-4">
+          <button type="button" className="lb-btn lb-btn-zoom" onClick={handleImageClick} aria-pressed={zoomed}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4" aria-hidden="true">
+              <circle cx="11" cy="11" r="8" />
+              <path strokeLinecap="round" d={zoomed ? 'm21 21-4.35-4.35M8 11h6' : 'm21 21-4.35-4.35M11 8v6M8 11h6'} />
+            </svg>
+            {zoomed ? t('zoomOut') : t('zoomIn')}
+          </button>
+          <button ref={closeButtonRef} type="button" className="lb-btn lb-btn-close" onClick={onClose} aria-label={t('closeImageViewer')}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-4 w-4" aria-hidden="true">
               <path strokeLinecap="round" d="M6 18 18 6M6 6l12 12" />
             </svg>
-            Close
+            {t('close')}
           </button>
         </div>
       </div>
 
       {/* ── Prev arrow ── */}
       {total > 1 && (
-        <button type="button" className="lb-nav lb-nav-prev" onClick={goPrev} aria-label="Previous image">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-6 w-6">
+        <button type="button" className="lb-nav lb-nav-prev" onClick={goPrev} aria-label={t('previousImage')}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-6 w-6" aria-hidden="true">
             <path strokeLinecap="round" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
@@ -157,13 +140,13 @@ export default function ImageLightbox({ images = [], startIndex = 0, alt = 'Prod
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         onClick={handleImageClick}
-        title={zoomed ? 'Click to zoom out' : 'Click to zoom in'}
+        title={zoomed ? t('clickToZoomOut') : t('clickToZoomIn')}
       >
         {src && (
           <img
             key={src}
             src={src}
-            alt={`${alt}, image ${index + 1} of ${total}`}
+            alt={t('imageAlt', { name, index: index + 1, total })}
             className={`lb-img${animClass ? ` ${animClass}` : ''}${zoomed ? ' lb-img-zoomed' : ''}`}
             draggable={false}
           />
@@ -172,8 +155,8 @@ export default function ImageLightbox({ images = [], startIndex = 0, alt = 'Prod
 
       {/* ── Next arrow ── */}
       {total > 1 && (
-        <button type="button" className="lb-nav lb-nav-next" onClick={goNext} aria-label="Next image">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-6 w-6">
+        <button type="button" className="lb-nav lb-nav-next" onClick={goNext} aria-label={t('nextImage')}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-6 w-6" aria-hidden="true">
             <path strokeLinecap="round" d="M9 5l7 7-7 7" />
           </svg>
         </button>
@@ -182,18 +165,17 @@ export default function ImageLightbox({ images = [], startIndex = 0, alt = 'Prod
       {/* ── Keyboard hint ── */}
       {total > 1 && (
         <div className="lb-key-hint" aria-hidden="true">
-          <kbd>←</kbd> <kbd>→</kbd> navigate · <kbd>Esc</kbd> close
+          <kbd>←</kbd> <kbd>→</kbd> {t('keyHintNavigate')} · <kbd>Esc</kbd> {t('close')}
         </div>
       )}
 
       {/* ── Thumbnail strip ── */}
       {total > 1 && (
-        <div className="lb-thumbs" role="list" aria-label="Image thumbnails">
+        <div className="lb-thumbs" role="group" aria-label={t('imageThumbnails')}>
           {images.map((imgSrc, i) => (
             <button
               key={imgSrc}
               type="button"
-              role="listitem"
               onClick={(e) => {
                 e.stopPropagation()
                 const dir = i > index ? 'right' : 'left'
@@ -202,7 +184,7 @@ export default function ImageLightbox({ images = [], startIndex = 0, alt = 'Prod
                 setIndex(i)
                 setTimeout(() => setAnimDir(null), 320)
               }}
-              aria-label={`View image ${i + 1}`}
+              aria-label={t('viewImage', { index: i + 1 })}
               aria-current={i === index ? 'true' : undefined}
               className={`lb-thumb${i === index ? ' lb-thumb-active' : ''}`}
             >

@@ -8,11 +8,20 @@ import CategoryIcon from './CategoryIcon'
 import { CloseIcon, SearchIcon } from './Icons'
 import ProductImage from './ProductImage'
 import { slugify } from '../utils/slugify'
-import { getFocusableElements } from '../utils/focus'
+import { shop } from '../data/site'
+import { trapTabKey } from '../utils/focus'
+import { categoryLabels } from '../i18n/translations'
 
 // ─── Static search index ──────────────────────────────────────────────────────
 // Built once at module load time (data is static) — not inside the component
 // so it isn't reconstructed on every SearchPalette mount.
+function allCategoryLabels(slug) {
+  return Object.values(categoryLabels)
+    .map((labels) => labels[slug])
+    .filter(Boolean)
+    .join(' ')
+}
+
 function buildSearchIndex() {
   const cats = []
   const prods = []
@@ -23,6 +32,7 @@ function buildSearchIndex() {
       id: `cat-${cat.category}`,
       categorySlug: cat.category,
       categoryLabel: cat.categoryLabel,
+      searchLabels: allCategoryLabels(cat.category),
       brandCount: cat.brands?.length || 0,
       modelCount: getModelCount({ brands: cat.brands || [] }),
       comingSoon: cat.comingSoon,
@@ -40,6 +50,7 @@ function buildSearchIndex() {
           brand: b.brand,
           categorySlug: cat.category,
           categoryLabel: cat.categoryLabel,
+          searchLabels: allCategoryLabels(cat.category),
           image: m.image,
           images: m.images,
           inStock: m.inStock !== false,
@@ -59,7 +70,7 @@ const { allCategories: ALL_CATEGORIES, allProducts: ALL_PRODUCTS } = buildSearch
 
 export default function SearchPalette() {
   const { isOpen, closeSearch } = useSearch()
-  const { t } = useLanguage()
+  const { t, tCategory } = useLanguage()
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -81,12 +92,12 @@ export default function SearchPalette() {
     const words = q.split(/\s+/).filter(Boolean)
 
     const matchedCats = ALL_CATEGORIES.filter((cat) => {
-      const text = `${cat.categoryLabel} ${cat.categorySlug}`.toLowerCase()
+      const text = `${cat.categoryLabel} ${cat.searchLabels} ${cat.categorySlug}`.toLowerCase()
       return words.every((w) => text.includes(w))
     })
 
     const matchedProds = ALL_PRODUCTS.filter((prod) => {
-      const text = `${prod.brand} ${prod.modelName} ${prod.categoryLabel} ${prod.specs.join(' ')} ${prod.colors.join(' ')}`.toLowerCase()
+      const text = `${prod.brand} ${prod.modelName} ${prod.categoryLabel} ${prod.searchLabels} ${prod.specs.join(' ')} ${prod.colors.join(' ')}`.toLowerCase()
       return words.every((w) => text.includes(w))
     })
 
@@ -109,21 +120,12 @@ export default function SearchPalette() {
       }, 50)
       document.body.classList.add('overflow-hidden')
       const handleKeyDown = (event) => {
-        if (event.key !== 'Tab' || !dialogRef.current) return
-
-        const focusableElements = getFocusableElements(dialogRef.current)
-        if (focusableElements.length === 0) return
-
-        const firstElement = focusableElements[0]
-        const lastElement = focusableElements[focusableElements.length - 1]
-
-        if (event.shiftKey && document.activeElement === firstElement) {
+        if (event.key === 'Escape') {
           event.preventDefault()
-          lastElement.focus()
-        } else if (!event.shiftKey && document.activeElement === lastElement) {
-          event.preventDefault()
-          firstElement.focus()
+          closeSearch()
+          return
         }
+        trapTabKey(event, dialogRef.current)
       }
 
       document.addEventListener('keydown', handleKeyDown)
@@ -135,7 +137,7 @@ export default function SearchPalette() {
         previouslyFocusedRef.current?.focus?.()
       }
     }
-  }, [isOpen])
+  }, [isOpen, closeSearch])
 
   // Scroll active item into view
   useEffect(() => {
@@ -158,10 +160,8 @@ export default function SearchPalette() {
   }
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Escape') {
-      e.preventDefault()
-      closeSearch()
-    } else if (e.key === 'ArrowDown') {
+    // Escape is handled by the dialog-level keydown listener.
+    if (e.key === 'ArrowDown') {
       e.preventDefault()
       setSelectedIndex((prev) => (filteredItems.length > 0 ? (prev + 1) % filteredItems.length : 0))
     } else if (e.key === 'ArrowUp') {
@@ -181,22 +181,27 @@ export default function SearchPalette() {
       onClick={(e) => {
         if (e.target === e.currentTarget) closeSearch()
       }}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Global Search Palette"
     >
-      <div ref={dialogRef} className="mx-auto max-w-2xl overflow-hidden rounded-3xl bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)] ring-1 ring-stone-200/90 animate-modal-pop">
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={t('searchDialogLabel')}
+        className="mx-auto max-w-2xl overflow-hidden rounded-3xl bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)] ring-1 ring-stone-200/90 animate-modal-pop">
         {/* Search Input Bar */}
         <div className="relative flex items-center border-b border-stone-200/80 px-4 py-3.5 sm:px-6">
-          <SearchIcon className="h-5 w-5 text-stone-400 mr-3 shrink-0" />
+          <SearchIcon className="h-5 w-5 text-stone-500 mr-3 shrink-0" />
           <input
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={t('searchPlaceholder') || 'Search fans, coolers, appliances, brands...'}
-            className="w-full bg-transparent text-sm sm:text-base text-stone-900 placeholder:text-stone-400 outline-none"
+            placeholder={t('searchPlaceholder')}
+            aria-label={t('searchDialogLabel')}
+            role="combobox"
+            aria-expanded="true"
+            className="w-full bg-transparent text-sm sm:text-base text-stone-900 placeholder:text-stone-500 outline-none"
             aria-autocomplete="list"
             aria-controls="search-palette-results"
             aria-activedescendant={
@@ -207,8 +212,8 @@ export default function SearchPalette() {
             <button
               type="button"
               onClick={() => setQuery('')}
-              className="rounded-lg p-1 text-stone-400 hover:bg-stone-100 hover:text-stone-700 transition cursor-pointer"
-              aria-label="Clear search"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-stone-500 hover:bg-stone-100 hover:text-stone-700 transition cursor-pointer"
+              aria-label={t('clearSearch')}
             >
               <CloseIcon className="h-4 w-4" />
             </button>
@@ -216,7 +221,8 @@ export default function SearchPalette() {
           <button
             type="button"
             onClick={closeSearch}
-            className="ml-2 rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1 text-xs font-semibold text-stone-500 hover:border-amber-300 hover:text-stone-900 transition cursor-pointer"
+            className="ml-2 min-h-9 rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1 text-xs font-semibold text-stone-600 hover:border-amber-300 hover:text-stone-900 transition cursor-pointer"
+            aria-label={t('close')}
           >
             ESC
           </button>
@@ -227,14 +233,14 @@ export default function SearchPalette() {
           ref={listRef}
           id="search-palette-results"
           role="listbox"
-          aria-label="Search results"
+          aria-label={t('searchResults')}
           className="max-h-[60vh] overflow-y-auto p-3 sm:p-4 space-y-1.5"
         >
           {filteredItems.length === 0 ? (
             <div className="py-12 text-center text-stone-500">
-              <SearchIcon className="mx-auto h-10 w-10 text-stone-300" />
+              <SearchIcon className="mx-auto h-10 w-10 text-stone-400" />
               <p className="mt-3 font-semibold text-stone-700">{t('searchNoResults')}</p>
-              <p className="mt-1 text-xs text-stone-400">{t('searchNoResultsHint')}</p>
+              <p className="mt-1 text-xs text-stone-600">{t('searchNoResultsHint')}</p>
             </div>
           ) : (
             filteredItems.map((item, index) => {
@@ -264,19 +270,17 @@ export default function SearchPalette() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="font-heading font-bold text-sm truncate">
-                          {item.categoryLabel}
+                          {tCategory(item.categorySlug, item.categoryLabel)}
                         </span>
                         <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-900">
-                          Category
+                          {t('categoryBadge')}
                         </span>
                       </div>
-                      <p className="text-xs text-stone-500 truncate">
-                        {item.comingSoon
-                          ? t('comingSoon')
-                          : `${item.modelCount} model${item.modelCount === 1 ? '' : 's'} available`}
+                      <p className="text-xs text-stone-600 truncate">
+                        {item.comingSoon ? t('comingSoon') : t('modelsAvailable', { count: item.modelCount })}
                       </p>
                     </div>
-                    <span className="text-xs font-semibold text-amber-700 opacity-60 group-hover:opacity-100">
+                    <span className="text-xs font-semibold text-amber-800" aria-hidden="true">
                       {t('searchJump')}
                     </span>
                   </div>
@@ -302,7 +306,7 @@ export default function SearchPalette() {
                     <ProductImage
                       category={item.categorySlug}
                       product={item}
-                      alt={item.modelName}
+                      alt=""
                       className="h-full w-full object-cover"
                       sizes="96px"
                       fallbackLabel=""
@@ -323,17 +327,17 @@ export default function SearchPalette() {
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 mt-0.5 text-xs text-stone-500 truncate">
-                      <span className="font-medium text-amber-800/90">{item.categoryLabel}</span>
+                    <div className="flex items-center gap-2 mt-0.5 text-xs text-stone-600 truncate">
+                      <span className="font-medium text-amber-800">{tCategory(item.categorySlug, item.categoryLabel)}</span>
                       {item.specs?.[0] && (
                         <>
-                          <span>•</span>
+                          <span aria-hidden="true">•</span>
                           <span className="truncate">{item.specs[0]}</span>
                         </>
                       )}
                     </div>
                   </div>
-                  <span className="text-xs font-semibold text-amber-700">
+                  <span className="text-xs font-semibold text-amber-800" aria-hidden="true">
                     {t('viewSpecs')}
                   </span>
                 </div>
@@ -343,21 +347,21 @@ export default function SearchPalette() {
         </div>
 
         {/* Keyboard Shortcuts Helper Footer */}
-        <div className="flex flex-wrap items-center justify-between border-t border-stone-200/80 bg-stone-50/70 px-4 py-2.5 sm:px-6 text-[11px] text-stone-500">
+        <div className="flex flex-wrap items-center justify-between border-t border-stone-200/80 bg-stone-50/70 px-4 py-2.5 sm:px-6 text-[11px] text-stone-600" aria-hidden="true">
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
               <kbd className="rounded border border-stone-300 bg-white px-1 py-0.5 font-mono text-[10px]">↑</kbd>
-              <kbd className="rounded border border-stone-300 bg-white px-1 py-0.5 font-mono text-[10px]">↓</kbd> to navigate
+              <kbd className="rounded border border-stone-300 bg-white px-1 py-0.5 font-mono text-[10px]">↓</kbd> {t('kbdNavigate')}
             </span>
             <span className="flex items-center gap-1">
-              <kbd className="rounded border border-stone-300 bg-white px-1.5 py-0.5 font-mono text-[10px]">↵</kbd> to select
+              <kbd className="rounded border border-stone-300 bg-white px-1.5 py-0.5 font-mono text-[10px]">↵</kbd> {t('kbdSelect')}
             </span>
             <span className="flex items-center gap-1">
-              <kbd className="rounded border border-stone-300 bg-white px-1 py-0.5 font-mono text-[10px]">esc</kbd> to close
+              <kbd className="rounded border border-stone-300 bg-white px-1 py-0.5 font-mono text-[10px]">esc</kbd> {t('kbdClose')}
             </span>
           </div>
-          <span className="hidden sm:inline font-medium text-stone-400">
-            Jai Baba Electronic Catalog
+          <span className="hidden sm:inline font-medium text-stone-600">
+            {t('searchFooter', { name: shop.name })}
           </span>
         </div>
       </div>
