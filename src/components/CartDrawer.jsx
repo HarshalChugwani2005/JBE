@@ -129,7 +129,7 @@ export default function CartDrawer() {
                   {t('enquiryDrawerTitle')}
                 </h2>
                 <p className="text-xs text-stone-500 font-medium">
-                  {totalCount} {t('readyForQuotation')}
+                  {t('itemsReady', { count: totalCount })}
                 </p>
               </div>
               <button
