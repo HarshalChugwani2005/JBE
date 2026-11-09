@@ -19,7 +19,10 @@ export default function Breadcrumbs({ items, className = '' }) {
                   {item.label}
                 </span>
               ) : (
-                <Link to={item.to} className="font-semibold text-amber-800 transition-colors hover:text-amber-950 hover:underline">
+                <Link
+                  to={item.to}
+                  className="inline-flex min-h-6 items-center font-semibold text-amber-800 transition-colors hover:text-amber-950 hover:underline"
+                >
                   {item.label}
                 </Link>
               )}

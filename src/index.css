@@ -692,6 +692,16 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
+   Devanagari (Marathi / Hindi): letter-spacing breaks conjuncts apart
+   ("मुख्य" renders as "मु ख्य"), so tracking utilities are neutralised.
+   Unlayered on purpose so it overrides the tracking-* utilities.
+   ───────────────────────────────────────────────────────────────────────────── */
+html:lang(mr) [class*='tracking-'],
+html:lang(hi) [class*='tracking-'] {
+  letter-spacing: normal;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
    Reduced motion — unlayered on purpose so it overrides utilities and components.
    Every looping or entrance animation used on a page is either stopped or shown
    in its final state; hover sheens and pulse rings are hidden entirely.
