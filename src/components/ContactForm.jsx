@@ -105,7 +105,7 @@ export default function ContactForm() {
   return (
     <form onSubmit={submitToFormspree} className="space-y-4 rounded-2xl border border-stone-200 bg-white p-6 sm:p-7 shadow-xs">
       <div>
-        <h3 className="font-heading text-lg font-bold text-stone-900">{t('sendEnquiry')}</h3>
+        <h2 className="font-heading text-lg font-bold text-stone-900">{t('sendEnquiry')}</h2>
         <p className="text-xs text-stone-500 mt-0.5">{t('sendEnquirySubtitle')}</p>
       </div>
 

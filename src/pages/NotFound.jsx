@@ -1,31 +1,50 @@
 import { Link } from 'react-router-dom'
+import EmptyState from '../components/EmptyState'
+import { HomeIcon, PackageIcon, WhatsAppIcon } from '../components/Icons'
 import SEO from '../components/SEO'
+import { useLanguage } from '../context/useLanguage'
+import { getWhatsAppUrl } from '../data/site'
+import { buildGreeting } from '../i18n/whatsappMessages'
+import { trackWhatsAppClick } from '../utils/analytics'
 
 export default function NotFound() {
+  const { t, lang } = useLanguage()
+
   return (
     <>
-      <SEO title="Page Not Found" description="The page you're looking for doesn't exist." />
-      <div className="py-20 text-center">
-        <p className="font-heading text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-tr from-amber-600 to-orange-500">404</p>
-        <h1 className="mt-4 font-heading text-2xl font-bold text-stone-900 sm:text-3xl">Page Not Found</h1>
-        <p className="mt-2 text-stone-600 text-sm sm:text-base max-w-sm mx-auto">
-          The page you&apos;re looking for doesn&apos;t exist or has been moved.
-        </p>
-        <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-          <Link
-            to="/"
-            className="glow-amber inline-flex min-h-11 items-center justify-center rounded-xl bg-gradient-to-r from-amber-600 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow-md transition hover:from-amber-700 hover:to-orange-600"
+      <SEO title={t('notFoundTitle')} description={t('seoNotFoundDescription')} noindex />
+      <EmptyState
+        as="h1"
+        visual={
+          <p
+            aria-hidden="true"
+            className="font-heading bg-linear-to-tr from-amber-700 to-orange-600 bg-clip-text text-7xl font-extrabold text-transparent"
           >
-            Go Home
-          </Link>
-          <Link
-            to="/catalog"
-            className="inline-flex min-h-11 items-center justify-center rounded-xl border border-stone-200 bg-white px-6 py-3 text-sm font-bold text-stone-800 shadow-xs transition hover:border-stone-300 hover:bg-stone-50"
-          >
-            Browse Catalog
-          </Link>
-        </div>
-      </div>
+            404
+          </p>
+        }
+        title={t('notFoundTitle')}
+        description={t('notFoundText')}
+      >
+        <Link to="/" className="btn btn-primary px-6">
+          <HomeIcon className="h-4 w-4" />
+          <span>{t('goHome')}</span>
+        </Link>
+        <Link to="/catalog" className="btn btn-secondary px-6">
+          <PackageIcon className="h-4 w-4" />
+          <span>{t('heroBrowseCatalog')}</span>
+        </Link>
+        <a
+          href={getWhatsAppUrl(buildGreeting(lang))}
+          onClick={() => trackWhatsAppClick('not_found')}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-whatsapp px-6"
+        >
+          <WhatsAppIcon className="h-4 w-4" />
+          <span>{t('askUsOnWhatsApp')}</span>
+        </a>
+      </EmptyState>
     </>
   )
 }

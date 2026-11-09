@@ -23,7 +23,7 @@ import {
 } from '../components/Icons'
 
 export default function Home() {
-  const { t, lang } = useLanguage()
+  const { t, tCategory, lang } = useLanguage()
   const featured = featuredCategorySlugs
     .map((slug) => categories.find((c) => c.category === slug))
     .filter(Boolean)
@@ -32,10 +32,7 @@ export default function Home() {
 
   return (
     <>
-      <SEO
-        title={t('navHome')}
-        description="Jai Baba Electronic offers ceiling fans, coolers, appliances and more in Malkapur. Browse the catalog and enquire for wholesale or retail pricing."
-      />
+      <SEO title={t('navHome')} description={t('seoHomeDescription')} />
       <div className="-mx-4">
         {/* Storefront Hero */}
         <section className="hero-surface px-4 py-10 text-white sm:px-6 md:py-16">
@@ -50,18 +47,18 @@ export default function Home() {
             <h1 className="font-heading mt-3 text-3xl font-extrabold tracking-tight sm:mt-4 sm:text-4xl md:text-5xl">
               {shop.name}
             </h1>
-            <p className="mt-3 max-w-2xl text-base sm:text-lg font-medium text-amber-100/90 leading-relaxed">
+            <p className="mt-3 max-w-2xl text-base sm:text-lg font-medium text-amber-50 leading-relaxed">
               {t('heroTagline')}
             </p>
-            <p className="mt-2 max-w-xl text-xs sm:text-sm text-amber-100/80 leading-normal">
+            <p className="mt-2 max-w-xl text-xs sm:text-sm text-amber-100 leading-normal">
               {t('heroDescription')}
             </p>
 
             {/* Store Information Strip */}
-            <div className="mt-6 flex flex-wrap items-center gap-4 text-xs text-amber-100/90 font-medium">
+            <div className="mt-6 flex flex-wrap items-center gap-4 text-xs text-amber-50 font-medium">
               <div className="inline-flex items-center gap-1.5">
                 <ClockIcon className="h-3.5 w-3.5 text-amber-300" />
-                <span>{shop.hours}</span>
+                <span>{t('hours')}</span>
               </div>
               <div className="inline-flex items-center gap-1.5">
                 <PhoneIcon className="h-3.5 w-3.5 text-amber-300" />
@@ -73,7 +70,7 @@ export default function Home() {
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
               <Link
                 to="/catalog"
-                className="inline-flex w-full sm:w-auto min-h-11 items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-bold text-amber-950 shadow-sm transition duration-150 hover:bg-amber-50 active:scale-[0.99]"
+                className="btn w-full bg-white px-6 py-3 text-amber-950 shadow-sm hover:bg-amber-50 sm:w-auto"
               >
                 <span>{t('heroBrowseCatalog')}</span>
                 <ArrowRightIcon className="h-4 w-4" />
@@ -83,7 +80,7 @@ export default function Home() {
                 onClick={() => trackWhatsAppClick('hero_section')}
                 target="_blank"
                 rel="noreferrer"
-                className="btn-whatsapp inline-flex w-full sm:w-auto min-h-11 items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white shadow-sm"
+                className="btn btn-whatsapp w-full px-6 py-3 sm:w-auto"
               >
                 <WhatsAppIcon className="h-4 w-4" />
                 <span>{t('heroWhatsAppUs')}</span>
@@ -98,16 +95,16 @@ export default function Home() {
                   <ProductImage
                     category="ceiling-fans"
                     product={heroProduct}
-                    alt={`${heroProduct.modelName} ceiling fan`}
+                    alt={`${heroProduct.modelName} — ${tCategory('ceiling-fans')}`}
                     className="relative aspect-4/3 overflow-hidden rounded-3xl border border-white/20 bg-white/10 shadow-2xl"
                     sizes="(min-width: 768px) 50vw, 100vw"
                     imgClassName="object-contain p-6"
-                    fallbackLabel="Featured product"
                     loading="eager"
+                    fetchPriority="high"
                   />
                 </div>
                 <div className="absolute bottom-4 left-4 rounded-xl border border-white/20 bg-stone-950/65 px-3 py-2 backdrop-blur-sm animate-slide-in-up" style={{animationDelay:'0.6s'}}>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-200">Featured range</p>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-amber-200">{t('featuredRange')}</p>
                   <p className="mt-0.5 text-sm font-bold text-white">{heroProduct.modelName}</p>
                 </div>
               </div>
@@ -134,10 +131,7 @@ export default function Home() {
               ))}
             </ul>
             <div className="mt-8 text-center">
-              <Link
-                to="/catalog"
-                className="shimmer-on-hover inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-stone-200 bg-white px-6 py-2 text-sm font-semibold text-amber-900 shadow-xs transition duration-150 hover:border-amber-400 hover:bg-amber-50/50"
-              >
+              <Link to="/catalog" className="btn btn-secondary rounded-full px-6 text-amber-900">
                 <span>{t('viewAllCategories')}</span>
                 <ArrowRightIcon className="h-3.5 w-3.5 text-amber-700" />
               </Link>
