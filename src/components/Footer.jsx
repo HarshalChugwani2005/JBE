@@ -25,8 +25,8 @@ export default function Footer() {
           {/* Address */}
           <div>
             <h2 className="font-heading text-xs font-bold uppercase tracking-wider text-stone-900">{t('address')}</h2>
-            <p className="mt-2 text-xs sm:text-sm text-stone-600">{shop.address}</p>
-            <p className="text-xs sm:text-sm text-stone-600">{shop.city}</p>
+            <p className="mt-2 text-xs sm:text-sm text-stone-600">{t('heroLocation')}</p>
+            <p className="text-xs sm:text-sm text-stone-600">{t('shopCity')}</p>
           </div>
 
           {/* Contact */}

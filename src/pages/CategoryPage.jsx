@@ -19,6 +19,7 @@ import { getWhatsAppUrl, shop } from '../data/site'
 import { buildGreeting } from '../i18n/whatsappMessages'
 import { buildBreadcrumbJsonLd, buildCategorySeo, buildModelSeo, buildProductJsonLd } from '../i18n/seo'
 import { trackWhatsAppClick } from '../utils/analytics'
+import { filterCategoryBrands } from '../utils/catalogFilters'
 import { slugify } from '../utils/slugify'
 
 function absoluteUrl(path) {
@@ -40,53 +41,10 @@ export default function CategoryPage() {
     return Array.from(brandNames).sort()
   }, [category])
 
-  const filteredBrands = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase()
-    const normalizedBrand = brand.trim().toLowerCase()
-
-    return (category?.brands ?? []).map((entry) => {
-      const brandMatches = !normalizedBrand || entry.brand?.toLowerCase() === normalizedBrand
-      if (!brandMatches) return null
-
-      let models = entry.models ?? []
-      if (inStockOnly) {
-        models = models.filter((m) => m.inStock !== false)
-      }
-      if (tier) {
-        models = models.filter((m) => m.priceTier === tier)
-      }
-
-      if (normalizedQuery) {
-        const queryWords = normalizedQuery.split(/\s+/).filter(Boolean)
-        models = models.filter((model) => {
-          const searchableText = [
-            entry.brand,
-            entry.tagline,
-            entry.warranty,
-            model.modelName,
-            ...(model.specs ?? []),
-            ...(model.colors ?? []),
-          ]
-            .filter(Boolean)
-            .join(' ')
-            .toLowerCase()
-
-          return queryWords.every((word) => searchableText.includes(word))
-        })
-      }
-
-      if (models.length === 0) return null
-
-      return {
-        ...entry,
-        models: [...models].sort((left, right) => {
-          if (sort === 'stock') return Number(right.inStock !== false) - Number(left.inStock !== false)
-          if (sort === 'name') return left.modelName.localeCompare(right.modelName)
-          return 0
-        }),
-      }
-    }).filter(Boolean)
-  }, [brand, category, inStockOnly, query, sort, tier])
+  const filteredBrands = useMemo(
+    () => (category ? filterCategoryBrands(category, { query, brand, tier, inStockOnly, sort }) : []),
+    [brand, category, inStockOnly, query, sort, tier],
+  )
 
   // Stable callback so the modal's focus/scroll-lock effect does not re-run on every render.
   const closeModal = useCallback(

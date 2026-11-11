@@ -124,7 +124,7 @@ export default class ErrorBoundary extends Component {
 
           {/* Shop branding footer */}
           <p className="relative z-10 mt-8 text-xs text-stone-400">
-            {shop.name} · {shop.city}
+            {shop.name} · {t('shopCity')}
           </p>
 
           <style>{`

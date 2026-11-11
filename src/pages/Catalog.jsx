@@ -9,6 +9,7 @@ import SEO from '../components/SEO'
 import { useLanguage } from '../context/useLanguage'
 import { useCatalogParams } from '../hooks/useCatalogParams'
 import { categories } from '../data/products'
+import { filterCatalog } from '../utils/catalogFilters'
 
 const liveCount = categories.filter((c) => !c.comingSoon).length
 
@@ -21,60 +22,15 @@ export default function Catalog() {
   const { query, brand, tier, sort, inStockOnly, updateParams, clearFilters } = useCatalogParams()
   const { search } = useLocation()
 
-  const filteredCategories = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase()
-    const normalizedBrand = brand.trim().toLowerCase()
-    const labelOf = (category) => tCategory(category.category, category.categoryLabel)
-
-    return categories.filter((category) => {
-      const categoryMatchesBrand =
-        !normalizedBrand || category.brands?.some((entry) => entry.brand?.toLowerCase() === normalizedBrand)
-
-      if (!categoryMatchesBrand) return false
-
-      if (inStockOnly) {
-        const hasInStockModel = category.brands?.some((b) =>
-          b.models?.some((m) => m.inStock !== false)
-        )
-        if (!hasInStockModel) return false
-      }
-
-      if (tier) {
-        const hasTierModel = category.brands?.some((b) =>
-          b.models?.some((m) => m.priceTier === tier)
-        )
-        if (!hasTierModel) return false
-      }
-
-      if (!normalizedQuery) return true
-
-      const searchableText = [
-        category.categoryLabel,
-        labelOf(category),
-        category.category,
-        ...(category.brands ?? []).flatMap((entry) => [
-          entry.brand,
-          entry.tagline,
-          entry.warranty,
-          ...(entry.models ?? []).flatMap((model) => [model.modelName, ...(model.specs ?? []), ...(model.colors ?? [])]),
-        ]),
-      ]
-        .filter(Boolean)
-        .join(' ')
-        .toLowerCase()
-
-      const queryWords = normalizedQuery.split(/\s+/).filter(Boolean)
-      return queryWords.every((word) => searchableText.includes(word))
-    }).sort((left, right) => {
-      if (sort === 'name') return labelOf(left).localeCompare(labelOf(right), lang)
-      if (sort === 'stock') {
-        const leftStock = left.brands?.some((entry) => entry.models?.some((model) => model.inStock !== false))
-        const rightStock = right.brands?.some((entry) => entry.models?.some((model) => model.inStock !== false))
-        return Number(rightStock) - Number(leftStock)
-      }
-      return 0
-    })
-  }, [brand, inStockOnly, query, sort, tier, tCategory, lang])
+  const filteredCategories = useMemo(
+    () =>
+      filterCatalog(
+        categories,
+        { query, brand, tier, inStockOnly, sort },
+        { labelOf: (category) => tCategory(category.category, category.categoryLabel), locale: lang },
+      ),
+    [brand, inStockOnly, query, sort, tier, tCategory, lang],
+  )
 
   return (
     <>

@@ -32,7 +32,7 @@ export default function Home() {
 
   return (
     <>
-      <SEO title={t('navHome')} description={t('seoHomeDescription')} />
+      <SEO description={t('seoHomeDescription')} />
       <div className="-mx-4">
         {/* Storefront Hero */}
         <section className="hero-surface px-4 py-10 text-white sm:px-6 md:py-16">

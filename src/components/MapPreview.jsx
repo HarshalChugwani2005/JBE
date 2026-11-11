@@ -24,8 +24,8 @@ export default function MapPreview({ compact = false, headingLevel: Heading = 'h
       </div>
       <div className={`flex flex-col justify-center p-6 sm:p-7 ${compact ? '' : 'md:col-span-2'}`}>
         <Heading className="font-heading text-lg font-bold text-stone-900">{t('visitOurShop')}</Heading>
-        <p className="mt-2 text-sm text-stone-600 font-medium">{shop.address}</p>
-        <p className="text-sm text-stone-600 font-medium">{shop.city}</p>
+        <p className="mt-2 text-sm text-stone-600 font-medium">{t('heroLocation')}</p>
+        <p className="text-sm text-stone-600 font-medium">{t('shopCity')}</p>
         <p className="mt-3 text-xs font-semibold text-amber-800">{t('hours')}</p>
         <div className="mt-5 flex flex-wrap gap-2.5">
           <a href={shop.mapDirectionsUrl} target="_blank" rel="noopener noreferrer" className="btn btn-secondary px-4 text-xs">

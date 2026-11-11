@@ -23,8 +23,8 @@ export default function Contact() {
           <div className="space-y-6">
             <div className="rounded-2xl border border-stone-200 bg-white p-6 sm:p-7 shadow-xs">
               <h2 className="font-heading text-lg font-bold text-stone-900">{t('contactDetails')}</h2>
-              <p className="mt-2.5 text-sm text-stone-600 font-medium">{shop.address}</p>
-              <p className="text-sm text-stone-600 font-medium">{shop.city}</p>
+              <p className="mt-2.5 text-sm text-stone-600 font-medium">{t('heroLocation')}</p>
+              <p className="text-sm text-stone-600 font-medium">{t('shopCity')}</p>
               <p className="mt-2.5 text-xs font-semibold text-amber-800">{t('hours')}</p>
 
               <div className="mt-5 border-t border-stone-100 pt-4">

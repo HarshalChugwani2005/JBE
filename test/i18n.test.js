@@ -61,6 +61,22 @@ test('translate interpolates, pluralizes and falls back to English', () => {
   assert.equal(translateCategory('mr', 'unknown-slug', 'Fallback'), 'Fallback')
 })
 
+test('index.html home metadata matches the English home page strings', async () => {
+  const { readFileSync } = await import('node:fs')
+  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8')
+  const decode = (value) => value.replaceAll('&amp;', '&').replaceAll('&quot;', '"')
+  const meta = (pattern) => decode(html.match(pattern)?.[1] ?? '')
+  const title = `Jai Baba Electronic — ${translations.en.heroTagline}`
+  const description = translations.en.seoHomeDescription
+
+  assert.equal(meta(/<title>([^<]*)<\/title>/), title)
+  assert.equal(meta(/<meta name="description" content="([^"]*)"/), description)
+  assert.equal(meta(/<meta property="og:title" content="([^"]*)"/), title)
+  assert.equal(meta(/<meta property="og:description" content="([^"]*)"/), description)
+  assert.equal(meta(/<meta name="twitter:title" content="([^"]*)"/), title)
+  assert.equal(meta(/<meta name="twitter:description" content="([^"]*)"/), description)
+})
+
 test('SEO builders produce complete metadata for every route', () => {
   for (const category of categories) {
     const page = buildCategorySeo('en', category)
