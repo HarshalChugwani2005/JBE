@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useCart } from '../context/useCart'
 import { useLanguage } from '../context/useLanguage'
 import { buildProductEnquiryMessage, buildStockCheckMessage } from '../i18n/whatsappMessages'
@@ -220,7 +221,10 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
     }
   }
 
-  return (
+  // Rendered into <body> so `position: fixed` is relative to the viewport. Inside the page
+  // container, an ancestor's CSS transform (page animations) would make the overlay scroll
+  // with the page and sit under the sticky header.
+  return createPortal(
     <div
       className="fixed inset-0 z-50 overflow-y-auto bg-stone-950/80 px-3 py-4 sm:px-6 sm:py-8 transition-all duration-300"
       onMouseDown={(event) => {
@@ -458,6 +462,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
           onClose={closeLightbox}
         />
       )}
-    </div>
+    </div>,
+    document.body,
   )
 }
