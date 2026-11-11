@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import CategoryIcon from './CategoryIcon'
 import { useLanguage } from '../context/useLanguage'
 import { getCategoryVisual } from '../data/categoryVisuals'
@@ -25,12 +25,20 @@ export default function ProductImage({
   const { t, tCategory } = useLanguage()
   const visual = getCategoryVisual(category)
   const fallbackText = fallbackLabel ?? t('photoComingSoon')
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [hasError, setHasError] = useState(false)
+  const imgRef = useRef(null)
 
-  useEffect(() => {
-    setIsLoaded(false)
-    setHasError(false)
+  // Track *which* source finished loading / failed instead of a boolean that is reset in an
+  // effect. A reset effect races the load event: a cached image can fire `load` before the
+  // effect runs, and the photo then stays invisible (opacity-0) for good.
+  const [loadedSrc, setLoadedSrc] = useState(null)
+  const [failedSrc, setFailedSrc] = useState(null)
+  const isLoaded = loadedSrc === src
+  const hasError = failedSrc === src
+
+  // An image served from cache can already be complete before React attaches onLoad.
+  useLayoutEffect(() => {
+    const img = imgRef.current
+    if (img && img.complete && img.naturalWidth > 0) setLoadedSrc(src)
   }, [src])
 
   if (!src || hasError) {
@@ -56,6 +64,7 @@ export default function ProductImage({
     <div className={`relative overflow-hidden bg-stone-100 ${className}`}>
       {!isLoaded && <div className="absolute inset-0 skeleton-shimmer" aria-hidden="true" />}
       <img
+        ref={imgRef}
         src={src}
         srcSet={srcSet}
         sizes={srcSet ? sizes : undefined}
@@ -63,8 +72,8 @@ export default function ProductImage({
         loading={loading}
         fetchPriority={fetchPriority}
         decoding="async"
-        onLoad={() => setIsLoaded(true)}
-        onError={() => setHasError(true)}
+        onLoad={() => setLoadedSrc(src)}
+        onError={() => setFailedSrc(src)}
         className={`h-full w-full object-cover transition duration-500 ease-out ${
           isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.03]'
         } ${imgClassName}`}

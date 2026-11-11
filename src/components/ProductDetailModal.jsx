@@ -402,39 +402,40 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
               </div>
             )}
 
-            <div className="mt-7 grid gap-2.5 sm:grid-cols-3">
+            {/* WhatsApp is the main action: full-width first row; list + call share the second row. */}
+            <div className="mt-7 grid grid-cols-2 gap-2.5">
+              <a
+                href={inStock === false ? getWhatsAppUrl(oosWhatsappText) : whatsappHref}
+                onClick={() => trackWhatsAppClick('product_modal', { modelName, brand: brandName })}
+                target={isExternalWhatsApp ? '_blank' : undefined}
+                rel={isExternalWhatsApp ? 'noopener noreferrer' : undefined}
+                className="btn btn-whatsapp col-span-2 px-4 py-3 text-base"
+              >
+                <WhatsAppIcon className="h-5 w-5" />
+                <span>{inStock === false ? t('askAvailabilityWa') : t('whatsappEnquiry')}</span>
+              </a>
               {inStock === false ? (
                 /* OOS: show a disabled badge in place of Add to List */
-                <div className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border-2 border-stone-200 bg-stone-50 px-4 py-3 text-sm font-bold text-stone-600 cursor-not-allowed select-none">
-                  <AlertTriangleIcon className="h-4 w-4 text-stone-500" />
+                <div className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border-2 border-stone-200 bg-stone-50 px-3 py-3 text-sm font-bold text-stone-600 cursor-not-allowed select-none">
+                  <AlertTriangleIcon className="h-4 w-4 shrink-0 text-stone-500" />
                   <span>{t('outOfStock')}</span>
                 </div>
               ) : (
                 <button
                   type="button"
                   onClick={handleAddToList}
-                  className="btn border-2 border-amber-700 bg-amber-50 px-4 py-3 text-amber-900 hover:bg-amber-100"
+                  className="btn border-2 border-amber-700 bg-amber-50 px-3 py-3 text-amber-900 hover:bg-amber-100"
                 >
                   <CartIcon className="h-4 w-4" />
                   <span>{t('addToList')}</span>
                 </button>
               )}
               <a
-                href={inStock === false ? getWhatsAppUrl(oosWhatsappText) : whatsappHref}
-                onClick={() => trackWhatsAppClick('product_modal', { modelName, brand: brandName })}
-                target={isExternalWhatsApp ? '_blank' : undefined}
-                rel={isExternalWhatsApp ? 'noopener noreferrer' : undefined}
-                className="btn btn-whatsapp px-4 py-3"
-              >
-                <WhatsAppIcon className="h-4 w-4" />
-                <span>{inStock === false ? t('askAvailabilityWa') : t('whatsappEnquiry')}</span>
-              </a>
-              <a
                 href={phoneHref}
                 onClick={() => trackCallClick('product_modal', shop.primaryPhone)}
                 target={isExternalPhone ? '_blank' : undefined}
                 rel={isExternalPhone ? 'noopener noreferrer' : undefined}
-                className="btn btn-secondary px-4 py-3"
+                className="btn btn-secondary px-3 py-3"
               >
                 <PhoneIcon className="h-4 w-4" />
                 <span>{t('callSeller')}</span>
