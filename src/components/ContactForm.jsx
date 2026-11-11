@@ -122,8 +122,13 @@ export default function ContactForm() {
       className="space-y-4 rounded-2xl border border-stone-200 bg-white p-6 sm:p-7 shadow-xs"
     >
       <div>
-        <h2 className="font-heading text-lg font-bold text-stone-900">{t('sendEnquiry')}</h2>
-        <p className="text-xs text-stone-500 mt-0.5">{t('sendEnquirySubtitle')}</p>
+        {/* Without a form service configured, the form only prepares a WhatsApp message — say so. */}
+        <h2 className="font-heading text-lg font-bold text-stone-900">
+          {hasFormspree ? t('sendEnquiry') : t('whatsappEnquiry')}
+        </h2>
+        <p className="text-xs text-stone-600 mt-0.5">
+          {hasFormspree ? t('sendEnquirySubtitle') : t('whatsappPrefillHint')}
+        </p>
       </div>
 
       {/* Status banner */}
@@ -256,9 +261,6 @@ export default function ContactForm() {
         </p>
       </div>
 
-      {!hasFormspree && (
-        <p className="text-[11px] text-stone-600 leading-relaxed">{t('whatsappPrefillHint')}</p>
-      )}
     </form>
   )
 }

@@ -40,7 +40,6 @@ export const categories = [
             colors: ['Smoke Brown', 'Ivory', 'Brown'],
             image: 'titan-smoke-brown.jpg',
             images: ['titan-smoke-brown.jpg', 'titan-ivory.jpg', 'titan-brown.jpg'],
-            inStock: true,
             priceTier: 'mid',
           },
           {
@@ -52,7 +51,6 @@ export const categories = [
             ],
             colors: ['Cherry Red'],
             image: 'glory.jpg',
-            inStock: true,
             priceTier: 'budget',
           },
           {
@@ -60,7 +58,6 @@ export const categories = [
             specs: ['Contemporary aero blades', 'Low wattage consumption', 'Smooth silent run'],
             colors: ['White', 'Beige', 'Copper', 'Sky Blue', 'Bronze'],
             image: 'bounce.jpg',
-            inStock: true,
             priceTier: 'mid',
           },
           {
@@ -68,7 +65,6 @@ export const categories = [
             specs: ['Metallic antique coating', 'Heavy duty copper motor', 'Wobble-free balance'],
             colors: ['Gold', 'White', 'Grey', 'Bronze'],
             image: 'zoro.jpg',
-            inStock: true,
             priceTier: 'premium',
           },
           {
@@ -76,7 +72,6 @@ export const categories = [
             specs: ['Hi-speed airflow', 'Rust proof powder coating', 'Dynamic blade pitch'],
             colors: ['Brown', 'White', 'Ivory'],
             image: 'wonder.jpg',
-            inStock: true,
             priceTier: 'budget',
           },
           {
@@ -91,7 +86,6 @@ export const categories = [
             ],
             colors: ['Boumvita', 'Chandi', 'Poly'],
             image: 'intex-designer.jpg',
-            inStock: true,
             priceTier: 'premium',
           },
         ],
@@ -113,7 +107,6 @@ export const categories = [
             specs: ['2 burner design', 'Fast heating coils', 'Good for homes and small shops'],
             colors: ['Black', 'Silver'],
             image: null,
-            inStock: true,
             priceTier: 'mid',
           },
         ],
@@ -135,7 +128,6 @@ export const categories = [
             specs: ['High speed motor', 'Easy grip handle', 'Ideal for daily use'],
             colors: ['White', 'Red'],
             image: null,
-            inStock: true,
             priceTier: 'budget',
           },
         ],
@@ -157,7 +149,6 @@ export const categories = [
             specs: ['Long battery life', 'Water resistant body', 'Portable design'],
             colors: ['Black', 'Yellow'],
             image: null,
-            inStock: true,
             priceTier: 'budget',
           },
         ],
@@ -189,7 +180,6 @@ export const categories = [
             colors: ['White'],
             image: 'crompton-rapid-jet-3l.png',
             images: ['crompton-rapid-jet-3l.png'],
-            inStock: true,
             priceTier: 'mid',
           },
           {
@@ -208,7 +198,6 @@ export const categories = [
             colors: ['White'],
             image: 'crompton-rapid-jet-3l.png',
             images: ['crompton-rapid-jet-3l.png'],
-            inStock: true,
             priceTier: 'mid',
           },
         ],
@@ -223,7 +212,6 @@ export const categories = [
             specs: ['Instant heating', 'Compact body', 'Energy efficient'],
             colors: ['White', 'Grey'],
             image: null,
-            inStock: true,
             priceTier: 'budget',
           },
         ],
@@ -251,7 +239,6 @@ export const categories = [
             colors: ['White / Aqua Blue'],
             image: 'orient-rapidus-5-5l.png',
             images: ['orient-rapidus-5-5l.png'],
-            inStock: true,
             priceTier: 'mid',
           },
         ],
@@ -273,7 +260,6 @@ export const categories = [
             specs: ['Fast heating', 'Powerful coil', 'Easy to store'],
             colors: ['Black', 'Silver'],
             image: null,
-            inStock: true,
             priceTier: 'budget',
           },
         ],
@@ -295,7 +281,6 @@ export const categories = [
             specs: ['Compact design', 'Low power consumption', 'Adjustable tilt'],
             colors: ['White', 'Blue'],
             image: null,
-            inStock: true,
             priceTier: 'budget',
           },
         ],
@@ -317,7 +302,6 @@ export const categories = [
             specs: ['Steam burst', 'Non-stick soleplate', 'Comfortable grip'],
             colors: ['Blue', 'Grey'],
             image: null,
-            inStock: true,
             priceTier: 'budget',
           },
         ],
@@ -351,7 +335,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)', 'Warm White (3000K)'],
             image: 'surya-led-b22.png',
             images: ['surya-led-b22.png'],
-            inStock: true,
             priceTier: 'budget',
           },
           {
@@ -370,7 +353,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)', 'Warm White (3000K)'],
             image: 'surya-led-b22.png',
             images: ['surya-led-b22.png'],
-            inStock: true,
             priceTier: 'budget',
           },
           {
@@ -388,7 +370,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)', 'Warm White (3000K)'],
             image: 'surya-led-b22.png',
             images: ['surya-led-b22.png'],
-            inStock: true,
             priceTier: 'budget',
           },
           {
@@ -407,7 +388,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)', 'Warm White (3000K)'],
             image: 'surya-led-b22.png',
             images: ['surya-led-b22.png'],
-            inStock: true,
             priceTier: 'budget',
           },
           {
@@ -425,7 +405,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)'],
             image: 'surya-led-b22.png',
             images: ['surya-led-b22.png'],
-            inStock: true,
             priceTier: 'budget',
           },
           {
@@ -446,7 +425,6 @@ export const categories = [
             colors: ['Orange', 'White', 'Green', 'Red', 'Blue', 'Yellow', 'Pink'],
             image: 'surya-neo-maxx-0-5w.png',
             images: ['surya-neo-maxx-0-5w.png'],
-            inStock: true,
             priceTier: 'budget',
           },
           {
@@ -465,7 +443,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)'],
             image: 'surya-duro-led.png',
             images: ['surya-duro-led.png'],
-            inStock: true,
             priceTier: 'mid',
           },
           {
@@ -484,7 +461,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)'],
             image: 'surya-duro-led.png',
             images: ['surya-duro-led.png'],
-            inStock: true,
             priceTier: 'mid',
           },
           {
@@ -503,7 +479,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)'],
             image: 'surya-duro-led.png',
             images: ['surya-duro-led.png'],
-            inStock: true,
             priceTier: 'mid',
           },
           {
@@ -521,7 +496,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)'],
             image: 'surya-duro-led.png',
             images: ['surya-duro-led.png'],
-            inStock: true,
             priceTier: 'premium',
           },
           {
@@ -540,7 +514,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)'],
             image: 'surya-duro-led.png',
             images: ['surya-duro-led.png'],
-            inStock: true,
             priceTier: 'premium',
           },
           {
@@ -561,7 +534,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)'],
             image: 'surya-turbo-inverter.png',
             images: ['surya-turbo-inverter.png'],
-            inStock: true,
             priceTier: 'mid',
           },
           {
@@ -582,7 +554,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)'],
             image: 'surya-turbo-inverter.png',
             images: ['surya-turbo-inverter.png'],
-            inStock: true,
             priceTier: 'mid',
           },
           {
@@ -603,7 +574,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)'],
             image: 'surya-turbo-inverter.png',
             images: ['surya-turbo-inverter.png'],
-            inStock: true,
             priceTier: 'mid',
           },
           {
@@ -623,7 +593,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)'],
             image: 'surya-turbo-inverter.png',
             images: ['surya-turbo-inverter.png'],
-            inStock: true,
             priceTier: 'premium',
           },
         ],
@@ -638,7 +607,6 @@ export const categories = [
             specs: ['Low power use', 'Long life', 'Warm white output'],
             colors: ['Warm White', 'Cool White'],
             image: null,
-            inStock: true,
             priceTier: 'budget',
           },
         ],
@@ -671,7 +639,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)'],
             image: 'surya-g-line-eco-batten.png',
             images: ['surya-g-line-eco-batten.png'],
-            inStock: true,
             priceTier: 'budget',
           },
           {
@@ -689,7 +656,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)'],
             image: 'surya-g-line-eco-batten.png',
             images: ['surya-g-line-eco-batten.png'],
-            inStock: true,
             priceTier: 'budget',
           },
           {
@@ -708,7 +674,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)', 'Warm White (3000K)'],
             image: 'surya-g-line-eco-batten.png',
             images: ['surya-g-line-eco-batten.png'],
-            inStock: true,
             priceTier: 'budget',
           },
           {
@@ -726,7 +691,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)'],
             image: 'surya-g-line-eco-batten.png',
             images: ['surya-g-line-eco-batten.png'],
-            inStock: true,
             priceTier: 'budget',
           },
           {
@@ -743,7 +707,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)'],
             image: 'surya-g-line-eco-batten.png',
             images: ['surya-g-line-eco-batten.png'],
-            inStock: true,
             priceTier: 'mid',
           },
           {
@@ -760,7 +723,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)'],
             image: 'surya-g-line-eco-batten.png',
             images: ['surya-g-line-eco-batten.png'],
-            inStock: true,
             priceTier: 'mid',
           },
           {
@@ -776,7 +738,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)'],
             image: 'surya-g-line-eco-batten.png',
             images: ['surya-g-line-eco-batten.png'],
-            inStock: true,
             priceTier: 'premium',
           },
           {
@@ -793,7 +754,6 @@ export const categories = [
             colors: ['Cool Daylight (6500K)'],
             image: 'surya-g-line-eco-batten.png',
             images: ['surya-g-line-eco-batten.png'],
-            inStock: true,
             priceTier: 'premium',
           },
         ],
@@ -815,7 +775,6 @@ export const categories = [
             specs: ['Bluetooth connectivity', 'Portable design', 'Balanced sound'],
             colors: ['Black', 'Blue'],
             image: null,
-            inStock: true,
             priceTier: 'mid',
           },
         ],
@@ -849,7 +808,6 @@ export const categories = [
             colors: ['Orange / Black'],
             image: 'goldstar-gsv-7.png',
             images: ['goldstar-gsv-7.png', 'goldstar-specs-table.png'],
-            inStock: true,
             priceTier: 'budget',
           },
           {
@@ -870,7 +828,6 @@ export const categories = [
             colors: ['Orange / Black'],
             image: 'goldstar-gsv-12.png',
             images: ['goldstar-gsv-12.png', 'goldstar-specs-table.png'],
-            inStock: true,
             priceTier: 'mid',
           },
         ],
@@ -885,7 +842,6 @@ export const categories = [
             specs: ['Deep discharge support', 'Long service life', 'Maintenance friendly'],
             colors: ['Black'],
             image: null,
-            inStock: true,
             priceTier: 'mid',
           },
         ],
@@ -907,7 +863,6 @@ export const categories = [
             specs: ['High airflow', 'Water tank', 'Easy mobility'],
             colors: ['White', 'Grey'],
             image: null,
-            inStock: true,
             priceTier: 'mid',
           },
         ],

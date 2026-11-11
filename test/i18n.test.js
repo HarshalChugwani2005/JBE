@@ -50,6 +50,23 @@ test('every catalog category has a label in every language', () => {
   }
 })
 
+test('every catalog spec, colour, tagline and warranty has Marathi and Hindi text', async () => {
+  const { productTextByLang } = await import('../src/i18n/productText.js')
+  const strings = new Set()
+  for (const category of categories) {
+    for (const entry of category.brands ?? []) {
+      ;[entry.tagline, entry.warranty].filter(Boolean).forEach((s) => strings.add(s))
+      for (const model of entry.models ?? []) {
+        ;[...(model.specs ?? []), ...(model.colors ?? []), model.tagline, model.warranty].filter(Boolean).forEach((s) => strings.add(s))
+      }
+    }
+  }
+  for (const lang of ['mr', 'hi']) {
+    const missing = [...strings].filter((s) => !productTextByLang[lang].get(s)?.trim())
+    assert.deepEqual(missing, [], `${lang} is missing product text`)
+  }
+})
+
 test('translate interpolates, pluralizes and falls back to English', () => {
   assert.equal(translate('en', 'modelCount', { count: 1 }), '1 model')
   assert.equal(translate('en', 'modelCount', { count: 3 }), '3 models')

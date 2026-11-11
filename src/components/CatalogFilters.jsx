@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useLanguage } from '../context/useLanguage'
-import { CheckIcon, SearchIcon } from './Icons'
+import { SearchIcon } from './Icons'
 
 export default function CatalogFilters({
   title,
@@ -12,8 +12,6 @@ export default function CatalogFilters({
   onBrandChange,
   selectedTier = '',
   onTierChange,
-  inStockOnly = false,
-  onInStockChange,
   resultsLabel,
   clearLabel,
   onClear,
@@ -22,7 +20,7 @@ export default function CatalogFilters({
 }) {
   const { t } = useLanguage()
   const [filtersOpen, setFiltersOpen] = useState(false)
-  const hasActiveFilters = Boolean(searchValue?.trim() || selectedBrand || selectedTier || inStockOnly)
+  const hasActiveFilters = Boolean(searchValue?.trim() || selectedBrand || selectedTier)
   const tierLabels = { budget: t('tierBudget'), mid: t('tierMid'), premium: t('tierPremium') }
   const chipClass = (active) =>
     `min-h-8 rounded-full border px-3 py-1 text-xs font-semibold transition duration-200 cursor-pointer ${
@@ -30,16 +28,12 @@ export default function CatalogFilters({
         ? 'border-amber-700 bg-amber-700 text-white shadow-xs'
         : 'border-stone-200 bg-white text-stone-700 hover:border-amber-300 hover:text-amber-900 hover:bg-amber-50/30'
     }`
-  const removableChip = (label, onRemove, tone = 'amber') => (
+  const removableChip = (label, onRemove) => (
     <button
       type="button"
       onClick={onRemove}
       aria-label={t('removeFilter', { label })}
-      className={`inline-flex min-h-8 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${
-        tone === 'emerald'
-          ? 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
-          : 'bg-amber-50 text-amber-900 hover:bg-amber-100'
-      }`}
+      className="inline-flex min-h-8 items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-900 hover:bg-amber-100"
     >
       <span>{label}</span>
       <span aria-hidden="true">×</span>
@@ -79,21 +73,6 @@ export default function CatalogFilters({
             </button>
           </div>
           <div id="catalog-filter-options" className={`${filtersOpen ? 'flex' : 'hidden'} w-full items-center gap-2 lg:flex lg:w-auto`}>
-            {onInStockChange && (
-              <button
-                type="button"
-                onClick={() => onInStockChange(!inStockOnly)}
-                aria-pressed={inStockOnly}
-                className={`inline-flex min-h-8 items-center gap-1 rounded-full border px-3.5 py-1.5 text-xs font-bold transition duration-200 cursor-pointer ${
-                  inStockOnly
-                    ? 'border-emerald-700 bg-emerald-700 text-white shadow-xs'
-                    : 'border-stone-200 bg-stone-50 text-stone-600 hover:border-stone-300 hover:bg-stone-100'
-                }`}
-              >
-                {inStockOnly && <CheckIcon className="h-3 w-3" />}
-                <span>{t('inStockOnly')}</span>
-              </button>
-            )}
             {hasActiveFilters && onClear && (
               <button
                 type="button"
@@ -166,13 +145,11 @@ export default function CatalogFilters({
           {searchValue?.trim() && removableChip(t('searchChip', { query: searchValue.trim() }), () => onSearchChange?.(''))}
           {selectedBrand && removableChip(selectedBrand, () => onBrandChange?.(''))}
           {selectedTier && removableChip(tierLabels[selectedTier] ?? selectedTier, () => onTierChange?.(''))}
-          {inStockOnly && removableChip(t('inStockOnly'), () => onInStockChange?.(false), 'emerald')}
           {onSortChange && (
             <label className="ml-auto inline-flex items-center gap-2 text-xs font-semibold text-stone-600">
               <span>{t('sort')}</span>
               <select value={sortValue} onChange={(event) => onSortChange(event.target.value)} className="min-h-9 rounded-lg border border-stone-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-stone-700 outline-none focus:border-amber-500">
                 <option value="">{t('sortRecommended')}</option>
-                <option value="stock">{t('sortInStock')}</option>
                 <option value="name">{t('sortName')}</option>
               </select>
             </label>

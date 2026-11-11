@@ -4,25 +4,23 @@ import { categories } from '../src/data/products.js'
 import { filterCatalog, filterCategoryBrands, toQueryWords } from '../src/utils/catalogFilters.js'
 
 const brands = [...new Set(categories.flatMap((c) => (c.brands ?? []).map((b) => b.brand)))]
-const sampleQueries = ['', 'fan', 'zipsy', 'सिलिंग', 'कूलर', 'led 9w', 'brown', 'no-such-thing']
+const sampleQueries = ['', 'fan', 'zipsy', 'सिलिंग', 'कूलर', 'led 9w', 'brown', 'पांढरा', 'वारंटी', 'no-such-thing']
 const tiers = ['', 'budget', 'mid', 'premium']
 
 test('catalog index and category page agree for every filter combination', () => {
   for (const query of sampleQueries) {
     for (const tier of tiers) {
-      for (const inStockOnly of [false, true]) {
-        for (const brand of ['', brands[0], brands.at(-1)]) {
-          const filters = { query, tier, inStockOnly, brand }
-          const listed = new Set(filterCatalog(categories, filters).map((c) => c.category))
-          for (const category of categories) {
-            if (!category.brands?.some((b) => b.models?.length)) continue
-            const shownOnPage = filterCategoryBrands(category, filters).length > 0
-            assert.equal(
-              listed.has(category.category),
-              shownOnPage,
-              `${category.category} disagrees for ${JSON.stringify(filters)}`,
-            )
-          }
+      for (const brand of ['', brands[0], brands.at(-1)]) {
+        const filters = { query, tier, brand }
+        const listed = new Set(filterCatalog(categories, filters).map((c) => c.category))
+        for (const category of categories) {
+          if (!category.brands?.some((b) => b.models?.length)) continue
+          const shownOnPage = filterCategoryBrands(category, filters).length > 0
+          assert.equal(
+            listed.has(category.category),
+            shownOnPage,
+            `${category.category} disagrees for ${JSON.stringify(filters)}`,
+          )
         }
       }
     }
@@ -45,12 +43,29 @@ test('search matches category names in every site language', () => {
   assert.ok(onPage.length > 0, 'category name search keeps the category page populated')
 })
 
-test('a model must pass every filter at once', () => {
+test('search matches translated specs and colours', () => {
+  const fans = categories.find((c) => c.category === 'ceiling-fans')
+  const whiteEnglish = filterCategoryBrands(fans, { query: 'ivory' }).flatMap((b) => b.models.map((m) => m.modelName))
+  const whiteMarathi = filterCategoryBrands(fans, { query: 'आयव्हरी' }).flatMap((b) => b.models.map((m) => m.modelName))
+  assert.ok(whiteEnglish.length > 0)
+  assert.deepEqual(whiteMarathi, whiteEnglish, 'Marathi colour search finds the same models as English')
+  const hindiSpec = filterCategoryBrands(fans, { query: 'डबल बॉल बेयरिंग' })
+  assert.ok(hindiSpec.length > 0, 'Hindi spec search finds models')
+})
+
+test('the tier filter applies to every listed model', () => {
   for (const category of categories) {
-    for (const entry of filterCategoryBrands(category, { tier: 'premium', inStockOnly: true })) {
-      for (const model of entry.models) {
-        assert.equal(model.priceTier, 'premium')
-        assert.notEqual(model.inStock, false)
+    for (const entry of filterCategoryBrands(category, { tier: 'premium' })) {
+      for (const model of entry.models) assert.equal(model.priceTier, 'premium')
+    }
+  }
+})
+
+test('catalog data has no stock fields (stock is not tracked online)', () => {
+  for (const category of categories) {
+    for (const entry of category.brands ?? []) {
+      for (const model of entry.models ?? []) {
+        assert.equal('inStock' in model, false, `${category.category}/${model.modelName} still has inStock`)
       }
     }
   }

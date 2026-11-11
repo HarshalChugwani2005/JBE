@@ -5,11 +5,10 @@
  * Rule: a model is shown when it passes every active filter at once. A category is
  * listed on the Catalog index exactly when its own page would show at least one model.
  *
- * filters: { query, brand, tier, inStockOnly, sort } — the values from useCatalogParams().
+ * filters: { query, brand, tier, sort } — the values from useCatalogParams().
  */
+import { productTextVariants } from '../i18n/productText.js'
 import { categoryLabels } from '../i18n/translations.js'
-
-export const isInStock = (model) => model.inStock !== false
 
 export function toQueryWords(query = '') {
   return query.trim().toLowerCase().split(/\s+/).filter(Boolean)
@@ -30,8 +29,17 @@ function categoryNames(category) {
   ]
 }
 
+/** Every searchable string for one model, in English and each translation. */
+function modelSearchText(names, entry, model) {
+  return [
+    ...names,
+    entry.brand,
+    model.modelName,
+    ...[entry.tagline, entry.warranty, ...(model.specs ?? []), ...(model.colors ?? [])].flatMap(productTextVariants),
+  ]
+}
+
 export function sortModels(models, sort) {
-  if (sort === 'stock') return [...models].sort((a, b) => Number(isInStock(b)) - Number(isInStock(a)))
   if (sort === 'name') return [...models].sort((a, b) => a.modelName.localeCompare(b.modelName))
   return models
 }
@@ -41,7 +49,7 @@ export function sortModels(models, sort) {
  * Searchable text per model: category names, brand name / tagline / warranty, model name, specs and colours.
  */
 export function filterCategoryBrands(category, filters = {}) {
-  const { query = '', brand = '', tier = '', inStockOnly = false, sort = '' } = filters
+  const { query = '', brand = '', tier = '', sort = '' } = filters
   const words = toQueryWords(query)
   const brandFilter = brand.trim().toLowerCase()
   const names = categoryNames(category)
@@ -51,13 +59,7 @@ export function filterCategoryBrands(category, filters = {}) {
       if (brandFilter && entry.brand?.toLowerCase() !== brandFilter) return null
 
       const models = (entry.models ?? []).filter(
-        (model) =>
-          (!inStockOnly || isInStock(model)) &&
-          (!tier || model.priceTier === tier) &&
-          matchesWords(
-            [...names, entry.brand, entry.tagline, entry.warranty, model.modelName, ...(model.specs ?? []), ...(model.colors ?? [])],
-            words,
-          ),
+        (model) => (!tier || model.priceTier === tier) && matchesWords(modelSearchText(names, entry, model), words),
       )
 
       return models.length > 0 ? { ...entry, models: sortModels(models, sort) } : null
@@ -68,27 +70,23 @@ export function filterCategoryBrands(category, filters = {}) {
 /**
  * Categories for the Catalog index, filtered and sorted.
  * Categories with no models yet (coming soon) match on their names only, and only when
- * no brand / tier / stock filter is active.
+ * no brand / tier filter is active.
  *
  * @param {(category) => string} labelOf  display label, used for name sorting
  * @param {string} locale                 locale for name sorting (the site language)
  */
 export function filterCatalog(categories, filters = {}, { labelOf = (category) => category.categoryLabel, locale } = {}) {
-  const { brand = '', tier = '', inStockOnly = false, query = '', sort = '' } = filters
+  const { brand = '', tier = '', query = '', sort = '' } = filters
 
   const visible = categories.filter((category) => {
     const hasModels = category.brands?.some((entry) => entry.models?.length)
     if (!hasModels) {
-      if (brand || tier || inStockOnly) return false
+      if (brand || tier) return false
       return matchesWords(categoryNames(category), toQueryWords(query))
     }
     return filterCategoryBrands(category, filters).length > 0
   })
 
   if (sort === 'name') return [...visible].sort((a, b) => labelOf(a).localeCompare(labelOf(b), locale))
-  if (sort === 'stock') {
-    const anyInStock = (category) => category.brands?.some((entry) => entry.models?.some(isInStock))
-    return [...visible].sort((a, b) => Number(anyInStock(b)) - Number(anyInStock(a)))
-  }
   return visible
 }

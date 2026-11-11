@@ -1,5 +1,41 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   Self-hosted fonts (no render-blocking Google Fonts request).
+   Only the subsets the site needs are declared:
+   - Inter + Plus Jakarta Sans: latin only. The ₹ sign is outside these ranges and
+     falls back to the system font, so latin-ext files are never downloaded.
+   - Noto Sans Devanagari: Devanagari characters only, and ₹ (U+20B9/U+20A8) is
+     deliberately excluded so English pages never download it. The language
+     switcher labels use the system font for the same reason (LanguageSelector).
+   ───────────────────────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url('@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Noto Sans Devanagari Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/noto-sans-devanagari/files/noto-sans-devanagari-devanagari-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0900-097F, U+1CD0-1CF9, U+200C-200D, U+20F0, U+25CC, U+A830-A839, U+A8E0-A8FF, U+11B00-11B09;
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════════
    JBE DESIGN SYSTEM — Jai Baba Electronic, Malkapur
    Theme: Warm Amber Gold × Deep Copper (light only)
@@ -14,8 +50,8 @@
     color-scheme: light;
 
     /* ── Typography ─────────────────────────────────────────────────── */
-    --font-body: 'Inter', 'Noto Sans Devanagari', system-ui, -apple-system, sans-serif;
-    --font-heading: 'Plus Jakarta Sans', 'Manrope', 'Noto Sans Devanagari', system-ui, -apple-system, sans-serif;
+    --font-body: 'Inter Variable', 'Noto Sans Devanagari Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-heading: 'Plus Jakarta Sans Variable', 'Noto Sans Devanagari Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
     /* ── Color tokens ───────────────────────────────────────────────── */
     --clr-amber-50:  #fffbeb;

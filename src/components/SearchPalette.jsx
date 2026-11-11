@@ -11,6 +11,7 @@ import { slugify } from '../utils/slugify'
 import { shop } from '../data/site'
 import { trapTabKey } from '../utils/focus'
 import { categoryLabels } from '../i18n/translations'
+import { productTextVariants } from '../i18n/productText'
 
 // ─── Static search index ──────────────────────────────────────────────────────
 // Built once at module load time (data is static) — not inside the component
@@ -53,7 +54,6 @@ function buildSearchIndex() {
           searchLabels: allCategoryLabels(cat.category),
           image: m.image,
           images: m.images,
-          inStock: m.inStock !== false,
           specs: m.specs || [],
           colors: m.colors || [],
           warranty: m.warranty || b.warranty,
@@ -70,7 +70,7 @@ const { allCategories: ALL_CATEGORIES, allProducts: ALL_PRODUCTS } = buildSearch
 
 export default function SearchPalette() {
   const { isOpen, closeSearch } = useSearch()
-  const { t, tCategory } = useLanguage()
+  const { t, tCategory, tProduct } = useLanguage()
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -97,7 +97,7 @@ export default function SearchPalette() {
     })
 
     const matchedProds = ALL_PRODUCTS.filter((prod) => {
-      const text = `${prod.brand} ${prod.modelName} ${prod.categoryLabel} ${prod.searchLabels} ${prod.specs.join(' ')} ${prod.colors.join(' ')}`.toLowerCase()
+      const text = `${prod.brand} ${prod.modelName} ${prod.categoryLabel} ${prod.searchLabels} ${prod.specs.flatMap(productTextVariants).join(' ')} ${prod.colors.flatMap(productTextVariants).join(' ')}`.toLowerCase()
       return words.every((w) => text.includes(w))
     })
 
@@ -317,22 +317,13 @@ export default function SearchPalette() {
                       <span className="font-heading font-bold text-sm text-stone-900 truncate">
                         {item.brand ? `${item.brand} ` : ''}{item.modelName}
                       </span>
-                      {item.inStock ? (
-                        <span className="rounded-full bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
-                          {t('inStock')}
-                        </span>
-                      ) : (
-                        <span className="rounded-full bg-stone-100 px-2 py-0.5 text-[10px] font-medium text-stone-600">
-                          {t('outOfStock')}
-                        </span>
-                      )}
                     </div>
                     <div className="flex items-center gap-2 mt-0.5 text-xs text-stone-600 truncate">
                       <span className="font-medium text-amber-800">{tCategory(item.categorySlug, item.categoryLabel)}</span>
                       {item.specs?.[0] && (
                         <>
                           <span aria-hidden="true">•</span>
-                          <span className="truncate">{item.specs[0]}</span>
+                          <span className="truncate">{tProduct(item.specs[0])}</span>
                         </>
                       )}
                     </div>

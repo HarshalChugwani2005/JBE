@@ -36,8 +36,6 @@ export const whatsappLabels = {
     keySpec: 'Key Spec',
     productClosing:
       'Hello! Please share current wholesale and retail pricing, warranty details, and availability for this model. Thank you!',
-    stockTitle: 'STOCK AVAILABILITY CHECK',
-    stockClosing: 'Hello! Could you please let me know when this model will be available in stock? Thank you!',
     contactTitle: 'DIRECT ENQUIRY',
     customerName: 'Customer Name',
     phone: 'Phone Number',
@@ -72,8 +70,6 @@ export const whatsappLabels = {
     keySpec: 'मुख्य वैशिष्ट्य',
     productClosing:
       'नमस्कार! कृपया या मॉडेलचा सध्याचा होलसेल व रिटेल दर, वॉरंटी आणि उपलब्धतेची माहिती द्या. धन्यवाद!',
-    stockTitle: 'स्टॉक उपलब्धता चौकशी',
-    stockClosing: 'नमस्कार! हे मॉडेल स्टॉकमध्ये कधी उपलब्ध होईल हे कृपया कळवा. धन्यवाद!',
     contactTitle: 'थेट चौकशी',
     customerName: 'ग्राहकाचे नाव',
     phone: 'फोन नंबर',
@@ -108,8 +104,6 @@ export const whatsappLabels = {
     keySpec: 'मुख्य विशेषता',
     productClosing:
       'नमस्ते! कृपया इस मॉडल का मौजूदा होलसेल और रिटेल रेट, वारंटी और उपलब्धता की जानकारी दें। धन्यवाद!',
-    stockTitle: 'स्टॉक उपलब्धता पूछताछ',
-    stockClosing: 'नमस्ते! कृपया बताएं कि यह मॉडल स्टॉक में कब उपलब्ध होगा। धन्यवाद!',
     contactTitle: 'सीधी पूछताछ',
     customerName: 'ग्राहक का नाम',
     phone: 'फ़ोन नंबर',
@@ -189,19 +183,6 @@ export function buildProductEnquiryMessage(lang, { brand, modelName, categoryLab
   ]
     .filter(Boolean)
     .join('\n')
-}
-
-/** "When will this be back in stock?" message for out-of-stock models. */
-export function buildStockCheckMessage(lang, { brand, modelName, categoryLabel }) {
-  const L = labelsFor(lang)
-  return [
-    `*${SHOP_HEADING} — ${L.stockTitle}*`,
-    DIVIDER,
-    `*${L.product}:* ${productLine(brand, modelName)}`,
-    `*${L.category}:* ${categoryLabel}`,
-    DIVIDER,
-    `_"${L.stockClosing}"_`,
-  ].join('\n')
 }
 
 /** Contact-form enquiry sent via WhatsApp. */

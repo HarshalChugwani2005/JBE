@@ -1,17 +1,15 @@
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/useCart'
 import { useLanguage } from '../context/useLanguage'
-import { buildStockCheckMessage } from '../i18n/whatsappMessages'
 import { useToast } from '../context/useToast'
-import { getWhatsAppUrl } from '../data/site'
-import { trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
+import { trackEnquiryCartAction } from '../utils/analytics'
 import { addRecentlyViewed } from '../utils/recentlyViewed'
-import { PlusIcon, ShareIcon, WhatsAppIcon } from './Icons'
+import { PlusIcon, ShareIcon } from './Icons'
 import ProductImage from './ProductImage'
 
 /**
  * Product tile. The title link is "stretched" over the whole card (::after overlay),
- * so the card is one link while the share / add / WhatsApp controls stay separate,
+ * so the card is one link while the share / add controls stay separate,
  * valid interactive elements layered above it (relative z-10).
  */
 export default function ProductCard({
@@ -22,16 +20,14 @@ export default function ProductCard({
   image,
   category,
   categoryLabel,
-  inStock = true,
   specs = [],
 }) {
   const { addToCart, openCart } = useCart()
-  const { t, tCategory, lang } = useLanguage()
+  const { t, tProduct } = useLanguage()
   const { showToast } = useToast()
   const productName = `${brand ? `${brand} ` : ''}${modelName}`
 
   const handleQuickAdd = () => {
-    if (inStock === false) return // guard: OOS items cannot be added
     addToCart({
       categorySlug: category,
       categoryLabel,
@@ -83,27 +79,6 @@ export default function ProductCard({
 
         {/* Gradient overlay */}
         <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-stone-900/25 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" aria-hidden="true" />
-
-        {/* Stock Badge */}
-        <div className="absolute top-3 right-3 flex items-center gap-1.5">
-          {inStock ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-700 px-2.5 py-0.5 text-[11px] font-bold text-white shadow-xs">
-              <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
-                <span className="absolute inline-flex h-full w-full ping-amber rounded-full bg-white opacity-75" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-white" />
-              </span>
-              {t('inStock')}
-            </span>
-          ) : inStock === false ? (
-            <span className="inline-flex items-center rounded-full border border-stone-600/30 bg-stone-800 px-2.5 py-0.5 text-[11px] font-semibold text-white">
-              {t('outOfStock')}
-            </span>
-          ) : (
-            <span className="inline-flex items-center rounded-full border border-amber-400/30 bg-amber-800 px-2.5 py-0.5 text-[11px] font-semibold text-white">
-              {t('askAvailability')}
-            </span>
-          )}
-        </div>
       </div>
 
       <div className="flex flex-1 flex-col p-4 pb-3">
@@ -118,7 +93,6 @@ export default function ProductCard({
                   brand,
                   modelName,
                   image,
-                  inStock,
                 })
               }}
               className="outline-none after:absolute after:inset-0 after:content-['']"
@@ -137,7 +111,7 @@ export default function ProductCard({
           </button>
         </div>
         {brand && <p className="mt-0.5 text-xs font-semibold uppercase tracking-wider text-amber-800">{brand}</p>}
-        {specs[0] && <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-stone-600">{specs[0]}</p>}
+        {specs[0] && <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-stone-600">{tProduct(specs[0])}</p>}
       </div>
 
       {/* Action Footer */}
@@ -145,35 +119,16 @@ export default function ProductCard({
         <span className="text-xs font-bold text-amber-800 group-hover:text-amber-950" aria-hidden="true">
           {t('viewSpecs')}
         </span>
-
-        {inStock === false ? (
-          /* OOS: replace button with a WhatsApp ask link */
-          <a
-            href={getWhatsAppUrl(
-              buildStockCheckMessage(lang, { brand, modelName, categoryLabel: tCategory(category, categoryLabel) }),
-            )}
-            onClick={() => trackWhatsAppClick('product_card_oos', { modelName, brand, category })}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="relative z-10 inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 hover:border-emerald-400 hover:bg-emerald-100 transition duration-200 active:scale-95"
-            title={t('askStockOnWhatsApp')}
-            aria-label={`${t('askAvailabilityWa')} — ${productName}`}
-          >
-            <WhatsAppIcon className="h-3.5 w-3.5" />
-            <span>{t('askAvailabilityWa')}</span>
-          </a>
-        ) : (
-          <button
-            type="button"
-            onClick={handleQuickAdd}
-            className="relative z-10 inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-stone-200 bg-stone-50/90 px-3 py-1.5 text-xs font-semibold text-stone-700 hover:border-amber-400 hover:bg-amber-50 hover:text-amber-900 hover:shadow-xs transition duration-200 active:scale-95 cursor-pointer"
-            title={t('addToEnquiryList')}
-            aria-label={`${t('addToList')} — ${productName}`}
-          >
-            <PlusIcon className="h-3.5 w-3.5" />
-            <span>{t('addToList')}</span>
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={handleQuickAdd}
+          className="relative z-10 inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-stone-200 bg-stone-50/90 px-3 py-1.5 text-xs font-semibold text-stone-700 hover:border-amber-400 hover:bg-amber-50 hover:text-amber-900 hover:shadow-xs transition duration-200 active:scale-95 cursor-pointer"
+          title={t('addToEnquiryList')}
+          aria-label={`${t('addToList')} — ${productName}`}
+        >
+          <PlusIcon className="h-3.5 w-3.5" />
+          <span>{t('addToList')}</span>
+        </button>
       </div>
     </article>
   )

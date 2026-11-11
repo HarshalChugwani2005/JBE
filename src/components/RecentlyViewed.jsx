@@ -98,11 +98,6 @@ export default function RecentlyViewed({ currentModelName, className = '' }) {
                   {t('view')}
                   <ArrowRightIcon className="h-3 w-3" />
                 </span>
-                {item.inStock ? (
-                  <span className="text-[11px] font-semibold text-emerald-800">{t('inStock')}</span>
-                ) : (
-                  <span className="text-[11px] font-medium text-stone-600">{t('askAvailability')}</span>
-                )}
               </div>
             </div>
           </Link>

@@ -14,9 +14,11 @@ import OfflineBanner from './components/OfflineBanner'
 import { AppProviders } from './context/AppProviders'
 import { Analytics } from '@vercel/analytics/react'
 import Home from './pages/Home'
+// Catalog and category pages are where most visitors land (search results, shared product
+// links), so they ship in the main bundle instead of a lazy chunk chain.
+import Catalog from './pages/Catalog'
+import CategoryPage from './pages/CategoryPage'
 
-const Catalog = lazy(() => import('./pages/Catalog'))
-const CategoryPage = lazy(() => import('./pages/CategoryPage'))
 const Contact = lazy(() => import('./pages/Contact'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 

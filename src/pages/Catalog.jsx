@@ -19,17 +19,17 @@ const allBrands = Array.from(
 
 export default function Catalog() {
   const { t, tCategory, lang } = useLanguage()
-  const { query, brand, tier, sort, inStockOnly, updateParams, clearFilters } = useCatalogParams()
+  const { query, brand, tier, sort, updateParams, clearFilters } = useCatalogParams()
   const { search } = useLocation()
 
   const filteredCategories = useMemo(
     () =>
       filterCatalog(
         categories,
-        { query, brand, tier, inStockOnly, sort },
+        { query, brand, tier, sort },
         { labelOf: (category) => tCategory(category.category, category.categoryLabel), locale: lang },
       ),
-    [brand, inStockOnly, query, sort, tier, tCategory, lang],
+    [brand, query, sort, tier, tCategory, lang],
   )
 
   return (
@@ -54,8 +54,6 @@ export default function Catalog() {
             onBrandChange={(value) => updateParams({ brand: value })}
             selectedTier={tier}
             onTierChange={(value) => updateParams({ tier: value })}
-            inStockOnly={inStockOnly}
-            onInStockChange={(value) => updateParams({ inStock: value })}
             sortValue={sort}
             onSortChange={(value) => updateParams({ sort: value })}
             resultsLabel={t('categoriesShown', { shown: filteredCategories.length, total: categories.length })}

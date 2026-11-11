@@ -45,7 +45,9 @@ function generateCatalogCsv() {
         const id = `${cat.category}_${slugify(brand.brand)}_${slugify(model.modelName)}`
         const title = `${brand.brand} ${model.modelName} - ${cat.categoryLabel}`
         const description = `${model.specs.join('. ')}${model.colors?.length ? ` | Colors: ${model.colors.join(', ')}` : ''} | Genuine wholesale & retail from Jai Baba Electronic Malkapur.`
-        const availability = model.inStock ? 'in stock' : 'out of stock'
+        // Meta requires an availability value. The shop does not track stock online, so every
+        // item is listed as orderable on enquiry rather than claiming it is in stock.
+        const availability = 'available for order'
         const condition = 'new'
         const price = '0.00 INR' // Quotation on WhatsApp
         const link = `${shop.siteUrl}/catalog/${cat.category}/${slugify(model.modelName)}`

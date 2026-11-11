@@ -31,8 +31,8 @@ export default function CategoryPage() {
   const { category: categorySlug, model: modelSlug } = useParams()
   const navigate = useNavigate()
   const { search } = useLocation()
-  const { query, brand, tier, sort, inStockOnly, updateParams, clearFilters } = useCatalogParams()
-  const { t, tCategory, lang } = useLanguage()
+  const { query, brand, tier, sort, updateParams, clearFilters } = useCatalogParams()
+  const { t, tCategory, tProduct, lang } = useLanguage()
 
   const category = getCategoryBySlug(categorySlug)
 
@@ -42,8 +42,8 @@ export default function CategoryPage() {
   }, [category])
 
   const filteredBrands = useMemo(
-    () => (category ? filterCategoryBrands(category, { query, brand, tier, inStockOnly, sort }) : []),
-    [brand, category, inStockOnly, query, sort, tier],
+    () => (category ? filterCategoryBrands(category, { query, brand, tier, sort }) : []),
+    [brand, category, query, sort, tier],
   )
 
   // Stable callback so the modal's focus/scroll-lock effect does not re-run on every render.
@@ -132,8 +132,6 @@ export default function CategoryPage() {
             onBrandChange={(value) => updateParams({ brand: value })}
             selectedTier={tier}
             onTierChange={(value) => updateParams({ tier: value })}
-            inStockOnly={inStockOnly}
-            onInStockChange={(value) => updateParams({ inStock: value })}
             sortValue={sort}
             onSortChange={(value) => updateParams({ sort: value })}
             resultsLabel={t('brandsShown', { shown: filteredBrands.length, total: category.brands.length })}
@@ -146,11 +144,11 @@ export default function CategoryPage() {
             <div className="flex flex-wrap items-center gap-3 border-b border-stone-200/80 pb-3">
               <h2 className="font-heading text-2xl font-extrabold text-stone-900">{brandEntry.brand}</h2>
               {brandEntry.tagline && (
-                <span className="text-xs font-medium text-stone-600">{brandEntry.tagline}</span>
+                <span className="text-xs font-medium text-stone-600">{tProduct(brandEntry.tagline)}</span>
               )}
               {brandEntry.warranty && (
                 <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800 border border-emerald-200/80 shadow-xs">
-                  {brandEntry.warranty}
+                  {tProduct(brandEntry.warranty)}
                 </span>
               )}
             </div>
@@ -165,7 +163,6 @@ export default function CategoryPage() {
                     image={model.image}
                     category={categorySlug}
                     categoryLabel={category.categoryLabel}
-                    inStock={model.inStock}
                     specs={model.specs}
                   />
                 </div>

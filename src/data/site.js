@@ -12,7 +12,7 @@ export const shop = {
   primaryPhone: '9673558859',
   phoneNumbers: ['9673558859', '8421009925', '9156576666', '9421394471'],
   whatsapp: '8421009925',
-  siteUrl: 'https://jaibabaelectronic.vercel.app',
+  siteUrl: 'https://jai-baba-electronics.vercel.app',
   mapEmbedUrl:
     'https://maps.google.com/maps?q=Buldana+Road,+Malkapur,+Maharashtra&output=embed',
   mapDirectionsUrl:

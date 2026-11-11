@@ -5,7 +5,6 @@ import {
   buildGreeting,
   buildProductEnquiryMessage,
   buildQuoteMessage,
-  buildStockCheckMessage,
   whatsappLabels,
 } from '../src/i18n/whatsappMessages.js'
 
@@ -39,14 +38,12 @@ test('quote message is localized and keeps product data intact', () => {
   }
 })
 
-test('single-product, stock-check and contact messages use the selected language', () => {
+test('single-product and contact messages use the selected language', () => {
   const hi = whatsappLabels.hi
   const product = buildProductEnquiryMessage('hi', { brand: 'ZIPSY', modelName: 'Zoro', categoryLabel: 'Ceiling Fans', keySpec: 'Wobble-free' })
   assert.ok(product.includes(hi.productClosing) && product.includes('ZIPSY Zoro') && product.includes(hi.keySpec))
   assert.ok(!product.includes(hi.selectedColor), 'missing color line is omitted')
 
-  const stock = buildStockCheckMessage('mr', { modelName: 'Glory', categoryLabel: 'Ceiling Fans' })
-  assert.ok(stock.includes(whatsappLabels.mr.stockClosing) && stock.includes('Glory'))
 
   const contact = buildContactMessage('en', { name: '', phone: '98', message: 'Need 10 fans' })
   assert.ok(contact.includes('Customer Name: Not provided') && contact.includes('Need 10 fans'))

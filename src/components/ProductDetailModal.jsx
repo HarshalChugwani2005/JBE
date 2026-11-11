@@ -2,14 +2,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useCart } from '../context/useCart'
 import { useLanguage } from '../context/useLanguage'
-import { buildProductEnquiryMessage, buildStockCheckMessage } from '../i18n/whatsappMessages'
+import { buildProductEnquiryMessage } from '../i18n/whatsappMessages'
 import { useToast } from '../context/useToast'
 import { getPhoneUrl, getWhatsAppUrl, shop } from '../data/site'
 import { getImageBaseName, getImageSrcSet, getProductImageUrls } from '../data/productImages'
 import { trackCallClick, trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
 import { addRecentlyViewed } from '../utils/recentlyViewed'
 import { slugify } from '../utils/slugify'
-import { AlertTriangleIcon, CartIcon, CloseIcon, PhoneIcon, ShareIcon, WhatsAppIcon } from './Icons'
+import { CartIcon, CloseIcon, PhoneIcon, ShareIcon, WhatsAppIcon } from './Icons'
 import ImageLightbox from './ImageLightbox'
 import ProductImage from './ProductImage'
 import { trapTabKey } from '../utils/focus'
@@ -66,7 +66,7 @@ function findColorForImage(imageSource, colors, modelName) {
 
 export default function ProductDetailModal({ isOpen, onClose, product }) {
   const { addToCart, openCart } = useCart()
-  const { t, tCategory, lang } = useLanguage()
+  const { t, tCategory, tProduct, lang } = useLanguage()
   const { showToast } = useToast()
   const dialogRef = useRef(null)
   const closeButtonRef = useRef(null)
@@ -86,7 +86,9 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
   const brandName = brand?.brand ?? brand ?? ''
   const categorySlug = product?.categorySlug ?? product?.category ?? ''
   const categoryLabel = product?.categoryLabel ?? ''
-  const inStock = model?.inStock ?? true
+  // Model-level text wins; otherwise fall back to the brand's warranty / tagline.
+  const warranty = model?.warranty || brand?.warranty
+  const tagline = model?.tagline || brand?.tagline
 
   const imageSources = useMemo(() => getProductImageUrls(categorySlug, model), [categorySlug, model])
   const activeImage = imageSources[activeImageIndex] ?? imageSources[0] ?? null
@@ -105,7 +107,6 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
         brand: brandName,
         modelName: model.modelName,
         image: model.image,
-        inStock,
         priceTier: model.priceTier,
       })
     }
@@ -134,7 +135,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
       document.body.classList.remove('overflow-hidden')
       previouslyFocusedRef.current?.focus?.({ preventScroll: true })
     }
-  }, [isOpen, model, onClose, categorySlug, categoryLabel, brandName, inStock])
+  }, [isOpen, model, onClose, categorySlug, categoryLabel, brandName])
 
   useEffect(() => {
     setActiveImageIndex(0)
@@ -154,7 +155,6 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
     keySpec: model?.specs?.[0],
   })
 
-  const oosWhatsappText = buildStockCheckMessage(lang, { brand: brandName, modelName, categoryLabel: productLabel })
 
   const whatsappHref = getWhatsAppUrl(whatsappText)
   const phoneHref = getPhoneUrl()
@@ -246,20 +246,6 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
               <p className="text-xs font-bold uppercase tracking-[0.24em] text-amber-800">
                 {productLabel || t('product')}
               </p>
-              {inStock ? (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-800">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-pulse" aria-hidden="true" />
-                  {t('inStock')}
-                </span>
-              ) : inStock === false ? (
-                <span className="inline-flex items-center rounded-full bg-stone-200 px-2.5 py-0.5 text-[10px] font-semibold text-stone-700">
-                  {t('outOfStock')}
-                </span>
-              ) : (
-                <span className="inline-flex items-center rounded-full border border-amber-300 bg-amber-50 px-2.5 py-0.5 text-[10px] font-semibold text-amber-800">
-                  {t('askAvailability')}
-                </span>
-              )}
             </div>
             <h2 id="product-modal-title" className="mt-1 font-heading text-xl font-extrabold text-stone-900 sm:text-2xl tracking-tight">
               {modelName}
@@ -302,7 +288,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                 src={activeImage}
                 category={categorySlug}
                 product={model}
-                alt={selectedColor ? t('productInColor', { name: productName, color: selectedColor }) : productName}
+                alt={selectedColor ? t('productInColor', { name: productName, color: tProduct(selectedColor) }) : productName}
                 className="aspect-4/3 rounded-2xl border border-stone-200 bg-white shadow-xs"
                 sizes="(min-width: 768px) 560px, 100vw"
                 imgClassName="transition-transform duration-500 group-hover:scale-[1.03]"
@@ -349,14 +335,14 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                   {brandName}
                 </span>
               )}
-              {model?.warranty && (
+              {warranty && (
                 <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800 border border-emerald-200/80">
-                  {model.warranty}
+                  {tProduct(warranty)}
                 </span>
               )}
-              {model?.tagline && (
+              {tagline && (
                 <span className="rounded-full bg-stone-100 px-3 py-1 text-xs font-medium text-stone-700">
-                  {model.tagline}
+                  {tProduct(tagline)}
                 </span>
               )}
             </div>
@@ -368,7 +354,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                   {model.specs.map((spec) => (
                     <li key={spec} className="flex items-center gap-2.5 rounded-xl border border-stone-200/70 bg-stone-50/80 px-3.5 py-2 transition hover:bg-stone-50">
                       <span className="h-2 w-2 rounded-full bg-amber-500" aria-hidden="true" />
-                      <span className="font-medium">{spec}</span>
+                      <span className="font-medium">{tProduct(spec)}</span>
                     </li>
                   ))}
                 </ul>
@@ -395,7 +381,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                           : 'border-stone-200 bg-white text-stone-700 hover:border-amber-300 hover:bg-amber-50/50'
                       }`}
                     >
-                      {color}
+                      {tProduct(color)}
                     </button>
                   ))}
                 </div>
@@ -405,31 +391,23 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
             {/* WhatsApp is the main action: full-width first row; list + call share the second row. */}
             <div className="mt-7 grid grid-cols-2 gap-2.5">
               <a
-                href={inStock === false ? getWhatsAppUrl(oosWhatsappText) : whatsappHref}
+                href={whatsappHref}
                 onClick={() => trackWhatsAppClick('product_modal', { modelName, brand: brandName })}
                 target={isExternalWhatsApp ? '_blank' : undefined}
                 rel={isExternalWhatsApp ? 'noopener noreferrer' : undefined}
                 className="btn btn-whatsapp col-span-2 px-4 py-3 text-base"
               >
                 <WhatsAppIcon className="h-5 w-5" />
-                <span>{inStock === false ? t('askAvailabilityWa') : t('whatsappEnquiry')}</span>
+                <span>{t('whatsappEnquiry')}</span>
               </a>
-              {inStock === false ? (
-                /* OOS: show a disabled badge in place of Add to List */
-                <div className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border-2 border-stone-200 bg-stone-50 px-3 py-3 text-sm font-bold text-stone-600 cursor-not-allowed select-none">
-                  <AlertTriangleIcon className="h-4 w-4 shrink-0 text-stone-500" />
-                  <span>{t('outOfStock')}</span>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleAddToList}
-                  className="btn border-2 border-amber-700 bg-amber-50 px-3 py-3 text-amber-900 hover:bg-amber-100"
-                >
-                  <CartIcon className="h-4 w-4" />
-                  <span>{t('addToList')}</span>
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={handleAddToList}
+                className="btn border-2 border-amber-700 bg-amber-50 px-3 py-3 text-amber-900 hover:bg-amber-100"
+              >
+                <CartIcon className="h-4 w-4" />
+                <span>{t('addToList')}</span>
+              </button>
               <a
                 href={phoneHref}
                 onClick={() => trackCallClick('product_modal', shop.primaryPhone)}
@@ -448,7 +426,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
               {contactNoteAfter}
             </p>
             {selectedColor && (
-              <p className="mt-1 text-xs text-amber-800 font-medium">{t('selectedColor')}: {selectedColor}</p>
+              <p className="mt-1 text-xs text-amber-800 font-medium">{t('selectedColor')}: {tProduct(selectedColor)}</p>
             )}
           </div>
         </div>

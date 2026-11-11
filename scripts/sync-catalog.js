@@ -6,7 +6,8 @@
  * 
  * Set CATALOG_SHEET_URL in your environment or below to sync directly from a published Google Sheet CSV / opensheet endpoint.
  * Format expected in Google Sheet:
- * Category | CategoryLabel | Brand | Tagline | Warranty | ModelName | Specs (comma separated) | Colors (comma separated) | Image | InStock (TRUE/FALSE)
+ * Category | CategoryLabel | Brand | Tagline | Warranty | ModelName | Specs (comma separated) | Colors (comma separated) | Image
+ * (Stock is not tracked on the site; any InStock column in the sheet is ignored.)
  */
 
 import fs from 'node:fs'
@@ -84,9 +85,6 @@ function validateCatalog(categories) {
         if (!Array.isArray(model.specs) || !Array.isArray(model.colors)) {
           errors.push(`Invalid specs/colors for ${category.category}/${model.modelName}.`)
         }
-        if (typeof model.inStock !== 'boolean') {
-          errors.push(`Invalid inStock value for ${category.category}/${model.modelName}.`)
-        }
         if (!allowedPriceTiers.has(model.priceTier)) {
           errors.push(`Invalid priceTier for ${category.category}/${model.modelName}.`)
         }
@@ -143,8 +141,6 @@ async function syncCatalog() {
       const colors = getCell(row, 'colors').split(';').map((c) => c.trim()).filter(Boolean)
       const image = getCell(row, 'image') || null
       const priceTier = getCell(row, 'pricetier') || null
-      const inStockValue = getCell(row, 'instock')
-      const inStock = inStockValue ? ['true', '1', 'yes'].includes(inStockValue.toLowerCase()) : true
 
       if (!categoriesMap.has(categorySlug)) {
         categoriesMap.set(categorySlug, {
@@ -172,7 +168,6 @@ async function syncCatalog() {
         colors,
         image,
         images: image ? [image] : [],
-        inStock,
         priceTier,
       })
     }

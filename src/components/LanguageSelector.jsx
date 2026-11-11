@@ -1,5 +1,7 @@
 import { useLanguage } from '../context/useLanguage'
 
+const SYSTEM_DEVANAGARI_FONT = "[font-family:system-ui,'Nirmala_UI','Kohinoor_Devanagari','Noto_Sans_Devanagari',sans-serif]"
+
 const languages = [
   { code: 'en', label: 'EN', name: 'English' },
   { code: 'mr', label: 'मराठी', name: 'मराठी' },
@@ -18,6 +20,9 @@ export default function LanguageSelector() {
           onClick={() => setLang(item.code)}
           lang={item.code}
           className={`min-h-8 rounded-full px-2.5 py-1 text-xs transition duration-200 cursor-pointer ${
+            // Native Devanagari font for the labels, so English pages never download the web font.
+            item.code === 'en' ? '' : SYSTEM_DEVANAGARI_FONT
+          } ${
             lang === item.code
               ? 'bg-amber-700 text-white shadow-xs'
               : 'text-stone-600 hover:text-stone-900 hover:bg-stone-200/50'

@@ -13,7 +13,7 @@ const ANIM_DURATION = 300 // ms — must match the CSS transition duration
 
 export default function CartDrawer() {
   const { items, isOpen, closeCart, removeFromCart, updateQuantity, clearCart, totalCount } = useCart()
-  const { t, tCategory, lang } = useLanguage()
+  const { t, tCategory, tProduct, lang } = useLanguage()
   const [buyerName, setBuyerName] = useState('')
   const [buyerType, setBuyerType] = useState('wholesale') // 'wholesale' | 'retail'
   const [notes, setNotes] = useState('')
@@ -179,7 +179,7 @@ export default function CartDrawer() {
                           {item.brand ? `${item.brand} ` : ''}{item.modelName}
                         </h3>
                         {item.selectedColor && (
-                          <p className="text-xs text-amber-800 font-semibold">{t('selectedColor')}: {item.selectedColor}</p>
+                          <p className="text-xs text-amber-800 font-semibold">{t('selectedColor')}: {tProduct(item.selectedColor)}</p>
                         )}
                         <div className="mt-1.5 flex items-center gap-2">
                           <button

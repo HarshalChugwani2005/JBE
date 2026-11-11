@@ -1,31 +1,24 @@
 # robots.txt — Jai Baba Electronic
-# https://jaibabaelectronic.vercel.app
+# https://jai-baba-electronics.vercel.app
+#
+# /assets/ must stay crawlable: it holds the JavaScript and CSS search engines need
+# to render this single-page app, and the product photos for image search.
 
 # Allow all well-behaved crawlers
 User-agent: *
 Allow: /
-Allow: /catalog
-Allow: /catalog/
-Allow: /contact
-
-# Disallow Vercel internals and hashed build assets (no SEO value)
 Disallow: /_vercel/
-Disallow: /assets/
-
-# Crawl-delay (seconds) — be polite
 Crawl-delay: 5
 
 # Google-specific rules — no crawl-delay needed, they self-throttle
 User-agent: Googlebot
 Allow: /
 Disallow: /_vercel/
-Disallow: /assets/
 
 # Bing-specific rules
 User-agent: Bingbot
 Allow: /
 Disallow: /_vercel/
-Disallow: /assets/
 
 # Sitemap location
-Sitemap: https://jaibabaelectronic.vercel.app/sitemap.xml
+Sitemap: https://jai-baba-electronics.vercel.app/sitemap.xml

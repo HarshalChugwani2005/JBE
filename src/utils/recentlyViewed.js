@@ -31,7 +31,6 @@ export function addRecentlyViewed(item) {
         brand: item.brand?.brand || item.brand || '',
         modelName: item.modelName,
         image: item.image || item.model?.image || null,
-        inStock: item.inStock !== false,
         priceTier: item.priceTier || item.model?.priceTier || null,
         viewedAt: Date.now(),
       },
