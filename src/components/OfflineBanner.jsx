@@ -124,7 +124,7 @@ export default function OfflineBanner() {
         <aside
           role="region"
           aria-label={t('installRegionLabel')}
-          className="fixed inset-x-0 bottom-[4.5rem] z-40 border-t border-stone-200 bg-white px-3 py-2.5 shadow-[0_-4px_16px_rgba(0,0,0,0.08)] animate-slide-in-up md:inset-x-auto md:bottom-24 md:right-6 md:max-w-sm md:rounded-2xl md:border md:p-4 md:shadow-xl md:shadow-stone-900/10"
+          className="fixed inset-x-0 bottom-18 z-40 border-t border-stone-200 bg-white px-3 py-2.5 shadow-[0_-4px_16px_rgba(0,0,0,0.08)] animate-slide-in-up md:inset-x-auto md:bottom-24 md:right-6 md:max-w-sm md:rounded-2xl md:border md:p-4 md:shadow-xl md:shadow-stone-900/10"
         >
           <div className="mx-auto flex max-w-md items-center gap-3 md:items-start">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-700 text-white text-[11px] font-black tracking-tight shadow-sm md:h-10 md:w-10" aria-hidden="true">
