@@ -1,6 +1,17 @@
 import { Component } from 'react'
 import { getWhatsAppUrl, shop } from '../data/site'
+import { DEFAULT_LANG, SUPPORTED_LANGS, translate } from '../i18n/format'
+import { buildErrorReport } from '../i18n/whatsappMessages'
 import { AlertTriangleIcon, HomeIcon, RefreshIcon, WhatsAppIcon } from './Icons'
+
+/**
+ * This boundary wraps the providers, so it cannot use useLanguage().
+ * LanguageProvider mirrors the active language onto <html lang>, which we read instead.
+ */
+function currentLang() {
+  const lang = typeof document !== 'undefined' ? document.documentElement.lang : ''
+  return SUPPORTED_LANGS.includes(lang) ? lang : DEFAULT_LANG
+}
 
 export default class ErrorBoundary extends Component {
   constructor(props) {
@@ -32,6 +43,8 @@ export default class ErrorBoundary extends Component {
   render() {
     if (this.state.hasError) {
       const { error, detailsOpen } = this.state
+      const lang = currentLang()
+      const t = (key, vars) => translate(lang, key, vars)
       const whatsappNumber = shop.whatsapp.replace(/\D/g, '').slice(-10)
       return (
         <div className="relative flex min-h-screen flex-col items-center justify-center bg-stone-950 px-4 py-16">
@@ -44,16 +57,15 @@ export default class ErrorBoundary extends Component {
           >
             {/* Logo / Alert mark */}
             <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-500 shadow-sm select-none">
-              <AlertTriangleIcon className="h-8 w-8 text-amber-500" />
+              <AlertTriangleIcon className="h-8 w-8 text-amber-400" />
             </div>
 
             {/* Heading */}
             <h1 className="font-heading text-2xl font-bold tracking-tight text-stone-50 sm:text-3xl">
-              Oops! Something broke.
+              {t('errorTitle')}
             </h1>
-            <p className="mt-3 text-sm leading-relaxed text-stone-400">
-              An unexpected error occurred while loading this page.
-              Please try reloading — if the issue persists, contact us directly on WhatsApp.
+            <p className="mt-3 text-sm leading-relaxed text-stone-300">
+              {t('errorText')}
             </p>
 
             {/* Action buttons */}
@@ -61,30 +73,30 @@ export default class ErrorBoundary extends Component {
               <button
                 type="button"
                 onClick={this.handleReload}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-600 px-6 py-3 text-sm font-bold text-white shadow-md transition-all duration-200 hover:bg-amber-700 active:scale-95 cursor-pointer"
+                className="btn btn-primary px-6 py-3"
               >
                 <RefreshIcon className="h-4 w-4" />
-                <span>Reload Page</span>
+                <span>{t('reloadPage')}</span>
               </button>
               <button
                 type="button"
                 onClick={this.handleGoHome}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-stone-700 bg-stone-800 px-6 py-3 text-sm font-semibold text-stone-200 transition-all duration-200 hover:border-stone-600 hover:bg-stone-700 active:scale-95 cursor-pointer"
+                className="btn border border-stone-700 bg-stone-800 px-6 py-3 text-stone-100 hover:border-stone-600 hover:bg-stone-700"
               >
                 <HomeIcon className="h-4 w-4" />
-                <span>Back to Home</span>
+                <span>{t('backToHome')}</span>
               </button>
             </div>
 
             {/* WhatsApp fallback */}
             <a
-              href={getWhatsAppUrl('Hi, the JBE website is showing an error. Please help!')}
+              href={getWhatsAppUrl(buildErrorReport(lang))}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366]/10 border border-[#25D366]/30 px-5 py-2.5 text-sm font-semibold text-[#25D366] transition-all duration-200 hover:bg-[#25D366]/20 active:scale-95 cursor-pointer w-full"
+              className="btn btn-whatsapp mt-5 w-full"
             >
               <WhatsAppIcon className="h-4 w-4" />
-              <span>Chat on WhatsApp — +91 {whatsappNumber}</span>
+              <span>{t('chatWhatsApp')} — +91 {whatsappNumber}</span>
             </a>
 
             {/* Collapsible error details — only in dev mode */}
@@ -93,10 +105,11 @@ export default class ErrorBoundary extends Component {
                 <button
                   type="button"
                   onClick={this.toggleDetails}
-                  className="flex w-full items-center justify-between rounded-lg border border-stone-800 bg-stone-800/50 px-4 py-2.5 text-xs font-mono text-stone-500 transition hover:text-stone-400 cursor-pointer"
+                  aria-expanded={detailsOpen}
+                  className="flex w-full items-center justify-between rounded-lg border border-stone-800 bg-stone-800/50 px-4 py-2.5 text-xs font-mono text-stone-400 transition hover:text-stone-300 cursor-pointer"
                 >
-                  <span>Error details</span>
-                  <span className={`transition-transform duration-200 ${detailsOpen ? 'rotate-180' : ''}`}>▼</span>
+                  <span>{t('errorDetails')}</span>
+                  <span aria-hidden="true" className={`transition-transform duration-200 ${detailsOpen ? 'rotate-180' : ''}`}>▼</span>
                 </button>
                 {detailsOpen && (
                   <pre className="mt-1 max-h-36 overflow-auto rounded-b-lg border border-t-0 border-stone-800 bg-stone-950 px-4 py-3 text-[11px] leading-relaxed text-red-400 whitespace-pre-wrap break-words">
@@ -110,8 +123,8 @@ export default class ErrorBoundary extends Component {
           </div>
 
           {/* Shop branding footer */}
-          <p className="relative z-10 mt-8 text-xs text-stone-600">
-            Jai Baba Electronic · Malkapur, Maharashtra
+          <p className="relative z-10 mt-8 text-xs text-stone-400">
+            {shop.name} · {t('shopCity')}
           </p>
 
           <style>{`

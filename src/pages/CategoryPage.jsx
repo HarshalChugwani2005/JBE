@@ -1,21 +1,38 @@
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { useMemo } from 'react'
-import ProductCard from '../components/ProductCard'
+import { useCallback, useMemo } from 'react'
+import Breadcrumbs from '../components/Breadcrumbs'
 import CatalogFilters from '../components/CatalogFilters'
+import EmptyState from '../components/EmptyState'
+import FilterEmptyState from '../components/FilterEmptyState'
+import PageHeader from '../components/PageHeader'
+import ProductCard from '../components/ProductCard'
 import ProductDetailModal from '../components/ProductDetailModal'
 import RecentlyViewed from '../components/RecentlyViewed'
 import SEO from '../components/SEO'
+import { ArrowLeftIcon, PackageIcon, SearchIcon, WhatsAppIcon } from '../components/Icons'
 import { useLanguage } from '../context/useLanguage'
 import { useCatalogParams } from '../hooks/useCatalogParams'
+import { getModelCount } from '../data/categoryVisuals'
+import { getProductImageUrls } from '../data/productImages'
 import { getCategoryBySlug, getModelBySlug } from '../data/products'
+import { getWhatsAppUrl, shop } from '../data/site'
+import { buildGreeting } from '../i18n/whatsappMessages'
+import { buildBreadcrumbJsonLd, buildCategorySeo, buildModelSeo, buildProductJsonLd } from '../i18n/seo'
+import { trackWhatsAppClick } from '../utils/analytics'
+import { filterCategoryBrands } from '../utils/catalogFilters'
 import { slugify } from '../utils/slugify'
+
+function absoluteUrl(path) {
+  if (!path) return undefined
+  return path.startsWith('http') ? path : `${shop.siteUrl}${path}`
+}
 
 export default function CategoryPage() {
   const { category: categorySlug, model: modelSlug } = useParams()
   const navigate = useNavigate()
   const { search } = useLocation()
   const { query, brand, tier, sort, inStockOnly, updateParams, clearFilters } = useCatalogParams()
-  const { t } = useLanguage()
+  const { t, tCategory, lang } = useLanguage()
 
   const category = getCategoryBySlug(categorySlug)
 
@@ -24,124 +41,92 @@ export default function CategoryPage() {
     return Array.from(brandNames).sort()
   }, [category])
 
-  const filteredBrands = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase()
-    const normalizedBrand = brand.trim().toLowerCase()
+  const filteredBrands = useMemo(
+    () => (category ? filterCategoryBrands(category, { query, brand, tier, inStockOnly, sort }) : []),
+    [brand, category, inStockOnly, query, sort, tier],
+  )
 
-    return (category?.brands ?? []).map((entry) => {
-      const brandMatches = !normalizedBrand || entry.brand?.toLowerCase() === normalizedBrand
-      if (!brandMatches) return null
+  // Stable callback so the modal's focus/scroll-lock effect does not re-run on every render.
+  const closeModal = useCallback(
+    () => navigate(`/catalog/${categorySlug}${search}`),
+    [navigate, categorySlug, search],
+  )
 
-      let models = entry.models ?? []
-      if (inStockOnly) {
-        models = models.filter((m) => m.inStock !== false)
-      }
-      if (tier) {
-        models = models.filter((m) => m.priceTier === tier)
-      }
-
-      if (normalizedQuery) {
-        const queryWords = normalizedQuery.split(/\s+/).filter(Boolean)
-        models = models.filter((model) => {
-          const searchableText = [
-            entry.brand,
-            entry.tagline,
-            entry.warranty,
-            model.modelName,
-            ...(model.specs ?? []),
-            ...(model.colors ?? []),
-          ]
-            .filter(Boolean)
-            .join(' ')
-            .toLowerCase()
-
-          return queryWords.every((word) => searchableText.includes(word))
-        })
-      }
-
-      if (models.length === 0) return null
-
-      return {
-        ...entry,
-        models: [...models].sort((left, right) => {
-          if (sort === 'stock') return Number(right.inStock !== false) - Number(left.inStock !== false)
-          if (sort === 'name') return left.modelName.localeCompare(right.modelName)
-          return 0
-        }),
-      }
-    }).filter(Boolean)
-  }, [brand, category, inStockOnly, query, sort, tier])
+  const catalogCrumb = { label: t('navCatalog'), to: `/catalog${search}` }
+  const homeCrumb = { label: t('navHome'), to: '/' }
 
   if (!category) {
     return (
       <>
-        <SEO title={t('categoryNotFound')} description="The requested category could not be found." />
-        <div className="py-12 text-center">
-          <h1 className="text-2xl font-bold text-stone-900">{t('categoryNotFound')}</h1>
-          <Link to="/catalog" className="mt-4 inline-flex items-center rounded-xl bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700 transition">
-            {t('backToCatalog')}
+        <SEO title={t('categoryNotFound')} description={t('seoNotFoundDescription')} noindex />
+        <Breadcrumbs items={[homeCrumb, catalogCrumb, { label: t('categoryNotFound') }]} />
+        <EmptyState as="h1" icon={SearchIcon} title={t('categoryNotFound')} description={t('categoryNotFoundText')}>
+          <Link to="/catalog" className="btn btn-primary">
+            <ArrowLeftIcon className="h-4 w-4" />
+            <span>{t('backToCatalog')}</span>
           </Link>
-        </div>
+          <StatusWhatsAppLink source="category_not_found" />
+        </EmptyState>
+      </>
+    )
+  }
+
+  const label = tCategory(category.category, category.categoryLabel)
+  const breadcrumbItems = [homeCrumb, catalogCrumb, { label }]
+
+  if (category.comingSoon) {
+    const meta = buildCategorySeo(lang, category)
+    return (
+      <>
+        <SEO title={meta.title} description={meta.description} image={meta.image} />
+        <Breadcrumbs items={breadcrumbItems} />
+        <EmptyState as="h1" icon={PackageIcon} title={label} description={t('comingSoonNotice')}>
+          <Link to="/catalog" className="btn btn-secondary">
+            <ArrowLeftIcon className="h-4 w-4" />
+            <span>{t('backToCatalog')}</span>
+          </Link>
+          <StatusWhatsAppLink source="category_coming_soon" />
+        </EmptyState>
       </>
     )
   }
 
   const activeModalModel = modelSlug ? getModelBySlug(categorySlug, modelSlug) : null
+  const activeBrandName = activeModalModel?.brand?.brand || ''
 
-  if (category.comingSoon) {
-    return (
-      <>
-        <SEO title={category.categoryLabel} description={`See upcoming products in ${category.categoryLabel} at Jai Baba Electronic.`} />
-        <div>
-          <Link to="/catalog" className="text-sm font-semibold text-amber-700 hover:underline">
-            {t('backToCatalog')}
-          </Link>
-          <h1 className="mt-4 text-2xl font-bold text-stone-900">{category.categoryLabel}</h1>
-          <p className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            {t('comingSoonNotice')}
-          </p>
-        </div>
-      </>
-    )
-  }
+  const meta = activeModalModel
+    ? buildModelSeo(lang, category, activeBrandName, activeModalModel.model)
+    : buildCategorySeo(lang, category)
 
-  const activeBrandName = activeModalModel?.brand?.brand || activeModalModel?.brand || ''
-  const modelName = activeModalModel?.model?.modelName || ''
-
-  const seoTitle = activeModalModel
-    ? `${activeBrandName ? `${activeBrandName} ` : ''}${modelName} | ${category.categoryLabel}`
-    : category.categoryLabel
-
-  const seoDescription = activeModalModel
-    ? `${activeBrandName ? `${activeBrandName} ` : ''}${modelName} (${category.categoryLabel}). ${activeModalModel.model.specs?.slice(0, 3).join(', ') || ''}. Genuine wholesale and retail pricing on enquiry at Jai Baba Electronic Malkapur.`
-    : `Browse ${category.categoryLabel} products at Jai Baba Electronic Malkapur. Wholesale and retail pricing on enquiry.`
-
-  const modelSlugClean = modelName ? slugify(modelName) : ''
-  const seoImage = activeModalModel
-    ? `/og/products/${categorySlug}-${modelSlugClean}.png`
-    : `/og/${categorySlug}.png`
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd(shop.siteUrl, [
+    { name: t('navHome'), path: '/' },
+    { name: t('navCatalog'), path: '/catalog' },
+    { name: label, path: `/catalog/${category.category}` },
+  ])
+  const jsonLd = activeModalModel
+    ? [
+        breadcrumbJsonLd,
+        buildProductJsonLd(shop.siteUrl, {
+          category,
+          brandName: activeBrandName,
+          model: activeModalModel.model,
+          imageUrl: absoluteUrl(getProductImageUrls(category.category, activeModalModel.model)[0]),
+        }),
+      ]
+    : breadcrumbJsonLd
 
   return (
     <>
-      <SEO
-        title={seoTitle}
-        description={seoDescription}
-        image={seoImage}
-      />
+      <SEO title={meta.title} description={meta.description} image={meta.image} jsonLd={jsonLd} />
       <div>
-        <Link to={`/catalog${search}`} className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-amber-700 hover:text-amber-900 transition-colors">
-          <span>←</span>
-          <span>{t('backToCatalog')}</span>
-        </Link>
-        <h1 className="mt-3 font-heading text-3xl font-extrabold tracking-tight text-stone-900 sm:text-4xl animate-slide-in-down">
-          <span className="section-heading-animated drawn">{category.categoryLabel}</span>
-        </h1>
+        <Breadcrumbs items={breadcrumbItems} className="mb-4" />
+        <PageHeader title={label} subtitle={t('modelsAvailable', { count: getModelCount(category) })} />
 
         <div className="mt-6">
           <CatalogFilters
             searchValue={query}
             onSearchChange={(value) => updateParams({ q: value })}
-            searchPlaceholder={`${t('searchWithinCategory')}`}
+            searchPlaceholder={t('searchWithinCategory')}
             brands={allBrands}
             selectedBrand={brand}
             onBrandChange={(value) => updateParams({ brand: value })}
@@ -151,7 +136,7 @@ export default function CategoryPage() {
             onInStockChange={(value) => updateParams({ inStock: value })}
             sortValue={sort}
             onSortChange={(value) => updateParams({ sort: value })}
-            resultsLabel={`${filteredBrands.length} of ${category.brands.length} brands shown`}
+            resultsLabel={t('brandsShown', { shown: filteredBrands.length, total: category.brands.length })}
             onClear={clearFilters}
           />
         </div>
@@ -161,7 +146,7 @@ export default function CategoryPage() {
             <div className="flex flex-wrap items-center gap-3 border-b border-stone-200/80 pb-3">
               <h2 className="font-heading text-2xl font-extrabold text-stone-900">{brandEntry.brand}</h2>
               {brandEntry.tagline && (
-                <span className="text-xs font-medium text-stone-500">{brandEntry.tagline}</span>
+                <span className="text-xs font-medium text-stone-600">{brandEntry.tagline}</span>
               )}
               {brandEntry.warranty && (
                 <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800 border border-emerald-200/80 shadow-xs">
@@ -169,7 +154,7 @@ export default function CategoryPage() {
                 </span>
               )}
             </div>
-          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {brandEntry.models.map((model) => (
                 <div key={model.modelName} className="stagger-item">
                   <ProductCard
@@ -190,16 +175,16 @@ export default function CategoryPage() {
         ))}
 
         {filteredBrands.length === 0 && (
-          <p className="mt-6 rounded-2xl border border-stone-200 bg-white px-5 py-4 text-sm font-medium text-stone-600 shadow-xs">
-            {t('noBrandsFound')}
-          </p>
+          <div className="mt-8">
+            <FilterEmptyState description={t('noBrandsFound')} onClear={clearFilters} />
+          </div>
         )}
 
         {/* Modal if URL contains model slug */}
         {activeModalModel && (
           <ProductDetailModal
             isOpen
-            onClose={() => navigate(`/catalog/${categorySlug}${search}`)}
+            onClose={closeModal}
             product={{
               categorySlug,
               categoryLabel: category.categoryLabel,
@@ -213,5 +198,21 @@ export default function CategoryPage() {
         <RecentlyViewed currentModelName={activeModalModel?.model?.modelName} />
       </div>
     </>
+  )
+}
+
+function StatusWhatsAppLink({ source }) {
+  const { t, lang } = useLanguage()
+  return (
+    <a
+      href={getWhatsAppUrl(buildGreeting(lang))}
+      onClick={() => trackWhatsAppClick(source)}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="btn btn-whatsapp"
+    >
+      <WhatsAppIcon className="h-4 w-4" />
+      <span>{t('askUsOnWhatsApp')}</span>
+    </a>
   )
 }

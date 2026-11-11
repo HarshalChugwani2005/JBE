@@ -5,6 +5,8 @@
  * skeleton matches the real page's grid shape and reduces layout shift.
  */
 
+import { useLanguage } from '../context/useLanguage'
+
 /** Reusable shimmer block */
 function Bone({ className = '' }) {
   return <div className={`skeleton-shimmer rounded-xl ${className}`} aria-hidden="true" />
@@ -164,18 +166,33 @@ function SpinnerFallback() {
   )
 }
 
-/** Route-aware entry point used as the Suspense fallback in App.jsx */
-export default function PageSkeleton() {
-  const path = typeof window !== 'undefined' ? window.location.pathname : '/'
-
+/** Picks the skeleton layout closest to the route that is loading. */
+function SkeletonForPath({ path }) {
   if (path === '/contact') return <ContactSkeleton />
 
   // /catalog/:category/* — product grid skeleton
-  const catalogMatch = path.match(/^\/catalog\/([^/]+)/)
-  if (catalogMatch) return <CategoryPageSkeleton />
+  if (/^\/catalog\/([^/]+)/.test(path)) return <CategoryPageSkeleton />
 
   // /catalog (index)
   if (path === '/catalog') return <CatalogSkeleton />
 
   return <SpinnerFallback />
+}
+
+/**
+ * Route-aware entry point used as the Suspense fallback in App.jsx.
+ * The visual skeleton is hidden from assistive tech; a status region announces "Loading…".
+ */
+export default function PageSkeleton() {
+  const { t } = useLanguage()
+  const path = typeof window !== 'undefined' ? window.location.pathname : '/'
+
+  return (
+    <div role="status" aria-busy="true">
+      <span className="sr-only">{t('loading')}</span>
+      <div aria-hidden="true">
+        <SkeletonForPath path={path} />
+      </div>
+    </div>
+  )
 }

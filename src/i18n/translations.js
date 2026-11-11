@@ -23,7 +23,7 @@ export const translations = {
     tierPremium: '₹₹₹ Premium',
     priceSegment: 'Price Tier',
     recentlyViewed: 'Recently Viewed',
-    recentlyViewedSubtitle: 'Products you checked during this visit',
+    recentlyViewedSubtitle: 'Products you looked at recently',
     clearRecentlyViewed: 'Clear',
     chatWhatsApp: 'Chat on WhatsApp',
     callUs: 'Call Us',
@@ -37,6 +37,9 @@ export const translations = {
     close: 'Close',
     backToCatalog: 'Back to Catalog',
     hours: 'Mon–Sat: 9:00 AM – 8:00 PM · Sun: 10:00 AM – 2:00 PM',
+    shopCity: 'Malkapur, Maharashtra',
+    skipToContent: 'Skip to main content',
+    loading: 'Loading…',
 
     // Hero
     heroLocation: 'Buldana Road, Malkapur',
@@ -88,7 +91,6 @@ export const translations = {
 
     // Enquiry Drawer
     enquiryDrawerTitle: 'Enquiry List',
-    readyForQuotation: 'items ready for quotation',
     enquiryEmpty: 'Your enquiry list is empty',
     enquiryEmptySubtitle:
       'Browse the catalog and add products to send a single consolidated WhatsApp enquiry!',
@@ -118,7 +120,7 @@ export const translations = {
     submitEnquiry: 'Send Enquiry',
     submitting: 'Sending…',
     sendViaWhatsApp: 'Send via WhatsApp',
-    fillAllFields: 'Please fill in all fields.',
+    fieldRequired: 'This field is required.',
     invalidPhone: 'Please enter a valid 10-digit mobile number.',
     submissionSuccess: 'Thanks — your enquiry was sent successfully!',
     // Contact Form status messages
@@ -142,6 +144,132 @@ export const translations = {
     offlineNotice: 'You are offline. Showing cached catalog & products.',
     onlineNotice: 'Back online! Reconnected to network.',
     dismiss: 'Dismiss',
+
+    // Counts & listing labels ({count} keys use _one / _other plural forms)
+    featuredRange: 'Featured range',
+    catalogSectionSubtitle:
+      'Tap any category to view brands and models. Categories marked Coming Soon will be updated as product data arrives.',
+    categoriesShown: '{shown} of {total} shown',
+    brandsShown: '{shown} of {total} brands shown',
+    modelCount_one: '{count} model',
+    modelCount_other: '{count} models',
+    modelsAvailable_one: '{count} model available',
+    modelsAvailable_other: '{count} models available',
+    itemsReady_one: '{count} item ready for quotation',
+    itemsReady_other: '{count} items ready for quotation',
+    browseModels: 'Browse models',
+    view: 'View',
+
+    // Navigation & landmarks
+    goHome: 'Go Home',
+    breadcrumb: 'Breadcrumb',
+    mainNavigation: 'Main navigation',
+    footerNavigation: 'Footer navigation',
+    quickActions: 'Quick actions',
+    language: 'Language',
+    switchLanguage: 'Switch language to {language}',
+    openMenu: 'Open menu',
+    closeMenu: 'Close menu',
+    searchShort: 'Search…',
+    searchButtonLabel: 'Search catalog ({shortcut})',
+    enquiryListCount_one: 'Enquiry list with {count} item',
+    enquiryListCount_other: 'Enquiry list with {count} items',
+
+    // Empty, not-found & error states
+    noResultsTitle: 'Nothing matches your filters',
+    clearFilters: 'Clear filters',
+    askUsOnWhatsApp: 'Ask us on WhatsApp',
+    categoryNotFoundText: 'This category may have been renamed or removed. Browse the full catalog instead.',
+    notFoundTitle: 'Page Not Found',
+    notFoundText: "The page you're looking for doesn't exist or has been moved.",
+    errorTitle: 'Oops! Something broke.',
+    errorText:
+      'An unexpected error occurred while loading this page. Please try reloading — if the issue persists, contact us directly on WhatsApp.',
+    reloadPage: 'Reload Page',
+    backToHome: 'Back to Home',
+    errorDetails: 'Error details',
+
+    // Map
+    visitOurShop: 'Visit Our Shop',
+    getDirections: 'Get Directions',
+    mapFrameTitle: '{name} location on Google Maps',
+
+    // Filters
+    searchAndFilter: 'Search & Filter',
+    activeFilters: 'Active:',
+    searchChip: 'Search: {query}',
+    removeFilter: 'Remove filter: {label}',
+
+    // Product card & detail modal
+    product: 'Product',
+    photoComingSoon: 'Photo coming soon',
+    shareProduct: 'Share {name}',
+    shareText: 'Check out {name} at Jai Baba Electronic, Malkapur',
+    copyFailed: 'Could not copy link',
+    askStockOnWhatsApp: 'Ask about stock on WhatsApp',
+    addToEnquiryList: 'Add to multi-item enquiry list',
+    openImageViewer: 'Open fullscreen image viewer',
+    clickToZoom: 'Click to zoom',
+    zoom: 'Zoom',
+    productInColor: '{name} in {color}',
+    modalContactNote: 'Contact {phone} for wholesale pricing and stock availability.',
+
+    // Image viewer
+    imageViewerLabel: 'Image viewer — {name}',
+    imageAlt: '{name}, image {index} of {total}',
+    viewImage: 'View image {index}',
+    viewImageOf: 'View image {index} of {total}',
+    imageThumbnails: 'Image thumbnails',
+    previousImage: 'Previous image',
+    nextImage: 'Next image',
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom out',
+    clickToZoomIn: 'Click to zoom in',
+    clickToZoomOut: 'Click to zoom out',
+    closeImageViewer: 'Close image viewer',
+    keyHintNavigate: 'navigate',
+
+    // Enquiry list
+    removeItem: 'Remove {name}',
+    decreaseQuantity: 'Decrease quantity of {name}',
+    increaseQuantity: 'Increase quantity of {name}',
+    buyerNamePlaceholder: 'e.g. Ramesh Patil',
+    buyerNotesPlaceholder: 'e.g. Malkapur, need delivery this weekend',
+
+    // Contact form
+    contactNamePlaceholder: 'e.g. Rahul Sharma',
+    contactPhonePlaceholder: 'e.g. 9876543210',
+    orCall: 'Or call:',
+
+    // Search palette
+    searchDialogLabel: 'Search the catalog',
+    clearSearch: 'Clear search',
+    searchResults: 'Search results',
+    categoryBadge: 'Category',
+    kbdNavigate: 'to navigate',
+    kbdSelect: 'to select',
+    kbdClose: 'to close',
+    searchFooter: '{name} catalog',
+
+    // PWA regions
+    offlineRegionLabel: 'Offline notification',
+    installRegionLabel: 'Install app',
+
+    // SEO (static pages are generated from the English strings)
+    seoHomeDescription:
+      'Jai Baba Electronic, Buldana Road, Malkapur: wholesale and retail ceiling fans, coolers, geysers, kitchen appliances, lighting and batteries. Browse the catalog and enquire on WhatsApp for prices.',
+    seoCatalogDescription:
+      'Browse the full Jai Baba Electronic catalog in Malkapur — ceiling fans, coolers, geysers, LED lighting, kitchen appliances and batteries. Wholesale and retail prices on enquiry.',
+    seoContactDescription:
+      'Visit Jai Baba Electronic on Buldana Road, Malkapur, or enquire by WhatsApp, phone or contact form for wholesale and retail electronics prices.',
+    seoNotFoundDescription:
+      "The page you're looking for doesn't exist. Browse the Jai Baba Electronic catalog in Malkapur instead.",
+    seoCategoryDescription:
+      'Browse {category} at Jai Baba Electronic, Malkapur. Wholesale and retail prices on enquiry via WhatsApp or phone.',
+    seoComingSoonDescription:
+      '{category} are coming soon to Jai Baba Electronic, Malkapur. Enquire on WhatsApp for availability.',
+    seoModelDescription:
+      '{product} ({category}). {specs}Genuine wholesale and retail pricing on enquiry at Jai Baba Electronic, Malkapur.',
   },
 
   mr: {
@@ -168,7 +296,7 @@ export const translations = {
     tierPremium: '₹₹₹ प्रीमियम',
     priceSegment: 'किंमत स्तर',
     recentlyViewed: 'नुकतेच पाहिलेले',
-    recentlyViewedSubtitle: 'या सत्रात तुम्ही पाहिलेली उत्पादने',
+    recentlyViewedSubtitle: 'तुम्ही अलीकडे पाहिलेली उत्पादने',
     clearRecentlyViewed: 'हटवा',
     chatWhatsApp: 'व्हॉट्सॲपवर चॅट करा',
     callUs: 'कॉल करा',
@@ -182,6 +310,9 @@ export const translations = {
     close: 'बंद करा',
     backToCatalog: 'कॅटलॉगवर परत जा',
     hours: 'सोम–शनि: सकाळी ९:०० – रात्री ८:०० · रवि: सकाळी १०:०० – दुपारी २:००',
+    shopCity: 'मलकापूर, महाराष्ट्र',
+    skipToContent: 'मुख्य मजकुरावर जा',
+    loading: 'लोड होत आहे…',
 
     // Hero
     heroLocation: 'बुलढाणा रोड, मलकापूर',
@@ -234,7 +365,6 @@ export const translations = {
 
     // Enquiry Drawer
     enquiryDrawerTitle: 'चौकशी यादी',
-    readyForQuotation: 'उत्पादने कोटेशनसाठी तयार',
     enquiryEmpty: 'तुमची चौकशी यादी रिकामी आहे',
     enquiryEmptySubtitle:
       'कॅटलॉग पहा आणि एकाच व्हॉट्सॲप मेसेजमध्ये सर्व उत्पादनांचे दर मिळवण्यासाठी जोडा!',
@@ -263,7 +393,7 @@ export const translations = {
     submitEnquiry: 'चौकशी पाठवा',
     submitting: 'पाठवत आहे…',
     sendViaWhatsApp: 'व्हॉट्सॲपद्वारे पाठवा',
-    fillAllFields: 'कृपया सर्व माहिती भरा.',
+    fieldRequired: 'ही माहिती भरणे आवश्यक आहे.',
     invalidPhone: 'कृपया १० अंकी वैध मोबाईल नंबर टाका.',
     submissionSuccess: 'धन्यवाद — तुमची चौकशी यशस्वीरीत्या पाठवली गेली!',
     // Contact Form status messages
@@ -287,6 +417,128 @@ export const translations = {
     offlineNotice: 'तुम्ही ऑफलाइन आहात. सेव्ह केलेला कॅटलॉग दाखवला जात आहे.',
     onlineNotice: 'इंटरनेट पुन्हा सुरू झाले!',
     dismiss: 'बंद करा',
+
+    // Counts & listing labels
+    featuredRange: 'निवडक उत्पादन',
+    catalogSectionSubtitle:
+      'ब्रँड आणि मॉडेल पाहण्यासाठी कोणत्याही श्रेणीवर टॅप करा. "लवकरच येत आहे" असलेल्या श्रेणी माहिती मिळताच अपडेट केल्या जातील.',
+    categoriesShown: '{total} पैकी {shown} दाखवल्या',
+    brandsShown: '{total} पैकी {shown} ब्रँड दाखवले',
+    modelCount: '{count} मॉडेल',
+    modelsAvailable: '{count} मॉडेल उपलब्ध',
+    itemsReady: '{count} उत्पादने कोटेशनसाठी तयार',
+    browseModels: 'मॉडेल पहा',
+    view: 'पहा',
+
+    // Navigation & landmarks
+    goHome: 'मुख्यपृष्ठावर जा',
+    breadcrumb: 'मार्गदर्शक दुवे',
+    mainNavigation: 'मुख्य नेव्हिगेशन',
+    footerNavigation: 'फूटर नेव्हिगेशन',
+    quickActions: 'जलद पर्याय',
+    language: 'भाषा',
+    switchLanguage: 'भाषा बदला: {language}',
+    openMenu: 'मेनू उघडा',
+    closeMenu: 'मेनू बंद करा',
+    searchShort: 'शोधा…',
+    searchButtonLabel: 'कॅटलॉगमध्ये शोधा ({shortcut})',
+    enquiryListCount: 'चौकशी यादी — {count} उत्पादने',
+
+    // Empty, not-found & error states
+    noResultsTitle: 'तुमच्या फिल्टरशी जुळणारे काहीही नाही',
+    clearFilters: 'फिल्टर काढा',
+    askUsOnWhatsApp: 'व्हॉट्सॲपवर विचारा',
+    categoryNotFoundText: 'ही श्रेणी बदलली किंवा काढली गेली असेल. त्याऐवजी संपूर्ण कॅटलॉग पहा.',
+    notFoundTitle: 'पान सापडले नाही',
+    notFoundText: 'तुम्ही शोधत असलेले पान अस्तित्वात नाही किंवा हलवले गेले आहे.',
+    errorTitle: 'अरेरे! काहीतरी चुकले.',
+    errorText:
+      'हे पान लोड करताना अनपेक्षित त्रुटी आली. कृपया पान पुन्हा लोड करा — समस्या कायम राहिल्यास थेट व्हॉट्सॲपवर संपर्क करा.',
+    reloadPage: 'पान पुन्हा लोड करा',
+    backToHome: 'मुख्यपृष्ठावर परत',
+    errorDetails: 'त्रुटीचा तपशील',
+
+    // Map
+    visitOurShop: 'आमच्या दुकानाला भेट द्या',
+    getDirections: 'दिशा पहा',
+    mapFrameTitle: 'Google Maps वर {name} चे ठिकाण',
+
+    // Filters
+    searchAndFilter: 'शोधा आणि फिल्टर करा',
+    activeFilters: 'सक्रिय:',
+    searchChip: 'शोध: {query}',
+    removeFilter: 'फिल्टर काढा: {label}',
+
+    // Product card & detail modal
+    product: 'उत्पादन',
+    photoComingSoon: 'फोटो लवकरच',
+    shareProduct: '{name} शेअर करा',
+    shareText: 'जय बाबा इलेक्ट्रॉनिक, मलकापूर येथे {name} पहा',
+    copyFailed: 'लिंक कॉपी करता आली नाही',
+    askStockOnWhatsApp: 'स्टॉकबद्दल व्हॉट्सॲपवर विचारा',
+    addToEnquiryList: 'चौकशी यादीत जोडा',
+    openImageViewer: 'फोटो पूर्ण स्क्रीनवर पहा',
+    clickToZoom: 'झूम करण्यासाठी क्लिक करा',
+    zoom: 'झूम',
+    productInColor: '{name} — {color} रंग',
+    modalContactNote: 'होलसेल दर आणि स्टॉकसाठी {phone} वर संपर्क करा.',
+
+    // Image viewer
+    imageViewerLabel: 'फोटो दर्शक — {name}',
+    imageAlt: '{name}, फोटो {index} / {total}',
+    viewImage: 'फोटो {index} पहा',
+    viewImageOf: 'फोटो {index} / {total} पहा',
+    imageThumbnails: 'फोटो लघुप्रतिमा',
+    previousImage: 'मागील फोटो',
+    nextImage: 'पुढील फोटो',
+    zoomIn: 'झूम इन',
+    zoomOut: 'झूम आउट',
+    clickToZoomIn: 'झूम इनसाठी क्लिक करा',
+    clickToZoomOut: 'झूम आउटसाठी क्लिक करा',
+    closeImageViewer: 'फोटो दर्शक बंद करा',
+    keyHintNavigate: 'पुढे/मागे',
+
+    // Enquiry list
+    removeItem: '{name} काढा',
+    decreaseQuantity: '{name} ची संख्या कमी करा',
+    increaseQuantity: '{name} ची संख्या वाढवा',
+    buyerNamePlaceholder: 'उदा. रमेश पाटील',
+    buyerNotesPlaceholder: 'उदा. मलकापूर, या आठवड्यात डिलिव्हरी हवी',
+
+    // Contact form
+    contactNamePlaceholder: 'उदा. राहुल शर्मा',
+    contactPhonePlaceholder: 'उदा. 9876543210',
+    orCall: 'किंवा कॉल करा:',
+
+    // Search palette
+    searchDialogLabel: 'कॅटलॉगमध्ये शोधा',
+    clearSearch: 'शोध साफ करा',
+    searchResults: 'शोध परिणाम',
+    categoryBadge: 'श्रेणी',
+    kbdNavigate: 'निवड बदला',
+    kbdSelect: 'निवडा',
+    kbdClose: 'बंद करा',
+    searchFooter: '{name} कॅटलॉग',
+
+    // PWA regions
+    offlineRegionLabel: 'ऑफलाइन सूचना',
+    installRegionLabel: 'अ‍ॅप इन्स्टॉल करा',
+
+    // SEO
+    seoHomeDescription:
+      'जय बाबा इलेक्ट्रॉनिक, बुलढाणा रोड, मलकापूर: सिलिंग फॅन, कूलर, गिझर, किचन उपकरणे, लाइटिंग आणि बॅटरी — होलसेल व किरकोळ. कॅटलॉग पहा आणि दरासाठी व्हॉट्सॲपवर चौकशी करा.',
+    seoCatalogDescription:
+      'मलकापूरमधील जय बाबा इलेक्ट्रॉनिकचा संपूर्ण कॅटलॉग — सिलिंग फॅन, कूलर, गिझर, LED लाइटिंग, किचन उपकरणे आणि बॅटरी. होलसेल व किरकोळ दर चौकशीवर.',
+    seoContactDescription:
+      'बुलढाणा रोड, मलकापूर येथील जय बाबा इलेक्ट्रॉनिकला भेट द्या किंवा होलसेल व किरकोळ दरासाठी व्हॉट्सॲप, फोन किंवा फॉर्मद्वारे चौकशी करा.',
+    seoNotFoundDescription:
+      'तुम्ही शोधत असलेले पान अस्तित्वात नाही. त्याऐवजी मलकापूरमधील जय बाबा इलेक्ट्रॉनिकचा कॅटलॉग पहा.',
+    seoCategoryDescription:
+      'जय बाबा इलेक्ट्रॉनिक, मलकापूर येथे {category} पहा. होलसेल व किरकोळ दर व्हॉट्सॲप किंवा फोनवर चौकशी करून मिळवा.',
+    seoComingSoonDescription:
+      '{category} लवकरच जय बाबा इलेक्ट्रॉनिक, मलकापूर येथे उपलब्ध होतील. उपलब्धतेसाठी व्हॉट्सॲपवर चौकशी करा.',
+    seoModelDescription:
+      '{product} ({category}). {specs}जय बाबा इलेक्ट्रॉनिक, मलकापूर येथे खात्रीशीर होलसेल व किरकोळ दर चौकशीवर.',
   },
 
   hi: {
@@ -313,7 +565,7 @@ export const translations = {
     tierPremium: '₹₹₹ प्रीमियम',
     priceSegment: 'मूल्य वर्ग',
     recentlyViewed: 'हाल ही में देखे गए',
-    recentlyViewedSubtitle: 'उत्पाद जो आपने इस सत्र में देखे',
+    recentlyViewedSubtitle: 'आपके हाल ही में देखे गए उत्पाद',
     clearRecentlyViewed: 'हटाएं',
     chatWhatsApp: 'व्हाट्सएप पर चैट करें',
     callUs: 'कॉल करें',
@@ -327,6 +579,9 @@ export const translations = {
     close: 'बंद करें',
     backToCatalog: 'कैटलॉग पर वापस जाएं',
     hours: 'सोम–शनि: सुबह 9:00 – रात 8:00 · रवि: सुबह 10:00 – दोपहर 2:00',
+    shopCity: 'मलकापुर, महाराष्ट्र',
+    skipToContent: 'मुख्य सामग्री पर जाएं',
+    loading: 'लोड हो रहा है…',
 
     // Hero
     heroLocation: 'बुलढाणा रोड, मलकापुर',
@@ -379,7 +634,6 @@ export const translations = {
 
     // Enquiry Drawer
     enquiryDrawerTitle: 'पूछताछ सूची',
-    readyForQuotation: 'उत्पाद कोटेशन के लिए तैयार',
     enquiryEmpty: 'आपकी पूछताछ सूची खाली है',
     enquiryEmptySubtitle:
       'कैटलॉग देखें और एक ही व्हाट्सएप संदेश में सभी उत्पादों के भाव प्राप्त करने के लिए जोड़ें!',
@@ -408,7 +662,7 @@ export const translations = {
     submitEnquiry: 'पूछताछ भेजें',
     submitting: 'भेजा जा रहा है…',
     sendViaWhatsApp: 'व्हाट्सएप के जरिए भेजें',
-    fillAllFields: 'कृपया सभी फ़ील्ड भरें।',
+    fieldRequired: 'यह जानकारी भरना ज़रूरी है।',
     invalidPhone: 'कृपया 10 अंकों का वैध मोबाइल नंबर दर्ज करें।',
     submissionSuccess: 'धन्यवाद — आपकी पूछताछ सफलतापूर्वक भेजी गई!',
     // Contact Form status messages
@@ -432,5 +686,180 @@ export const translations = {
     offlineNotice: 'आप ऑफ़लाइन हैं। सहेजा गया कैटलॉग दिखाया जा रहा है।',
     onlineNotice: 'इंटरनेट फिर से चालू हो गया!',
     dismiss: 'खारिज करें',
+
+    // Counts & listing labels
+    featuredRange: 'खास उत्पाद',
+    catalogSectionSubtitle:
+      'ब्रांड और मॉडल देखने के लिए किसी भी श्रेणी पर टैप करें। "जल्द आ रहा है" वाली श्रेणियां जानकारी मिलते ही अपडेट की जाएंगी।',
+    categoriesShown: '{total} में से {shown} दिखाई गईं',
+    brandsShown: '{total} में से {shown} ब्रांड दिखाए गए',
+    modelCount: '{count} मॉडल',
+    modelsAvailable: '{count} मॉडल उपलब्ध',
+    itemsReady: '{count} उत्पाद कोटेशन के लिए तैयार',
+    browseModels: 'मॉडल देखें',
+    view: 'देखें',
+
+    // Navigation & landmarks
+    goHome: 'होम पेज पर जाएं',
+    breadcrumb: 'नेविगेशन पथ',
+    mainNavigation: 'मुख्य नेविगेशन',
+    footerNavigation: 'फ़ुटर नेविगेशन',
+    quickActions: 'त्वरित विकल्प',
+    language: 'भाषा',
+    switchLanguage: 'भाषा बदलें: {language}',
+    openMenu: 'मेनू खोलें',
+    closeMenu: 'मेनू बंद करें',
+    searchShort: 'खोजें…',
+    searchButtonLabel: 'कैटलॉग में खोजें ({shortcut})',
+    enquiryListCount: 'पूछताछ सूची — {count} उत्पाद',
+
+    // Empty, not-found & error states
+    noResultsTitle: 'आपके फ़िल्टर से कुछ भी मेल नहीं खाता',
+    clearFilters: 'फ़िल्टर हटाएं',
+    askUsOnWhatsApp: 'व्हाट्सएप पर पूछें',
+    categoryNotFoundText: 'यह श्रेणी बदली या हटाई जा चुकी है। इसके बजाय पूरा कैटलॉग देखें।',
+    notFoundTitle: 'पेज नहीं मिला',
+    notFoundText: 'आप जो पेज ढूंढ रहे हैं वह मौजूद नहीं है या हटा दिया गया है।',
+    errorTitle: 'ओह! कुछ गड़बड़ हो गई।',
+    errorText:
+      'यह पेज लोड करते समय एक अनपेक्षित त्रुटि हुई। कृपया पेज फिर से लोड करें — समस्या बनी रहे तो सीधे व्हाट्सएप पर संपर्क करें।',
+    reloadPage: 'पेज फिर से लोड करें',
+    backToHome: 'होम पर वापस',
+    errorDetails: 'त्रुटि का विवरण',
+
+    // Map
+    visitOurShop: 'हमारी दुकान पर आएं',
+    getDirections: 'रास्ता देखें',
+    mapFrameTitle: 'Google Maps पर {name} का स्थान',
+
+    // Filters
+    searchAndFilter: 'खोजें और फ़िल्टर करें',
+    activeFilters: 'सक्रिय:',
+    searchChip: 'खोज: {query}',
+    removeFilter: 'फ़िल्टर हटाएं: {label}',
+
+    // Product card & detail modal
+    product: 'उत्पाद',
+    photoComingSoon: 'फ़ोटो जल्द आएगी',
+    shareProduct: '{name} शेयर करें',
+    shareText: 'जय बाबा इलेक्ट्रॉनिक, मलकापुर पर {name} देखें',
+    copyFailed: 'लिंक कॉपी नहीं हो सकी',
+    askStockOnWhatsApp: 'स्टॉक के बारे में व्हाट्सएप पर पूछें',
+    addToEnquiryList: 'पूछताछ सूची में जोड़ें',
+    openImageViewer: 'फ़ोटो फ़ुल स्क्रीन में देखें',
+    clickToZoom: 'ज़ूम करने के लिए क्लिक करें',
+    zoom: 'ज़ूम',
+    productInColor: '{name} — {color} रंग',
+    modalContactNote: 'थोक कीमत और स्टॉक की जानकारी के लिए {phone} पर संपर्क करें।',
+
+    // Image viewer
+    imageViewerLabel: 'फ़ोटो व्यूअर — {name}',
+    imageAlt: '{name}, फ़ोटो {index} / {total}',
+    viewImage: 'फ़ोटो {index} देखें',
+    viewImageOf: 'फ़ोटो {index} / {total} देखें',
+    imageThumbnails: 'फ़ोटो थंबनेल',
+    previousImage: 'पिछली फ़ोटो',
+    nextImage: 'अगली फ़ोटो',
+    zoomIn: 'ज़ूम इन',
+    zoomOut: 'ज़ूम आउट',
+    clickToZoomIn: 'ज़ूम इन के लिए क्लिक करें',
+    clickToZoomOut: 'ज़ूम आउट के लिए क्लिक करें',
+    closeImageViewer: 'फ़ोटो व्यूअर बंद करें',
+    keyHintNavigate: 'आगे/पीछे',
+
+    // Enquiry list
+    removeItem: '{name} हटाएं',
+    decreaseQuantity: '{name} की मात्रा घटाएं',
+    increaseQuantity: '{name} की मात्रा बढ़ाएं',
+    buyerNamePlaceholder: 'जैसे रमेश पाटिल',
+    buyerNotesPlaceholder: 'जैसे मलकापुर, इस हफ़्ते डिलीवरी चाहिए',
+
+    // Contact form
+    contactNamePlaceholder: 'जैसे राहुल शर्मा',
+    contactPhonePlaceholder: 'जैसे 9876543210',
+    orCall: 'या कॉल करें:',
+
+    // Search palette
+    searchDialogLabel: 'कैटलॉग में खोजें',
+    clearSearch: 'खोज साफ़ करें',
+    searchResults: 'खोज परिणाम',
+    categoryBadge: 'श्रेणी',
+    kbdNavigate: 'चुनाव बदलें',
+    kbdSelect: 'चुनें',
+    kbdClose: 'बंद करें',
+    searchFooter: '{name} कैटलॉग',
+
+    // PWA regions
+    offlineRegionLabel: 'ऑफ़लाइन सूचना',
+    installRegionLabel: 'ऐप इंस्टॉल करें',
+
+    // SEO
+    seoHomeDescription:
+      'जय बाबा इलेक्ट्रॉनिक, बुलढाणा रोड, मलकापुर: सीलिंग फैन, कूलर, गीज़र, किचन उपकरण, लाइटिंग और बैटरी — थोक एवं खुदरा। कैटलॉग देखें और कीमत के लिए व्हाट्सएप पर पूछताछ करें।',
+    seoCatalogDescription:
+      'मलकापुर में जय बाबा इलेक्ट्रॉनिक का पूरा कैटलॉग — सीलिंग फैन, कूलर, गीज़र, LED लाइटिंग, किचन उपकरण और बैटरी। थोक एवं खुदरा कीमत पूछताछ पर।',
+    seoContactDescription:
+      'बुलढाणा रोड, मलकापुर स्थित जय बाबा इलेक्ट्रॉनिक पर आएं या थोक एवं खुदरा कीमतों के लिए व्हाट्सएप, फ़ोन या फ़ॉर्म से पूछताछ करें।',
+    seoNotFoundDescription:
+      'आप जो पेज ढूंढ रहे हैं वह मौजूद नहीं है। इसके बजाय मलकापुर में जय बाबा इलेक्ट्रॉनिक का कैटलॉग देखें।',
+    seoCategoryDescription:
+      'जय बाबा इलेक्ट्रॉनिक, मलकापुर पर {category} देखें। थोक एवं खुदरा कीमत व्हाट्सएप या फ़ोन पर पूछताछ से पाएं।',
+    seoComingSoonDescription:
+      '{category} जल्द ही जय बाबा इलेक्ट्रॉनिक, मलकापुर पर उपलब्ध होंगे। उपलब्धता के लिए व्हाट्सएप पर पूछताछ करें।',
+    seoModelDescription:
+      '{product} ({category})। {specs}जय बाबा इलेक्ट्रॉनिक, मलकापुर पर भरोसेमंद थोक एवं खुदरा कीमत पूछताछ पर।',
+  },
+}
+
+/**
+ * Category display names keyed by language, then by category slug.
+ * `categoryLabel` in src/data/products.js stays the English source of truth
+ * (used for stored enquiry items and static SEO); these maps localize the UI.
+ */
+export const categoryLabels = {
+  en: {
+    'ceiling-fans': 'Ceiling Fans',
+    'hot-plates': 'Electric Hot Plates',
+    mixers: 'Mixers',
+    torches: 'Torches',
+    geysers: 'Geysers',
+    'immersion-rods': 'Immersion Rods',
+    'table-fans': 'Table Fans',
+    'electric-irons': 'Electric Irons',
+    'led-bulbs': 'LED Bulbs',
+    'led-battens': 'LED Battens',
+    'bluetooth-speakers': 'Bluetooth Speakers',
+    '12v-batteries': '12V Rechargeable Batteries',
+    coolers: 'Coolers',
+  },
+  mr: {
+    'ceiling-fans': 'सिलिंग फॅन',
+    'hot-plates': 'इलेक्ट्रिक हॉट प्लेट',
+    mixers: 'मिक्सर',
+    torches: 'टॉर्च',
+    geysers: 'गिझर',
+    'immersion-rods': 'इमर्शन रॉड',
+    'table-fans': 'टेबल फॅन',
+    'electric-irons': 'इलेक्ट्रिक इस्त्री',
+    'led-bulbs': 'LED बल्ब',
+    'led-battens': 'LED बॅटन',
+    'bluetooth-speakers': 'ब्लूटूथ स्पीकर',
+    '12v-batteries': '12V रिचार्जेबल बॅटरी',
+    coolers: 'कूलर',
+  },
+  hi: {
+    'ceiling-fans': 'सीलिंग फैन',
+    'hot-plates': 'इलेक्ट्रिक हॉट प्लेट',
+    mixers: 'मिक्सर',
+    torches: 'टॉर्च',
+    geysers: 'गीज़र',
+    'immersion-rods': 'इमर्शन रॉड',
+    'table-fans': 'टेबल फैन',
+    'electric-irons': 'इलेक्ट्रिक प्रेस',
+    'led-bulbs': 'LED बल्ब',
+    'led-battens': 'LED बैटन',
+    'bluetooth-speakers': 'ब्लूटूथ स्पीकर',
+    '12v-batteries': '12V रिचार्जेबल बैटरी',
+    coolers: 'कूलर',
   },
 }

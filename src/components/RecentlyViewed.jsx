@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom'
 import { useLanguage } from '../context/useLanguage'
 import { clearRecentlyViewed, getRecentlyViewed } from '../utils/recentlyViewed'
 import { slugify } from '../utils/slugify'
-import { ClockIcon } from './Icons'
+import { ArrowRightIcon, ClockIcon } from './Icons'
 import ProductImage from './ProductImage'
 
 export default function RecentlyViewed({ currentModelName, className = '' }) {
-  const { t } = useLanguage()
+  const { t, tCategory } = useLanguage()
   const [items, setItems] = useState([])
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function RecentlyViewed({ currentModelName, className = '' }) {
         <button
           type="button"
           onClick={clearRecentlyViewed}
-          className="rounded-full border border-stone-200 bg-white px-3 py-1 text-xs font-semibold text-stone-500 hover:border-amber-300 hover:text-amber-900 transition duration-150 cursor-pointer"
+          className="min-h-9 rounded-full border border-stone-200 bg-white px-3 py-1 text-xs font-semibold text-stone-600 hover:border-amber-300 hover:text-amber-900 transition duration-150 cursor-pointer"
         >
           {t('clearRecentlyViewed')}
         </button>
@@ -76,15 +76,15 @@ export default function RecentlyViewed({ currentModelName, className = '' }) {
                 imgClassName="group-hover:scale-105 transition-transform duration-300"
                 fallbackLabel=""
               />
-              <span className="absolute top-2 right-2 rounded-full bg-stone-900/80 px-2 py-0.5 text-[9px] font-bold text-white">
-                {item.categoryLabel}
+              <span className="absolute top-2 right-2 rounded-full bg-stone-900/80 px-2 py-0.5 text-[10px] font-bold text-white">
+                {tCategory(item.categorySlug, item.categoryLabel)}
               </span>
             </div>
 
             <div className="p-3 flex-1 flex flex-col justify-between">
               <div>
                 {item.brand && (
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-amber-700">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-amber-800">
                     {item.brand}
                   </p>
                 )}
@@ -94,13 +94,14 @@ export default function RecentlyViewed({ currentModelName, className = '' }) {
               </div>
 
               <div className="mt-2 flex items-center justify-between text-xs pt-1.5 border-t border-stone-100">
-                <span className="font-medium text-[11px] text-amber-700 group-hover:underline">
-                  View →
+                <span className="inline-flex items-center gap-1 font-semibold text-[11px] text-amber-800 group-hover:underline">
+                  {t('view')}
+                  <ArrowRightIcon className="h-3 w-3" />
                 </span>
                 {item.inStock ? (
-                  <span className="text-[10px] font-semibold text-emerald-700">In Stock</span>
+                  <span className="text-[11px] font-semibold text-emerald-800">{t('inStock')}</span>
                 ) : (
-                  <span className="text-[10px] font-medium text-stone-400">Ask Stock</span>
+                  <span className="text-[11px] font-medium text-stone-600">{t('askAvailability')}</span>
                 )}
               </div>
             </div>

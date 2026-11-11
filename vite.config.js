@@ -3,6 +3,10 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { imagetools } from 'vite-imagetools'
+import { translations } from './src/i18n/translations.js'
+
+// A web app manifest has a single description, so it carries the tagline in all three site languages.
+const manifestDescription = ['en', 'mr', 'hi'].map((lang) => translations[lang].heroTagline).join(' · ')
 
 export default defineConfig({
   plugins: [
@@ -23,9 +27,11 @@ export default defineConfig({
       manifest: {
         name: 'Jai Baba Electronic',
         short_name: 'Jai Baba',
-        description: 'Wholesale & Retail Electronics Store in Malkapur',
+        description: manifestDescription,
+        lang: 'en',
+        dir: 'ltr',
         theme_color: '#d97706',
-        background_color: '#18181B',
+        background_color: '#fafaf9',
         display: 'standalone',
         orientation: 'portrait',
         scope: '/',

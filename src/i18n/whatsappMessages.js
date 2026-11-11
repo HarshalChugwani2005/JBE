@@ -44,6 +44,7 @@ export const whatsappLabels = {
     message: 'Requirement / Message',
     notProvided: 'Not provided',
     contactClosing: 'Looking forward to hearing from you soon. Thank you!',
+    errorReport: 'Hi, the Jai Baba Electronic website is showing an error. Please help!',
   },
   mr: {
     greeting: 'नमस्कार, मला तुमच्या उत्पादनांबद्दल चौकशी करायची आहे.',
@@ -79,6 +80,7 @@ export const whatsappLabels = {
     message: 'गरज / संदेश',
     notProvided: 'दिलेले नाही',
     contactClosing: 'तुमच्या उत्तराची वाट पाहत आहे. धन्यवाद!',
+    errorReport: 'नमस्कार, जय बाबा इलेक्ट्रॉनिकच्या वेबसाइटवर त्रुटी दिसत आहे. कृपया मदत करा!',
   },
   hi: {
     greeting: 'नमस्ते, मुझे आपके उत्पादों के बारे में जानकारी चाहिए।',
@@ -114,6 +116,7 @@ export const whatsappLabels = {
     message: 'आवश्यकता / संदेश',
     notProvided: 'नहीं दिया गया',
     contactClosing: 'आपके जवाब का इंतज़ार रहेगा। धन्यवाद!',
+    errorReport: 'नमस्ते, जय बाबा इलेक्ट्रॉनिक की वेबसाइट पर त्रुटि दिख रही है। कृपया मदद करें!',
   },
 }
 
@@ -141,6 +144,11 @@ function formatDate(lang, date) {
 /** Default greeting for generic "Chat on WhatsApp" buttons. */
 export function buildGreeting(lang) {
   return labelsFor(lang).greeting
+}
+
+/** Message for reporting a site error from the error screen. */
+export function buildErrorReport(lang) {
+  return labelsFor(lang).errorReport
 }
 
 /** Multi-item quotation request from the enquiry list (cart drawer). */
