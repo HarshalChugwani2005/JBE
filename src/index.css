@@ -79,6 +79,11 @@
     outline-offset: 3px;
   }
 
+  /* Headings receive focus programmatically on route change (ScrollToTop); no ring needed. */
+  h1[tabindex='-1']:focus {
+    outline: none;
+  }
+
   /* Scrollbar */
   * {
     scrollbar-width: thin;

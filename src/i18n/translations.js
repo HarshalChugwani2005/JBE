@@ -23,7 +23,7 @@ export const translations = {
     tierPremium: '₹₹₹ Premium',
     priceSegment: 'Price Tier',
     recentlyViewed: 'Recently Viewed',
-    recentlyViewedSubtitle: 'Products you checked during this visit',
+    recentlyViewedSubtitle: 'Products you looked at recently',
     clearRecentlyViewed: 'Clear',
     chatWhatsApp: 'Chat on WhatsApp',
     callUs: 'Call Us',
@@ -37,6 +37,9 @@ export const translations = {
     close: 'Close',
     backToCatalog: 'Back to Catalog',
     hours: 'Mon–Sat: 9:00 AM – 8:00 PM · Sun: 10:00 AM – 2:00 PM',
+    shopCity: 'Malkapur, Maharashtra',
+    skipToContent: 'Skip to main content',
+    loading: 'Loading…',
 
     // Hero
     heroLocation: 'Buldana Road, Malkapur',
@@ -117,7 +120,7 @@ export const translations = {
     submitEnquiry: 'Send Enquiry',
     submitting: 'Sending…',
     sendViaWhatsApp: 'Send via WhatsApp',
-    fillAllFields: 'Please fill in all fields.',
+    fieldRequired: 'This field is required.',
     invalidPhone: 'Please enter a valid 10-digit mobile number.',
     submissionSuccess: 'Thanks — your enquiry was sent successfully!',
     // Contact Form status messages
@@ -293,7 +296,7 @@ export const translations = {
     tierPremium: '₹₹₹ प्रीमियम',
     priceSegment: 'किंमत स्तर',
     recentlyViewed: 'नुकतेच पाहिलेले',
-    recentlyViewedSubtitle: 'या सत्रात तुम्ही पाहिलेली उत्पादने',
+    recentlyViewedSubtitle: 'तुम्ही अलीकडे पाहिलेली उत्पादने',
     clearRecentlyViewed: 'हटवा',
     chatWhatsApp: 'व्हॉट्सॲपवर चॅट करा',
     callUs: 'कॉल करा',
@@ -307,6 +310,9 @@ export const translations = {
     close: 'बंद करा',
     backToCatalog: 'कॅटलॉगवर परत जा',
     hours: 'सोम–शनि: सकाळी ९:०० – रात्री ८:०० · रवि: सकाळी १०:०० – दुपारी २:००',
+    shopCity: 'मलकापूर, महाराष्ट्र',
+    skipToContent: 'मुख्य मजकुरावर जा',
+    loading: 'लोड होत आहे…',
 
     // Hero
     heroLocation: 'बुलढाणा रोड, मलकापूर',
@@ -387,7 +393,7 @@ export const translations = {
     submitEnquiry: 'चौकशी पाठवा',
     submitting: 'पाठवत आहे…',
     sendViaWhatsApp: 'व्हॉट्सॲपद्वारे पाठवा',
-    fillAllFields: 'कृपया सर्व माहिती भरा.',
+    fieldRequired: 'ही माहिती भरणे आवश्यक आहे.',
     invalidPhone: 'कृपया १० अंकी वैध मोबाईल नंबर टाका.',
     submissionSuccess: 'धन्यवाद — तुमची चौकशी यशस्वीरीत्या पाठवली गेली!',
     // Contact Form status messages
@@ -559,7 +565,7 @@ export const translations = {
     tierPremium: '₹₹₹ प्रीमियम',
     priceSegment: 'मूल्य वर्ग',
     recentlyViewed: 'हाल ही में देखे गए',
-    recentlyViewedSubtitle: 'उत्पाद जो आपने इस सत्र में देखे',
+    recentlyViewedSubtitle: 'आपके हाल ही में देखे गए उत्पाद',
     clearRecentlyViewed: 'हटाएं',
     chatWhatsApp: 'व्हाट्सएप पर चैट करें',
     callUs: 'कॉल करें',
@@ -573,6 +579,9 @@ export const translations = {
     close: 'बंद करें',
     backToCatalog: 'कैटलॉग पर वापस जाएं',
     hours: 'सोम–शनि: सुबह 9:00 – रात 8:00 · रवि: सुबह 10:00 – दोपहर 2:00',
+    shopCity: 'मलकापुर, महाराष्ट्र',
+    skipToContent: 'मुख्य सामग्री पर जाएं',
+    loading: 'लोड हो रहा है…',
 
     // Hero
     heroLocation: 'बुलढाणा रोड, मलकापुर',
@@ -653,7 +662,7 @@ export const translations = {
     submitEnquiry: 'पूछताछ भेजें',
     submitting: 'भेजा जा रहा है…',
     sendViaWhatsApp: 'व्हाट्सएप के जरिए भेजें',
-    fillAllFields: 'कृपया सभी फ़ील्ड भरें।',
+    fieldRequired: 'यह जानकारी भरना ज़रूरी है।',
     invalidPhone: 'कृपया 10 अंकों का वैध मोबाइल नंबर दर्ज करें।',
     submissionSuccess: 'धन्यवाद — आपकी पूछताछ सफलतापूर्वक भेजी गई!',
     // Contact Form status messages

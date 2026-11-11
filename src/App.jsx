@@ -9,6 +9,7 @@ import ErrorBoundary from './components/ErrorBoundary'
 import PageSkeleton from './components/PageSkeleton'
 import SearchPalette from './components/SearchPalette'
 import ScrollToTop from './components/ScrollToTop'
+import SkipLink from './components/SkipLink'
 import OfflineBanner from './components/OfflineBanner'
 import { AppProviders } from './context/AppProviders'
 import { Analytics } from '@vercel/analytics/react'
@@ -25,9 +26,10 @@ export default function App() {
       <AppProviders>
         <BrowserRouter>
           <ScrollToTop />
+          <SkipLink />
           <div className="flex min-h-screen flex-col">
             <Navbar />
-            <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-5 pb-24 sm:py-8 md:pb-8">
+            <main id="main" tabIndex={-1} className="mx-auto w-full outline-none max-w-6xl flex-1 px-4 py-5 pb-24 sm:py-8 md:pb-8">
               <Suspense fallback={<PageSkeleton />}>
                 <div className="page-transition">
                   <Routes>

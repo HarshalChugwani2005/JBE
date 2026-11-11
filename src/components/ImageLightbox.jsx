@@ -50,10 +50,10 @@ export default function ImageLightbox({ images = [], startIndex = 0, alt = '', o
   // ── Focus: remember the opener once, restore it on unmount ──────────────────
   useEffect(() => {
     previouslyFocusedRef.current = document.activeElement
-    const frame = requestAnimationFrame(() => closeButtonRef.current?.focus())
+    const frame = requestAnimationFrame(() => closeButtonRef.current?.focus({ preventScroll: true }))
     return () => {
       cancelAnimationFrame(frame)
-      previouslyFocusedRef.current?.focus?.()
+      previouslyFocusedRef.current?.focus?.({ preventScroll: true })
     }
   }, [])
 

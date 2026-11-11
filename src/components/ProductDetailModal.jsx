@@ -110,7 +110,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
     }
 
     const frame = window.requestAnimationFrame(() => {
-      closeButtonRef.current?.focus()
+      closeButtonRef.current?.focus({ preventScroll: true })
     })
 
     const handleKeyDown = (event) => {
@@ -131,7 +131,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
       window.cancelAnimationFrame(frame)
       document.removeEventListener('keydown', handleKeyDown)
       document.body.classList.remove('overflow-hidden')
-      previouslyFocusedRef.current?.focus?.()
+      previouslyFocusedRef.current?.focus?.({ preventScroll: true })
     }
   }, [isOpen, model, onClose, categorySlug, categoryLabel, brandName, inStock])
 

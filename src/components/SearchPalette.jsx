@@ -116,7 +116,7 @@ export default function SearchPalette() {
       setQuery('')
       setSelectedIndex(0)
       const timer = setTimeout(() => {
-        inputRef.current?.focus()
+        inputRef.current?.focus({ preventScroll: true })
       }, 50)
       document.body.classList.add('overflow-hidden')
       const handleKeyDown = (event) => {
@@ -134,7 +134,7 @@ export default function SearchPalette() {
         clearTimeout(timer)
         document.removeEventListener('keydown', handleKeyDown)
         document.body.classList.remove('overflow-hidden')
-        previouslyFocusedRef.current?.focus?.()
+        previouslyFocusedRef.current?.focus?.({ preventScroll: true })
       }
     }
   }, [isOpen, closeSearch])

@@ -51,7 +51,7 @@ export default function CartDrawer() {
     previouslyFocusedRef.current = document.activeElement
     document.body.classList.add('overflow-hidden')
     const frame = requestAnimationFrame(() => {
-      getFocusableElements(drawerRef.current)?.[0]?.focus()
+      getFocusableElements(drawerRef.current)?.[0]?.focus({ preventScroll: true })
     })
 
     const handleKeyDown = (event) => {
@@ -69,7 +69,7 @@ export default function CartDrawer() {
       cancelAnimationFrame(frame)
       document.removeEventListener('keydown', handleKeyDown)
       document.body.classList.remove('overflow-hidden')
-      previouslyFocusedRef.current?.focus?.()
+      previouslyFocusedRef.current?.focus?.({ preventScroll: true })
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
