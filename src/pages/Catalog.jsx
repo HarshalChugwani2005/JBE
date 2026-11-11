@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { useLocation } from 'react-router-dom'
 import CategoryCard from '../components/CategoryCard'
 import CatalogFilters from '../components/CatalogFilters'
 import FilterEmptyState from '../components/FilterEmptyState'
@@ -19,8 +18,7 @@ const allBrands = Array.from(
 
 export default function Catalog() {
   const { t, tCategory, lang } = useLanguage()
-  const { query, brand, tier, sort, updateParams, clearFilters } = useCatalogParams()
-  const { search } = useLocation()
+  const { query, brand, tier, sort, search, updateParams, clearFilters } = useCatalogParams()
 
   const filteredCategories = useMemo(
     () =>

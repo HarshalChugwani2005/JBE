@@ -15,29 +15,19 @@ import {
   CloseIcon,
 } from './Icons'
 
-// JS-based mobile detection — immune to CSS rem scaling and system font size changes
-function useIsMobile(breakpoint = 1024) {
-  const [isMobile, setIsMobile] = useState(
-    typeof window !== 'undefined' ? window.innerWidth < breakpoint : true
-  )
-  useEffect(() => {
-    const handler = () => setIsMobile(window.innerWidth < breakpoint)
-    window.addEventListener('resize', handler, { passive: true })
-    return () => window.removeEventListener('resize', handler)
-  }, [breakpoint])
-  return isMobile
-}
-
-const searchShortcut =
-  typeof navigator !== 'undefined' && /Mac|iPhone|iPad|iPod/i.test(navigator.platform) ? '⌘K' : 'Ctrl+K'
-
+/**
+ * Site header. Desktop vs phone layout is decided by CSS breakpoints (lg = 1024px), not by
+ * reading the window size in JavaScript, so the pre-rendered HTML and the browser's first
+ * render are identical (required for hydration) and there is no layout jump on load.
+ */
 export default function Navbar() {
   const { totalCount, toggleCart } = useCart()
   const { openSearch } = useSearch()
-  const { t } = useLanguage()
+  const { t, href } = useLanguage()
   const location = useLocation()
   const [menuOpen, setMenuOpen] = useState(false)
-  const isMobile = useIsMobile(1024) // hamburger below 1024px
+  // Platform-specific shortcut label is filled in after mount (the server can't know it).
+  const [searchShortcut, setSearchShortcut] = useState('Ctrl+K')
 
   const navContainerRef = useRef(null)
   const headerRef = useRef(null)
@@ -45,9 +35,14 @@ export default function Navbar() {
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 })
   const [scrolled, setScrolled] = useState(false)
 
+  useEffect(() => {
+    if (/Mac|iPhone|iPad|iPod/i.test(navigator.platform)) setSearchShortcut('⌘K')
+  }, [])
+
   // Scroll-aware navbar shadow
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 8)
+    handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -69,31 +64,24 @@ export default function Navbar() {
   }, [menuOpen])
 
   const navRoutes = useMemo(() => [
-    { to: '/', label: t('navHome'), end: true, Icon: HomeIcon },
-    { to: '/catalog', label: t('navCatalog'), end: false, Icon: PackageIcon },
-    { to: '/contact', label: t('navContact'), end: false, Icon: MapPinIcon },
-  ], [t])
+    { to: href('/'), label: t('navHome'), end: true, Icon: HomeIcon },
+    { to: href('/catalog'), label: t('navCatalog'), end: false, Icon: PackageIcon },
+    { to: href('/contact'), label: t('navContact'), end: false, Icon: MapPinIcon },
+  ], [t, href])
 
-  // Update sliding indicator position
+  // Sliding pill behind the active desktop link (hidden while the desktop nav is not displayed).
   useEffect(() => {
-    if (isMobile) return
-
     const updateIndicator = () => {
       const activeRoute =
         navRoutes.find((r) =>
           r.end ? location.pathname === r.to : location.pathname.startsWith(r.to)
-        ) || (location.pathname.startsWith('/catalog') ? navRoutes[1] : null)
-      const activeKey = activeRoute ? activeRoute.to : null
-      const activeEl = activeKey ? linkRefs.current[activeKey] : null
+        ) || (location.pathname.startsWith(href('/catalog')) ? navRoutes[1] : null)
+      const activeEl = activeRoute ? linkRefs.current[activeRoute.to] : null
+      const elRect = activeEl?.getBoundingClientRect()
 
-      if (activeEl && navContainerRef.current) {
+      if (elRect && elRect.width > 0 && navContainerRef.current) {
         const containerRect = navContainerRef.current.getBoundingClientRect()
-        const elRect = activeEl.getBoundingClientRect()
-        setIndicatorStyle({
-          left: elRect.left - containerRect.left,
-          width: elRect.width,
-          opacity: 1,
-        })
+        setIndicatorStyle({ left: elRect.left - containerRect.left, width: elRect.width, opacity: 1 })
       } else {
         setIndicatorStyle((prev) => ({ ...prev, opacity: 0 }))
       }
@@ -107,7 +95,14 @@ export default function Navbar() {
       clearTimeout(timer)
       window.removeEventListener('resize', updateIndicator)
     }
-  }, [location.pathname, isMobile, navRoutes])
+  }, [location.pathname, navRoutes, href])
+
+  const cartBadge = (className) =>
+    totalCount > 0 && (
+      <span className={className} aria-hidden="true">
+        {totalCount}
+      </span>
+    )
 
   return (
     <header ref={headerRef} className={`sticky top-0 z-40 border-b border-stone-200 bg-white/95 backdrop-blur-sm transition-all duration-300 ${scrolled ? 'scrolled' : ''}`}>
@@ -115,7 +110,7 @@ export default function Navbar() {
 
         {/* Logo / Shop Identity */}
         <Link
-          to="/"
+          to={href('/')}
           onClick={() => setMenuOpen(false)}
           className="group flex shrink-0 items-center gap-2.5 font-bold text-stone-900 tracking-tight transition duration-150 hover:opacity-95"
         >
@@ -127,46 +122,44 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop Nav — only shown when not mobile */}
-        {!isMobile && (
-          <div className="relative" role="navigation" aria-label={t('mainNavigation')}>
-            <ul
-              ref={navContainerRef}
-              className="relative flex items-center gap-1 rounded-full border border-stone-200/80 bg-stone-100/70 p-1 backdrop-blur-xs"
-            >
-              {/* Animated sliding pill */}
-              <span
-                className="absolute top-1 bottom-1 rounded-full bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-amber-200/60 transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none"
-                style={{
-                  left: `${indicatorStyle.left}px`,
-                  width: `${indicatorStyle.width}px`,
-                  opacity: indicatorStyle.opacity,
-                }}
-              />
+        {/* Desktop nav (≥ 1024px) */}
+        <div className="relative hidden lg:block" role="navigation" aria-label={t('mainNavigation')}>
+          <ul
+            ref={navContainerRef}
+            className="relative flex items-center gap-1 rounded-full border border-stone-200/80 bg-stone-100/70 p-1 backdrop-blur-xs"
+          >
+            {/* Animated sliding pill */}
+            <span
+              className="absolute top-1 bottom-1 rounded-full bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-amber-200/60 transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none"
+              style={{
+                left: `${indicatorStyle.left}px`,
+                width: `${indicatorStyle.width}px`,
+                opacity: indicatorStyle.opacity,
+              }}
+            />
 
-              {navRoutes.map(({ to, label, end }) => (
-                <li key={to} className="relative z-10">
-                  <NavLink
-                    ref={(el) => {
-                      if (el) linkRefs.current[to] = el
-                    }}
-                    to={to}
-                    end={end}
-                    className={({ isActive }) =>
-                      `px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-colors duration-200 inline-block ${
-                        isActive
-                          ? 'text-amber-900 font-bold'
-                          : 'text-stone-600 hover:text-stone-900'
-                      }`
-                    }
-                  >
-                    {label}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+            {navRoutes.map(({ to, label, end }) => (
+              <li key={to} className="relative z-10">
+                <NavLink
+                  ref={(el) => {
+                    if (el) linkRefs.current[to] = el
+                  }}
+                  to={to}
+                  end={end}
+                  className={({ isActive }) =>
+                    `px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-colors duration-200 inline-block ${
+                      isActive
+                        ? 'text-amber-900 font-bold'
+                        : 'text-stone-600 hover:text-stone-900'
+                    }`
+                  }
+                >
+                  {label}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         {/* Right-side controls */}
         <div className="flex items-center gap-1.5">
@@ -178,76 +171,59 @@ export default function Navbar() {
             aria-label={t('searchButtonLabel', { shortcut: searchShortcut })}
           >
             <SearchIcon className="h-3.5 w-3.5 text-stone-600" />
-            {!isMobile && <span className="text-stone-600 font-normal">{t('searchShort')}</span>}
-            {!isMobile && (
-              <kbd className="rounded border border-stone-200 bg-white px-1.5 py-0.5 font-mono text-[10px] text-stone-500 shadow-2xs" aria-hidden="true">
-                {searchShortcut}
-              </kbd>
-            )}
+            <span className="hidden text-stone-600 font-normal lg:inline">{t('searchShort')}</span>
+            <kbd className="hidden rounded border border-stone-200 bg-white px-1.5 py-0.5 font-mono text-[10px] text-stone-500 shadow-2xs lg:inline" aria-hidden="true">
+              {searchShortcut}
+            </kbd>
           </button>
 
-          {/* Desktop controls — language, cart */}
-          {!isMobile && (
-            <>
-              <LanguageSelector />
-              <button
-                type="button"
-                onClick={toggleCart}
-                className="relative inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-stone-50 px-3 py-1.5 text-xs font-semibold text-stone-800 transition duration-150 hover:border-amber-400 hover:bg-white hover:text-amber-900 cursor-pointer"
-                aria-label={t('enquiryListCount', { count: totalCount })}
-              >
-                <CartIcon className="h-3.5 w-3.5 text-stone-600" />
-                <span>{t('navCart')}</span>
-                {totalCount > 0 && (
-                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-600 px-1.5 text-[10px] font-bold text-white shadow-xs">
-                    {totalCount}
-                  </span>
-                )}
-              </button>
-            </>
-          )}
-
-          {/* Mobile cart icon */}
-          {isMobile && (
+          {/* Desktop: language + enquiry list */}
+          <div className="hidden items-center gap-1.5 lg:flex">
+            <LanguageSelector />
             <button
               type="button"
               onClick={toggleCart}
-              className="relative inline-flex items-center justify-center h-10 w-10 rounded-full border border-stone-200 bg-stone-50 text-stone-700 transition duration-150 hover:border-amber-400 hover:bg-white cursor-pointer"
+              className="relative inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-stone-50 px-3 py-1.5 text-xs font-semibold text-stone-800 transition duration-150 hover:border-amber-400 hover:bg-white hover:text-amber-900 cursor-pointer"
               aria-label={t('enquiryListCount', { count: totalCount })}
             >
-              <CartIcon className="h-4 w-4" />
-              {totalCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-600 px-1 text-[9px] font-bold text-white shadow-xs">
-                  {totalCount}
-                </span>
-              )}
+              <CartIcon className="h-3.5 w-3.5 text-stone-600" />
+              <span>{t('navCart')}</span>
+              {cartBadge('flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-600 px-1.5 text-[10px] font-bold text-white shadow-xs')}
             </button>
-          )}
+          </div>
 
-          {/* Mobile hamburger */}
-          {isMobile && (
-            <button
-              type="button"
-              onClick={() => setMenuOpen((o) => !o)}
-              className="inline-flex items-center justify-center h-10 w-10 rounded-full border border-stone-200 bg-stone-50 text-stone-700 transition duration-150 hover:border-amber-400 hover:bg-white cursor-pointer"
-              aria-label={menuOpen ? t('closeMenu') : t('openMenu')}
-              aria-expanded={menuOpen}
-              aria-controls="mobile-menu"
-            >
-              {menuOpen ? <CloseIcon className="h-4 w-4" /> : <MenuIcon className="h-4 w-4" />}
-            </button>
-          )}
+          {/* Phone: enquiry list icon */}
+          <button
+            type="button"
+            onClick={toggleCart}
+            className="relative inline-flex items-center justify-center h-10 w-10 rounded-full border border-stone-200 bg-stone-50 text-stone-700 transition duration-150 hover:border-amber-400 hover:bg-white cursor-pointer lg:hidden"
+            aria-label={t('enquiryListCount', { count: totalCount })}
+          >
+            <CartIcon className="h-4 w-4" />
+            {cartBadge('absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-600 px-1 text-[9px] font-bold text-white shadow-xs')}
+          </button>
+
+          {/* Phone: hamburger */}
+          <button
+            type="button"
+            onClick={() => setMenuOpen((o) => !o)}
+            className="inline-flex items-center justify-center h-10 w-10 rounded-full border border-stone-200 bg-stone-50 text-stone-700 transition duration-150 hover:border-amber-400 hover:bg-white cursor-pointer lg:hidden"
+            aria-label={menuOpen ? t('closeMenu') : t('openMenu')}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+          >
+            {menuOpen ? <CloseIcon className="h-4 w-4" /> : <MenuIcon className="h-4 w-4" />}
+          </button>
         </div>
       </nav>
 
-      {/* Mobile drawer menu */}
-      {isMobile && (
-        <div
-          id="mobile-menu"
-          inert={!menuOpen}
-          className={`grid overflow-hidden border-t border-stone-200 bg-white px-4 transition-[grid-template-rows,opacity,padding] duration-200 ${menuOpen ? 'grid-rows-[1fr] py-4 opacity-100' : 'grid-rows-[0fr] py-0 opacity-0'}`}
-        >
-          <div className="min-h-0">
+      {/* Phone drawer menu */}
+      <div
+        id="mobile-menu"
+        inert={!menuOpen}
+        className={`grid overflow-hidden border-t border-stone-200 bg-white px-4 transition-[grid-template-rows,opacity,padding] duration-200 lg:hidden ${menuOpen ? 'grid-rows-[1fr] py-4 opacity-100' : 'grid-rows-[0fr] py-0 opacity-0'}`}
+      >
+        <div className="min-h-0">
           {/* Nav links */}
           <nav className="flex flex-col gap-1" aria-label={t('mainNavigation')}>
             {navRoutes.map(({ to, label, end, Icon }) => (
@@ -291,15 +267,10 @@ export default function Navbar() {
           >
             <CartIcon className="h-4 w-4 text-amber-800" />
             <span>{t('navCart')}</span>
-            {totalCount > 0 && (
-              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-600 px-1.5 text-[10px] font-bold text-white">
-                {totalCount}
-              </span>
-            )}
+            {cartBadge('flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-600 px-1.5 text-[10px] font-bold text-white')}
           </button>
-          </div>
         </div>
-      )}
+      </div>
     </header>
   )
 }

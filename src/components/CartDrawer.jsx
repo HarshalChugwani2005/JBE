@@ -13,7 +13,7 @@ const ANIM_DURATION = 300 // ms — must match the CSS transition duration
 
 export default function CartDrawer() {
   const { items, isOpen, closeCart, removeFromCart, updateQuantity, clearCart, totalCount } = useCart()
-  const { t, tCategory, tProduct, lang } = useLanguage()
+  const { t, tCategory, tProduct, lang, href } = useLanguage()
   const [buyerName, setBuyerName] = useState('')
   const [buyerType, setBuyerType] = useState('wholesale') // 'wholesale' | 'retail'
   const [notes, setNotes] = useState('')
@@ -153,7 +153,7 @@ export default function CartDrawer() {
                 <p className="mt-1.5 text-xs text-stone-600 max-w-xs mx-auto">
                   {t('enquiryEmptySubtitle')}
                 </p>
-                <Link to="/catalog" onClick={closeCart} className="btn btn-primary mt-6">
+                <Link to={href('/catalog')} onClick={closeCart} className="btn btn-primary mt-6">
                   {t('heroBrowseCatalog')}
                 </Link>
               </div>

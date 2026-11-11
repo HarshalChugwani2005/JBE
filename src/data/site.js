@@ -7,7 +7,7 @@ export const shop = {
   name: 'Jai Baba Electronic',
   tagline: 'Wholesale & Retail Electronics in Malkapur',
   // Address, city and opening hours are shown in the visitor's language, so they live in
-  // src/i18n/translations.js (heroLocation, shopCity, hours). Keep the LocalBusiness JSON-LD
+  // src/i18n/locales/*.js (heroLocation, shopCity, hours). Keep the LocalBusiness JSON-LD
   // in index.html in sync if they change.
   primaryPhone: '9673558859',
   phoneNumbers: ['9673558859', '8421009925', '9156576666', '9421394471'],

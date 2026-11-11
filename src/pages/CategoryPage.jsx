@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useCallback, useMemo } from 'react'
 import Breadcrumbs from '../components/Breadcrumbs'
 import CatalogFilters from '../components/CatalogFilters'
@@ -30,9 +30,8 @@ function absoluteUrl(path) {
 export default function CategoryPage() {
   const { category: categorySlug, model: modelSlug } = useParams()
   const navigate = useNavigate()
-  const { search } = useLocation()
-  const { query, brand, tier, sort, updateParams, clearFilters } = useCatalogParams()
-  const { t, tCategory, tProduct, lang } = useLanguage()
+  const { query, brand, tier, sort, search, updateParams, clearFilters } = useCatalogParams()
+  const { t, tCategory, tProduct, lang, href } = useLanguage()
 
   const category = getCategoryBySlug(categorySlug)
 
@@ -48,12 +47,12 @@ export default function CategoryPage() {
 
   // Stable callback so the modal's focus/scroll-lock effect does not re-run on every render.
   const closeModal = useCallback(
-    () => navigate(`/catalog/${categorySlug}${search}`),
-    [navigate, categorySlug, search],
+    () => navigate(`${href(`/catalog/${categorySlug}`)}${search}`),
+    [navigate, categorySlug, search, href],
   )
 
-  const catalogCrumb = { label: t('navCatalog'), to: `/catalog${search}` }
-  const homeCrumb = { label: t('navHome'), to: '/' }
+  const catalogCrumb = { label: t('navCatalog'), to: `${href('/catalog')}${search}` }
+  const homeCrumb = { label: t('navHome'), to: href('/') }
 
   if (!category) {
     return (
@@ -61,7 +60,7 @@ export default function CategoryPage() {
         <SEO title={t('categoryNotFound')} description={t('seoNotFoundDescription')} noindex />
         <Breadcrumbs items={[homeCrumb, catalogCrumb, { label: t('categoryNotFound') }]} />
         <EmptyState as="h1" icon={SearchIcon} title={t('categoryNotFound')} description={t('categoryNotFoundText')}>
-          <Link to="/catalog" className="btn btn-primary">
+          <Link to={href('/catalog')} className="btn btn-primary">
             <ArrowLeftIcon className="h-4 w-4" />
             <span>{t('backToCatalog')}</span>
           </Link>
@@ -81,7 +80,7 @@ export default function CategoryPage() {
         <SEO title={meta.title} description={meta.description} image={meta.image} />
         <Breadcrumbs items={breadcrumbItems} />
         <EmptyState as="h1" icon={PackageIcon} title={label} description={t('comingSoonNotice')}>
-          <Link to="/catalog" className="btn btn-secondary">
+          <Link to={href('/catalog')} className="btn btn-secondary">
             <ArrowLeftIcon className="h-4 w-4" />
             <span>{t('backToCatalog')}</span>
           </Link>
@@ -99,14 +98,15 @@ export default function CategoryPage() {
     : buildCategorySeo(lang, category)
 
   const breadcrumbJsonLd = buildBreadcrumbJsonLd(shop.siteUrl, [
-    { name: t('navHome'), path: '/' },
-    { name: t('navCatalog'), path: '/catalog' },
-    { name: label, path: `/catalog/${category.category}` },
+    { name: t('navHome'), path: href('/') },
+    { name: t('navCatalog'), path: href('/catalog') },
+    { name: label, path: href(`/catalog/${category.category}`) },
   ])
   const jsonLd = activeModalModel
     ? [
         breadcrumbJsonLd,
         buildProductJsonLd(shop.siteUrl, {
+          lang,
           category,
           brandName: activeBrandName,
           model: activeModalModel.model,
@@ -156,7 +156,7 @@ export default function CategoryPage() {
               {brandEntry.models.map((model) => (
                 <div key={model.modelName} className="stagger-item">
                   <ProductCard
-                    to={`/catalog/${categorySlug}/${slugify(model.modelName)}`}
+                    to={href(`/catalog/${categorySlug}/${slugify(model.modelName)}`)}
                     search={search}
                     modelName={model.modelName}
                     brand={brandEntry.brand}

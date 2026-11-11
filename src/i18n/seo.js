@@ -4,6 +4,8 @@
  */
 import { slugify } from '../utils/slugify.js'
 import { translate, translateCategory } from './format.js'
+import { stripLang, withLang } from './paths.js'
+import { DEFAULT_LANG, SUPPORTED_LANGS } from './registry.js'
 
 function productName(brand, modelName) {
   return `${brand ? `${brand} ` : ''}${modelName}`
@@ -35,6 +37,18 @@ export function buildModelSeo(lang, category, brandName, model) {
   }
 }
 
+/**
+ * <link rel="alternate" hreflang> entries for a page: the same page in every language,
+ * plus x-default (English) — tells search engines which URL to show to which language.
+ */
+export function buildAlternates(siteUrl, pathname) {
+  const path = stripLang(pathname)
+  return [
+    ...SUPPORTED_LANGS.map((lang) => ({ hreflang: lang, href: `${siteUrl}${withLang(lang, path)}` })),
+    { hreflang: 'x-default', href: `${siteUrl}${withLang(DEFAULT_LANG, path)}` },
+  ]
+}
+
 export function buildBreadcrumbJsonLd(siteUrl, items) {
   return {
     '@context': 'https://schema.org',
@@ -49,7 +63,7 @@ export function buildBreadcrumbJsonLd(siteUrl, items) {
 }
 
 /** Product structured data without price — the shop quotes prices on enquiry only. */
-export function buildProductJsonLd(siteUrl, { category, brandName, model, imageUrl }) {
+export function buildProductJsonLd(siteUrl, { category, brandName, model, imageUrl, lang = 'en' }) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -58,6 +72,6 @@ export function buildProductJsonLd(siteUrl, { category, brandName, model, imageU
     ...(brandName ? { brand: { '@type': 'Brand', name: brandName } } : {}),
     ...(model.specs?.length ? { description: model.specs.join(', ') } : {}),
     ...(imageUrl ? { image: imageUrl } : {}),
-    url: `${siteUrl}/catalog/${category.category}/${slugify(model.modelName)}`,
+    url: `${siteUrl}${withLang(lang, `/catalog/${category.category}/${slugify(model.modelName)}`)}`,
   }
 }

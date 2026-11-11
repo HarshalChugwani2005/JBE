@@ -1,10 +1,34 @@
 import { track } from '@vercel/analytics'
 
 /**
- * Lightweight, privacy-friendly event tracking utility.
- * Supports Vercel Analytics, Plausible, and Google Analytics (GA4),
- * with zero configuration overhead.
+ * Event tracking (WhatsApp / call clicks, enquiry list, contact form).
+ *
+ * - Vercel Web Analytics: page views work on every plan, but custom events (track()) are only
+ *   recorded on Vercel Pro — on the free Hobby plan they are silently dropped.
+ * - Google Analytics 4 (free): set VITE_GA_MEASUREMENT_ID (e.g. G-XXXXXXX) in Vercel and every
+ *   event below is also sent to GA4. Off when the variable is empty.
+ * - Plausible: used automatically if its script is added to the page.
  */
+
+const GA_MEASUREMENT_ID = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GA_MEASUREMENT_ID) || ''
+
+/** Loads GA4 when configured. No inline script, so the Content-Security-Policy stays strict. */
+export function installAnalytics() {
+  if (!GA_MEASUREMENT_ID || typeof window === 'undefined' || window.gtag) return
+  window.dataLayer = window.dataLayer || []
+  window.gtag = function gtag() {
+    // GA4 expects the `arguments` object itself, not an array.
+    // eslint-disable-next-line prefer-rest-params
+    window.dataLayer.push(arguments)
+  }
+  window.gtag('js', new Date())
+  // Single-page navigation is counted by GA4's enhanced measurement (history changes).
+  window.gtag('config', GA_MEASUREMENT_ID)
+  const script = document.createElement('script')
+  script.async = true
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_MEASUREMENT_ID)}`
+  document.head.appendChild(script)
+}
 
 export function trackEvent(eventName, props = {}) {
   // 1. Vercel Analytics Custom Event

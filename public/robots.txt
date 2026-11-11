@@ -8,7 +8,6 @@
 User-agent: *
 Allow: /
 Disallow: /_vercel/
-Crawl-delay: 5
 
 # Google-specific rules — no crawl-delay needed, they self-throttle
 User-agent: Googlebot

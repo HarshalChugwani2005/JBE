@@ -23,7 +23,7 @@ import {
 } from '../components/Icons'
 
 export default function Home() {
-  const { t, tCategory, lang } = useLanguage()
+  const { t, tCategory, lang, href } = useLanguage()
   const featured = featuredCategorySlugs
     .map((slug) => categories.find((c) => c.category === slug))
     .filter(Boolean)
@@ -69,7 +69,7 @@ export default function Home() {
             {/* Direct Action Buttons */}
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
               <Link
-                to="/catalog"
+                to={href('/catalog')}
                 className="btn w-full bg-white px-6 py-3 text-amber-950 shadow-sm hover:bg-amber-50 sm:w-auto"
               >
                 <span>{t('heroBrowseCatalog')}</span>
@@ -131,7 +131,7 @@ export default function Home() {
               ))}
             </ul>
             <div className="mt-8 text-center">
-              <Link to="/catalog" className="btn btn-secondary rounded-full px-6 text-amber-900">
+              <Link to={href('/catalog')} className="btn btn-secondary rounded-full px-6 text-amber-900">
                 <span>{t('viewAllCategories')}</span>
                 <ArrowRightIcon className="h-3.5 w-3.5 text-amber-700" />
               </Link>

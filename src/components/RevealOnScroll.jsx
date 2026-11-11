@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { isHydrating } from '../utils/hydration'
 
 /**
  * Premium scroll-triggered reveal component.
@@ -14,7 +15,8 @@ export default function RevealOnScroll({
   threshold = 0.12,
 }) {
   const ref = useRef(null)
-  const [isVisible, setIsVisible] = useState(false)
+  // Visible from the start when part of the pre-rendered page, so no text is hidden until JS runs.
+  const [isVisible, setIsVisible] = useState(isHydrating)
 
   useEffect(() => {
     const node = ref.current

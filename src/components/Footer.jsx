@@ -5,7 +5,7 @@ import { getWhatsAppUrl, getPhoneUrl, shop } from '../data/site'
 import { ArrowRightIcon, WhatsAppIcon, PhoneIcon } from './Icons'
 
 export default function Footer() {
-  const { t, lang } = useLanguage()
+  const { t, lang, href } = useLanguage()
 
   return (
     <footer className="mt-auto border-t border-stone-200/80 bg-white pb-20 md:pb-0">
@@ -58,13 +58,13 @@ export default function Footer() {
             <nav aria-label={t('footerNavigation')} className="mt-2">
               <ul className="flex flex-col gap-1.5 text-xs sm:text-sm">
                 <li>
-                  <Link to="/catalog" className="text-stone-600 hover:text-amber-800 font-medium transition duration-150 inline-flex min-h-8 items-center gap-1.5">
+                  <Link to={href('/catalog')} className="text-stone-600 hover:text-amber-800 font-medium transition duration-150 inline-flex min-h-8 items-center gap-1.5">
                     <ArrowRightIcon className="h-3 w-3" />
                     <span>{t('navCatalog')}</span>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/contact" className="text-stone-600 hover:text-amber-800 font-medium transition duration-150 inline-flex min-h-8 items-center gap-1.5">
+                  <Link to={href('/contact')} className="text-stone-600 hover:text-amber-800 font-medium transition duration-150 inline-flex min-h-8 items-center gap-1.5">
                     <ArrowRightIcon className="h-3 w-3" />
                     <span>{t('navContact')}</span>
                   </Link>
@@ -73,7 +73,7 @@ export default function Footer() {
             </nav>
           </div>
         </div>
-        <p className="mt-8 border-t border-stone-100 pt-6 text-center text-xs text-stone-600 font-medium">
+        <p className="mt-8 border-t border-stone-100 pt-6 text-center text-xs text-stone-600 font-medium" suppressHydrationWarning>
           © {new Date().getFullYear()} {shop.name}. {t('allPricesOnEnquiry')}
         </p>
       </div>

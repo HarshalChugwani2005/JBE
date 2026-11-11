@@ -4,25 +4,32 @@ import { CartContext } from './CartContext.js'
 const STORAGE_KEY = 'jbe_enquiry_cart_v1'
 
 export function CartProvider({ children }) {
-  const [items, setItems] = useState(() => {
+  // Starts empty so the pre-rendered HTML and the first browser render match; the saved
+  // list is restored right after mount.
+  const [items, setItems] = useState([])
+  const [restored, setRestored] = useState(false)
+
+  useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY)
       const parsed = saved ? JSON.parse(saved) : []
-      return Array.isArray(parsed) ? parsed : []
+      if (Array.isArray(parsed) && parsed.length) setItems(parsed)
     } catch {
-      return []
+      // Unreadable storage: start with an empty list.
     }
-  })
+    setRestored(true)
+  }, [])
 
   const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
+    if (!restored) return // don't overwrite the saved list with the initial empty one
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
     } catch (e) {
       console.error('Failed to save enquiry cart:', e)
     }
-  }, [items])
+  }, [items, restored])
 
   const addToCart = (product) => {
     const colorKey = product.selectedColor ? `-${product.selectedColor}` : ''

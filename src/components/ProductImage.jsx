@@ -3,6 +3,7 @@ import CategoryIcon from './CategoryIcon'
 import { useLanguage } from '../context/useLanguage'
 import { getCategoryVisual } from '../data/categoryVisuals'
 import { getImageSrcSet, getProductImageUrls } from '../data/productImages'
+import { isHydrating } from '../utils/hydration'
 
 export default function ProductImage({
   src: directSrc,
@@ -30,7 +31,8 @@ export default function ProductImage({
   // Track *which* source finished loading / failed instead of a boolean that is reset in an
   // effect. A reset effect races the load event: a cached image can fire `load` before the
   // effect runs, and the photo then stays invisible (opacity-0) for good.
-  const [loadedSrc, setLoadedSrc] = useState(null)
+  // Pre-rendered photos are shown straight away (no shimmer / fade) so they paint before JS runs.
+  const [loadedSrc, setLoadedSrc] = useState(() => (isHydrating() ? src : null))
   const [failedSrc, setFailedSrc] = useState(null)
   const isLoaded = loadedSrc === src
   const hasError = failedSrc === src

@@ -10,7 +10,7 @@ import ProductImage from './ProductImage'
 import { slugify } from '../utils/slugify'
 import { shop } from '../data/site'
 import { trapTabKey } from '../utils/focus'
-import { categoryLabels } from '../i18n/translations'
+import { categoryLabels } from '../i18n/categoryLabels'
 import { productTextVariants } from '../i18n/productText'
 
 // ─── Static search index ──────────────────────────────────────────────────────
@@ -70,7 +70,7 @@ const { allCategories: ALL_CATEGORIES, allProducts: ALL_PRODUCTS } = buildSearch
 
 export default function SearchPalette() {
   const { isOpen, closeSearch } = useSearch()
-  const { t, tCategory, tProduct } = useLanguage()
+  const { t, tCategory, tProduct, href } = useLanguage()
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -153,9 +153,9 @@ export default function SearchPalette() {
   const handleSelect = (item) => {
     closeSearch()
     if (item.type === 'category') {
-      navigate(`/catalog/${item.categorySlug}`)
+      navigate(href(`/catalog/${item.categorySlug}`))
     } else {
-      navigate(`/catalog/${item.categorySlug}/${slugify(item.modelName)}`)
+      navigate(href(`/catalog/${item.categorySlug}/${slugify(item.modelName)}`))
     }
   }
 

@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
+// Register Marathi and Hindi so search can match translated specs and colours (the app loads them on demand).
+import '../src/i18n/allLocales.js'
 import { categories } from '../src/data/products.js'
 import { filterCatalog, filterCategoryBrands, toQueryWords } from '../src/utils/catalogFilters.js'
 

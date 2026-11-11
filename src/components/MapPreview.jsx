@@ -8,7 +8,7 @@ import { ArrowRightIcon, MapPinIcon } from './Icons'
  * `headingLevel` keeps the document outline valid: h3 under a section h2 (Home), h2 directly under a page h1 (Contact).
  */
 export default function MapPreview({ compact = false, headingLevel: Heading = 'h3' }) {
-  const { t } = useLanguage()
+  const { t, href } = useLanguage()
 
   return (
     <div className={`glass-card overflow-hidden rounded-2xl ${compact ? '' : 'grid gap-0 md:grid-cols-5'}`}>
@@ -32,7 +32,7 @@ export default function MapPreview({ compact = false, headingLevel: Heading = 'h
             <MapPinIcon className="h-3.5 w-3.5" />
             <span>{t('getDirections')}</span>
           </a>
-          <Link to="/contact" className="btn btn-primary px-4 text-xs">
+          <Link to={href('/contact')} className="btn btn-primary px-4 text-xs">
             <span>{t('contactTitle')}</span>
             <ArrowRightIcon className="h-3.5 w-3.5" />
           </Link>

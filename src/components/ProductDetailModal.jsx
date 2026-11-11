@@ -74,6 +74,10 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
   const [activeImageIndex, setActiveImageIndex] = useState(0)
   const [selectedColor, setSelectedColor] = useState(null)
   const [lightboxOpen, setLightboxOpen] = useState(false)
+  // The modal renders into <body> via a portal, which only exists in the browser: it opens right
+  // after mount, never in the pre-rendered HTML (the page underneath is pre-rendered instead).
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
   // The lightbox owns the keyboard while open (Escape / Tab must not also reach this dialog).
   const lightboxOpenRef = useRef(false)
   useEffect(() => {
@@ -94,7 +98,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
   const activeImage = imageSources[activeImageIndex] ?? imageSources[0] ?? null
 
   useEffect(() => {
-    if (!isOpen) return
+    if (!isOpen || !mounted) return
 
     previouslyFocusedRef.current = document.activeElement
     setActiveImageIndex(0)
@@ -135,13 +139,13 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
       document.body.classList.remove('overflow-hidden')
       previouslyFocusedRef.current?.focus?.({ preventScroll: true })
     }
-  }, [isOpen, model, onClose, categorySlug, categoryLabel, brandName])
+  }, [isOpen, mounted, model, onClose, categorySlug, categoryLabel, brandName])
 
   useEffect(() => {
     setActiveImageIndex(0)
   }, [imageSources.length])
 
-  if (!isOpen || !model) return null
+  if (!isOpen || !model || !mounted) return null
 
   const modelName = model.modelName ?? t('product')
   const productName = `${brandName ? `${brandName} ` : ''}${modelName}`

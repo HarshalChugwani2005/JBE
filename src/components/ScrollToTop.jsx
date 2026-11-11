@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
+import { stripLang } from '../i18n/paths'
 
 /**
  * On page navigation: scroll to the top and move focus to the new page's <h1>,
@@ -9,8 +10,9 @@ import { useLocation } from 'react-router-dom'
  * is treated as the same page: no scroll jump behind the modal, and the modal keeps focus.
  */
 function pageKey(pathname) {
-  const match = pathname.match(/^\/catalog\/[^/]+/)
-  return match ? match[0] : pathname
+  const path = stripLang(pathname)
+  const match = path.match(/^\/catalog\/[^/]+/)
+  return match ? match[0] : path
 }
 
 const FOCUS_WAIT_MS = 3000 // lazy routes render their <h1> after the chunk loads

@@ -739,6 +739,14 @@
   }
 }
 
+/* While the install strip is docked above the phone action bar, extend the footer so the last
+   content can still scroll clear of both bars. Unlayered so it overrides the footer's pb-20. */
+@media (max-width: 767px) {
+  body.install-banner-open footer {
+    padding-bottom: 9.5rem;
+  }
+}
+
 /* ─────────────────────────────────────────────────────────────────────────────
    Devanagari (Marathi / Hindi): letter-spacing breaks conjuncts apart
    ("मुख्य" renders as "मु ख्य"), so tracking utilities are neutralised.

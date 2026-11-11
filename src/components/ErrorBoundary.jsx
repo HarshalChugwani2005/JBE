@@ -1,6 +1,8 @@
 import { Component } from 'react'
 import { getWhatsAppUrl, shop } from '../data/site'
 import { DEFAULT_LANG, SUPPORTED_LANGS, translate } from '../i18n/format'
+import { withLang } from '../i18n/paths'
+import { reportError } from '../utils/errorReporting'
 import { buildErrorReport } from '../i18n/whatsappMessages'
 import { AlertTriangleIcon, HomeIcon, RefreshIcon, WhatsAppIcon } from './Icons'
 
@@ -25,6 +27,7 @@ export default class ErrorBoundary extends Component {
 
   componentDidCatch(error, errorInfo) {
     console.error('Uncaught error in component tree:', error, errorInfo)
+    reportError(error, { source: 'react.ErrorBoundary', componentStack: errorInfo?.componentStack?.slice(0, 2000) })
   }
 
   handleReload = () => {
@@ -33,7 +36,7 @@ export default class ErrorBoundary extends Component {
 
   handleGoHome = () => {
     this.setState({ hasError: false, error: null, detailsOpen: false })
-    window.location.href = '/'
+    window.location.href = withLang(currentLang(), '/')
   }
 
   toggleDetails = () => {

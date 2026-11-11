@@ -7,7 +7,7 @@ import { ArrowRightIcon, ClockIcon } from './Icons'
 import ProductImage from './ProductImage'
 
 export default function RecentlyViewed({ currentModelName, className = '' }) {
-  const { t, tCategory } = useLanguage()
+  const { t, tCategory, href } = useLanguage()
   const [items, setItems] = useState([])
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function RecentlyViewed({ currentModelName, className = '' }) {
         {displayItems.map((item) => (
           <Link
             key={item.id}
-            to={`/catalog/${item.categorySlug}/${slugify(item.modelName)}`}
+            to={href(`/catalog/${item.categorySlug}/${slugify(item.modelName)}`)}
             className="group shrink-0 w-52 sm:w-auto flex flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] transition-all duration-200 hover:-translate-y-1 hover:border-amber-400/80 hover:shadow-[0_12px_24px_-4px_rgba(217,119,6,0.12)]"
           >
             <div className="relative aspect-4/3 bg-stone-100 overflow-hidden">

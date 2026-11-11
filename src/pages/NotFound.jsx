@@ -8,7 +8,7 @@ import { buildGreeting } from '../i18n/whatsappMessages'
 import { trackWhatsAppClick } from '../utils/analytics'
 
 export default function NotFound() {
-  const { t, lang } = useLanguage()
+  const { t, lang, href } = useLanguage()
 
   return (
     <>
@@ -26,11 +26,11 @@ export default function NotFound() {
         title={t('notFoundTitle')}
         description={t('notFoundText')}
       >
-        <Link to="/" className="btn btn-primary px-6">
+        <Link to={href('/')} className="btn btn-primary px-6">
           <HomeIcon className="h-4 w-4" />
           <span>{t('goHome')}</span>
         </Link>
-        <Link to="/catalog" className="btn btn-secondary px-6">
+        <Link to={href('/catalog')} className="btn btn-secondary px-6">
           <PackageIcon className="h-4 w-4" />
           <span>{t('heroBrowseCatalog')}</span>
         </Link>

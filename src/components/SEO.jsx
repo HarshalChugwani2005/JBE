@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useLanguage } from '../context/useLanguage'
 import { shop } from '../data/site'
+import { buildAlternates } from '../i18n/seo'
 
 const OG_LOCALES = { en: 'en_IN', mr: 'mr_IN', hi: 'hi_IN' }
 const JSON_LD_ID = 'page-jsonld'
@@ -44,6 +45,21 @@ export default function SEO({ title, description, image = '/og-image.png', noind
     setAttr('meta[name="twitter:image"]', 'content', fullImageUrl)
     setAttr('meta[name="twitter:url"]', 'content', fullUrl)
   }, [title, description, image, pathname, lang, t])
+
+  // Language alternates for this page (none on noindex pages such as 404).
+  useEffect(() => {
+    document.head.querySelectorAll('link[rel="alternate"][hreflang]').forEach((link) => link.remove())
+    if (noindex) return undefined
+    const links = buildAlternates(shop.siteUrl || window.location.origin, pathname).map(({ hreflang, href }) => {
+      const link = document.createElement('link')
+      link.rel = 'alternate'
+      link.hreflang = hreflang
+      link.href = href
+      document.head.appendChild(link)
+      return link
+    })
+    return () => links.forEach((link) => link.remove())
+  }, [pathname, noindex])
 
   useEffect(() => {
     if (!noindex) return undefined

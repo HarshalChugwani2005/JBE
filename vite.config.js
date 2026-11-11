@@ -1,21 +1,48 @@
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { imagetools } from 'vite-imagetools'
-import { translations } from './src/i18n/translations.js'
+import { locales } from './src/i18n/allLocales.js'
 
 // A web app manifest has a single description, so it carries the tagline in all three site languages.
-const manifestDescription = ['en', 'mr', 'hi'].map((lang) => translations[lang].heroTagline).join(' · ')
+const manifestDescription = ['en', 'mr', 'hi'].map((lang) => locales[lang].ui.heroTagline).join(' · ')
 
-export default defineConfig({
+/**
+ * Emits spa.html — a copy of the built, still-empty index.html — during the client build, so the
+ * service worker can precache it as the offline fallback (scripts/prerender.js later fills
+ * index.html with the English home page).
+ */
+function emitAppShell() {
+  return {
+    name: 'jbe-emit-app-shell',
+    enforce: 'post',
+    generateBundle(_options, bundle) {
+      const indexHtml = bundle['index.html']
+      if (indexHtml?.type === 'asset') {
+        this.emitFile({ type: 'asset', fileName: 'spa.html', source: indexHtml.source })
+      }
+    },
+  }
+}
+
+// The server build (`vite build --ssr src/entry-server.jsx`, used only by scripts/prerender.js
+// to turn each page into HTML) skips the PWA plugin and gets a stub for its browser-only module.
+export default defineConfig(({ isSsrBuild }) => ({
+  resolve: isSsrBuild
+    ? { alias: { 'virtual:pwa-register/react': fileURLToPath(new URL('./src/utils/pwaRegisterStub.js', import.meta.url)) } }
+    : undefined,
   plugins: [
     react(),
     tailwindcss(),
     imagetools({ removeMetadata: true }),
-    VitePWA({
-      registerType: 'autoUpdate',
-      injectRegister: 'auto',
+    !isSsrBuild && emitAppShell(),
+    !isSsrBuild && VitePWA({
+      // 'prompt': a new version waits until the visitor taps "Refresh" (UpdatePrompt component),
+      // instead of reloading the page mid-visit. Registration happens in UpdatePrompt.
+      registerType: 'prompt',
+      injectRegister: false,
       includeAssets: [
         'favicon.svg',
         'apple-touch-icon.png',
@@ -57,10 +84,36 @@ export default defineConfig({
         ],
       },
       workbox: {
-        skipWaiting: true,
         clientsClaim: true,
-        globPatterns: ['**/*.{js,css,html,ico,svg}'],
+        // Pages are pre-rendered per route and language, so they are not precached (and must not
+        // all be answered with index.html, which is now the English home page). Only the empty
+        // app shell is precached, as the offline fallback for pages never visited.
+        globPatterns: ['**/*.{js,css,ico,svg}', 'spa.html'],
+        // Marathi / Hindi strings are cached when first used, not downloaded by every visitor.
+        globIgnores: ['**/assets/mr-*.js', '**/assets/hi-*.js'],
+        navigateFallback: null,
         runtimeCaching: [
+          {
+            // Pages: always try the network (fresh, pre-rendered HTML); offline, use the copy from
+            // an earlier visit, or the app shell, which renders any page in the browser.
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'pages-cache',
+              networkTimeoutSeconds: 4,
+              expiration: { maxEntries: 60 },
+              precacheFallback: { fallbackURL: '/spa.html' },
+            },
+          },
+          {
+            urlPattern: /\/assets\/(?:mr|hi)-[\w-]+\.js$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'locale-cache',
+              expiration: { maxEntries: 6 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
           {
             urlPattern: /\.(?:png|jpg|jpeg|webp|avif|gif)$/i,
             handler: 'CacheFirst',
@@ -94,6 +147,6 @@ export default defineConfig({
         ],
       },
     }),
-  ],
-})
+  ].filter(Boolean),
+}))
 

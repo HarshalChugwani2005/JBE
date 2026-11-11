@@ -1,60 +1,95 @@
-import { lazy, Suspense } from 'react'
+import { Fragment, lazy, Suspense, useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import CartDrawer from './components/CartDrawer'
-import Footer from './components/Footer'
-import Navbar from './components/Navbar'
-import WhatsAppButton from './components/WhatsAppButton'
-import MobileActionBar from './components/MobileActionBar'
-import ErrorBoundary from './components/ErrorBoundary'
-import PageSkeleton from './components/PageSkeleton'
-import SearchPalette from './components/SearchPalette'
-import ScrollToTop from './components/ScrollToTop'
-import SkipLink from './components/SkipLink'
-import OfflineBanner from './components/OfflineBanner'
-import { AppProviders } from './context/AppProviders'
 import { Analytics } from '@vercel/analytics/react'
-import Home from './pages/Home'
-// Catalog and category pages are where most visitors land (search results, shared product
-// links), so they ship in the main bundle instead of a lazy chunk chain.
+import CartDrawer from './components/CartDrawer'
+import ErrorBoundary from './components/ErrorBoundary'
+import Footer from './components/Footer'
+import MobileActionBar from './components/MobileActionBar'
+import Navbar from './components/Navbar'
+import OfflineBanner from './components/OfflineBanner'
+import ScrollToTop from './components/ScrollToTop'
+import SearchPalette from './components/SearchPalette'
+import SkipLink from './components/SkipLink'
+import WhatsAppButton from './components/WhatsAppButton'
+import { AppProviders } from './context/AppProviders'
+import { ROUTE_PREFIXES } from './i18n/paths'
+import { markHydrated } from './utils/hydration'
 import Catalog from './pages/Catalog'
 import CategoryPage from './pages/CategoryPage'
+import Contact from './pages/Contact'
+import Home from './pages/Home'
+import NotFound from './pages/NotFound'
 
-const Contact = lazy(() => import('./pages/Contact'))
-const NotFound = lazy(() => import('./pages/NotFound'))
+// Service-worker registration only exists in the browser; it is never part of pre-rendering.
+const UpdatePrompt = lazy(() => import('./components/UpdatePrompt'))
+
+// Every page is imported directly (no lazy routes) so each one can be pre-rendered to HTML at
+// build time and hydrated without a loading state.
+const PAGES = [
+  ['/', Home],
+  ['/catalog', Catalog],
+  ['/catalog/:category', CategoryPage],
+  ['/catalog/:category/:model', CategoryPage],
+  ['/contact', Contact],
+]
+
+function useHasMounted() {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    markHydrated()
+    setMounted(true)
+  }, [])
+  return mounted
+}
+
+/** The site inside a router. Used by the browser (BrowserRouter) and the pre-renderer (StaticRouter). */
+export function AppShell() {
+  const mounted = useHasMounted()
+
+  return (
+    <AppProviders>
+      <ScrollToTop />
+      <SkipLink />
+      <div className="flex min-h-screen flex-col">
+        <Navbar />
+        <main id="main" tabIndex={-1} className="mx-auto w-full outline-none max-w-6xl flex-1 px-4 py-5 pb-24 sm:py-8 md:pb-8">
+          <div className="page-transition">
+            <Routes>
+              {/* Each page under every language prefix: /catalog, /mr/catalog, /hi/catalog … */}
+              {ROUTE_PREFIXES.map((prefix) => (
+                <Fragment key={prefix || 'en'}>
+                  {PAGES.map(([path, Page]) => (
+                    <Route key={path} path={prefix + (path === '/' && prefix ? '' : path)} element={<Page />} />
+                  ))}
+                </Fragment>
+              ))}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
+        </main>
+        <Footer />
+        <WhatsAppButton />
+        <MobileActionBar />
+        <CartDrawer />
+        <SearchPalette />
+        <OfflineBanner />
+        <Analytics />
+        {mounted && (
+          <Suspense fallback={null}>
+            <UpdatePrompt />
+          </Suspense>
+        )}
+      </div>
+    </AppProviders>
+  )
+}
 
 export default function App() {
   return (
     <ErrorBoundary>
-      <AppProviders>
-        <BrowserRouter>
-          <ScrollToTop />
-          <SkipLink />
-          <div className="flex min-h-screen flex-col">
-            <Navbar />
-            <main id="main" tabIndex={-1} className="mx-auto w-full outline-none max-w-6xl flex-1 px-4 py-5 pb-24 sm:py-8 md:pb-8">
-              <Suspense fallback={<PageSkeleton />}>
-                <div className="page-transition">
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/catalog" element={<Catalog />} />
-                    <Route path="/catalog/:category" element={<CategoryPage />} />
-                    <Route path="/catalog/:category/:model" element={<CategoryPage />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </div>
-              </Suspense>
-            </main>
-            <Footer />
-            <WhatsAppButton />
-            <MobileActionBar />
-            <CartDrawer />
-            <SearchPalette />
-            <OfflineBanner />
-            <Analytics />
-          </div>
-        </BrowserRouter>
-      </AppProviders>
+      <BrowserRouter>
+        <AppShell />
+      </BrowserRouter>
     </ErrorBoundary>
   )
 }

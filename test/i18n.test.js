@@ -3,9 +3,12 @@ import test from 'node:test'
 import { categories } from '../src/data/products.js'
 import { interpolate, translate, translateCategory } from '../src/i18n/format.js'
 import { buildCategorySeo, buildModelSeo } from '../src/i18n/seo.js'
-import { categoryLabels, translations } from '../src/i18n/translations.js'
+import { locales } from '../src/i18n/allLocales.js'
+import { categoryLabels } from '../src/i18n/categoryLabels.js'
+import { langFromPath, stripLang, withLang } from '../src/i18n/paths.js'
 
-const languages = Object.keys(translations)
+const languages = Object.keys(locales)
+const translations = Object.fromEntries(languages.map((lang) => [lang, locales[lang].ui]))
 
 /** Plural variants (`key_one`, `key_other`) count as the base key. */
 function baseKeys(dict) {
@@ -51,7 +54,6 @@ test('every catalog category has a label in every language', () => {
 })
 
 test('every catalog spec, colour, tagline and warranty has Marathi and Hindi text', async () => {
-  const { productTextByLang } = await import('../src/i18n/productText.js')
   const strings = new Set()
   for (const category of categories) {
     for (const entry of category.brands ?? []) {
@@ -62,9 +64,21 @@ test('every catalog spec, colour, tagline and warranty has Marathi and Hindi tex
     }
   }
   for (const lang of ['mr', 'hi']) {
-    const missing = [...strings].filter((s) => !productTextByLang[lang].get(s)?.trim())
+    const missing = [...strings].filter((s) => !locales[lang].products?.[s]?.trim())
     assert.deepEqual(missing, [], `${lang} is missing product text`)
   }
+})
+
+test('language prefixes round-trip through the path helpers', () => {
+  assert.equal(langFromPath('/mr/catalog/ceiling-fans'), 'mr')
+  assert.equal(langFromPath('/hi'), 'hi')
+  assert.equal(langFromPath('/catalog'), 'en')
+  assert.equal(langFromPath('/mrx/catalog'), 'en', 'only a whole segment counts as a prefix')
+  assert.equal(stripLang('/mr/catalog/ceiling-fans'), '/catalog/ceiling-fans')
+  assert.equal(stripLang('/mr'), '/')
+  assert.equal(withLang('mr', '/'), '/mr')
+  assert.equal(withLang('hi', '/contact'), '/hi/contact')
+  assert.equal(withLang('en', '/contact'), '/contact')
 })
 
 test('translate interpolates, pluralizes and falls back to English', () => {

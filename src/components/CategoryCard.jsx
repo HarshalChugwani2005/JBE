@@ -7,7 +7,7 @@ import CategoryIcon from './CategoryIcon'
 import { PackageIcon } from './Icons'
 
 export default function CategoryCard({ category, categoryLabel, comingSoon, brands = [], search = '' }) {
-  const { t, tCategory } = useLanguage()
+  const { t, tCategory, href } = useLanguage()
   const label = tCategory(category, categoryLabel)
   const visual = getCategoryVisual(category)
   const modelCount = getModelCount({ brands })
@@ -23,7 +23,7 @@ export default function CategoryCard({ category, categoryLabel, comingSoon, bran
 
   return (
     <Link
-      to={{ pathname: `/catalog/${category}`, search }}
+      to={{ pathname: href(`/catalog/${category}`), search }}
       className="group press-effect flex h-full flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1.5 hover:border-amber-400/80 hover:shadow-[0_16px_32px_-6px_rgba(217,119,6,0.14)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
     >
       <div

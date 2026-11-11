@@ -8,7 +8,7 @@
  * filters: { query, brand, tier, sort } — the values from useCatalogParams().
  */
 import { productTextVariants } from '../i18n/productText.js'
-import { categoryLabels } from '../i18n/translations.js'
+import { categoryLabels } from '../i18n/categoryLabels.js'
 
 export function toQueryWords(query = '') {
   return query.trim().toLowerCase().split(/\s+/).filter(Boolean)
