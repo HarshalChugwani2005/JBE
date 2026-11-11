@@ -112,7 +112,7 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="mx-auto max-w-6xl px-4 sm:px-0">
+        <div className="mx-auto max-w-6xl px-4">
           {/* Featured Categories */}
           <Section
             title={t('featuredCategories')}

@@ -30,7 +30,7 @@ export default function MobileActionBar() {
           className="btn btn-secondary flex-1 px-2 py-3"
         >
           <PhoneIcon className="h-4 w-4" />
-          <span>{t('callPrimary')}</span>
+          <span>{t('callUs')}</span>
         </a>
 
         {/* WhatsApp */}
