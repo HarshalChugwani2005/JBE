@@ -15,6 +15,8 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { categories } from '../src/data/products.js'
+import { localizedFaq } from '../src/data/faq.js'
+import { seasonCategories, seasonKey, seasons } from '../src/data/seasons.js'
 import { shop } from '../src/data/site.js'
 import '../src/i18n/allLocales.js'
 import { translate, translateCategory } from '../src/i18n/format.js'
@@ -24,6 +26,7 @@ import {
   buildAlternates,
   buildBreadcrumbJsonLd,
   buildCategorySeo,
+  buildFaqJsonLd,
   buildModelSeo,
   buildProductJsonLd,
 } from '../src/i18n/seo.js'
@@ -100,7 +103,25 @@ for (const lang of SUPPORTED_LANGS) {
   renderPage({ lang, route: '/', title: `${shop.name} — ${t('heroTagline')}`, description: t('seoHomeDescription') })
   renderPage({ lang, route: '/catalog', title: titled(t('catalogTitle')), description: t('seoCatalogDescription') })
   renderPage({ lang, route: '/contact', title: titled(t('contactTitle')), description: t('seoContactDescription') })
-  pages += 3
+  renderPage({ lang, route: '/guide', title: titled(t('guideTitle')), description: t('seoGuideDescription') })
+  renderPage({
+    lang,
+    route: '/faq',
+    title: titled(t('faqTitle')),
+    description: t('seoFaqDescription'),
+    jsonLd: buildFaqJsonLd(localizedFaq(lang, translate)),
+  })
+  for (const season of seasons) {
+    const name = t(`season${seasonKey(season.slug)}`)
+    renderPage({
+      lang,
+      route: `/season/${season.slug}`,
+      title: titled(t('seasonTitle', { season: name })),
+      description: t('seoSeasonDescription', { season: name, text: t(`season${seasonKey(season.slug)}Text`) }),
+      image: `/og/${seasonCategories(season)[0]?.category ?? 'ceiling-fans'}.png`,
+    })
+  }
+  pages += 5 + seasons.length
 
   for (const category of categories) {
     const categoryRoute = `/catalog/${category.category}`

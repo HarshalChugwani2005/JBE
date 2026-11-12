@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { useCart } from '../context/useCart'
 import { useLanguage } from '../context/useLanguage'
 import { buildGreeting } from '../i18n/whatsappMessages'
@@ -9,6 +10,23 @@ export default function MobileActionBar() {
   const { totalCount, toggleCart } = useCart()
   const { t, lang } = useLanguage()
 
+  // Publish the bar's real height (it grows when labels wrap — long Marathi / Hindi words on
+  // narrow phones, or a larger system font) so the install strip can sit exactly on top of it.
+  const barRef = useRef(null)
+  useEffect(() => {
+    const bar = barRef.current
+    if (!bar || typeof ResizeObserver === 'undefined') return undefined
+    const root = document.documentElement
+    const observer = new ResizeObserver(() => {
+      root.style.setProperty('--mobile-bar-h', `${Math.ceil(bar.getBoundingClientRect().height)}px`)
+    })
+    observer.observe(bar)
+    return () => {
+      observer.disconnect()
+      root.style.removeProperty('--mobile-bar-h')
+    }
+  }, [])
+
   const handleCall = () => {
     trackCallClick('mobile_action_bar', shop.primaryPhone)
   }
@@ -19,6 +37,7 @@ export default function MobileActionBar() {
 
   return (
     <aside
+      ref={barRef}
       aria-label={t('quickActions')}
       className="mobile-bar-enter fixed bottom-0 left-0 right-0 z-40 border-t border-stone-200 bg-white/95 backdrop-blur-sm px-3 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] md:hidden"
     >

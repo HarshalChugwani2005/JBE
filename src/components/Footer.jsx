@@ -3,6 +3,7 @@ import { useLanguage } from '../context/useLanguage'
 import { buildGreeting } from '../i18n/whatsappMessages'
 import { getWhatsAppUrl, getPhoneUrl, shop } from '../data/site'
 import { ArrowRightIcon, WhatsAppIcon, PhoneIcon } from './Icons'
+import OpenStatus from './OpenStatus'
 
 export default function Footer() {
   const { t, lang, href } = useLanguage()
@@ -27,6 +28,7 @@ export default function Footer() {
             <h2 className="font-heading text-xs font-bold uppercase tracking-wider text-stone-900">{t('address')}</h2>
             <p className="mt-2 text-xs sm:text-sm text-stone-600">{t('heroLocation')}</p>
             <p className="text-xs sm:text-sm text-stone-600">{t('shopCity')}</p>
+            <OpenStatus className="mt-3" />
           </div>
 
           {/* Contact */}
@@ -61,6 +63,18 @@ export default function Footer() {
                   <Link to={href('/catalog')} className="text-stone-600 hover:text-amber-800 font-medium transition duration-150 inline-flex min-h-8 items-center gap-1.5">
                     <ArrowRightIcon className="h-3 w-3" />
                     <span>{t('navCatalog')}</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to={href('/guide')} className="text-stone-600 hover:text-amber-800 font-medium transition duration-150 inline-flex min-h-8 items-center gap-1.5">
+                    <ArrowRightIcon className="h-3 w-3" />
+                    <span>{t('navGuide')}</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to={href('/faq')} className="text-stone-600 hover:text-amber-800 font-medium transition duration-150 inline-flex min-h-8 items-center gap-1.5">
+                    <ArrowRightIcon className="h-3 w-3" />
+                    <span>{t('navFaq')}</span>
                   </Link>
                 </li>
                 <li>

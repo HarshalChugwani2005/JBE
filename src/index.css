@@ -743,7 +743,7 @@
    content can still scroll clear of both bars. Unlayered so it overrides the footer's pb-20. */
 @media (max-width: 767px) {
   body.install-banner-open footer {
-    padding-bottom: 9.5rem;
+    padding-bottom: calc(var(--mobile-bar-h, 4.5rem) + 5rem);
   }
 }
 

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useLanguage } from '../context/useLanguage'
 import { shop } from '../data/site'
 import { ArrowRightIcon, MapPinIcon } from './Icons'
+import OpenStatus from './OpenStatus'
 
 /**
  * Embedded map with shop address.
@@ -27,6 +28,7 @@ export default function MapPreview({ compact = false, headingLevel: Heading = 'h
         <p className="mt-2 text-sm text-stone-600 font-medium">{t('heroLocation')}</p>
         <p className="text-sm text-stone-600 font-medium">{t('shopCity')}</p>
         <p className="mt-3 text-xs font-semibold text-amber-800">{t('hours')}</p>
+        <OpenStatus className="mt-2 self-start" />
         <div className="mt-5 flex flex-wrap gap-2.5">
           <a href={shop.mapDirectionsUrl} target="_blank" rel="noopener noreferrer" className="btn btn-secondary px-4 text-xs">
             <MapPinIcon className="h-3.5 w-3.5" />

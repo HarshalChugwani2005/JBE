@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom'
 import CategoryCard from '../components/CategoryCard'
 import MapPreview from '../components/MapPreview'
+import OpenStatus from '../components/OpenStatus'
 import ProductImage from '../components/ProductImage'
 import RecentlyViewed from '../components/RecentlyViewed'
+import ReviewsSection from '../components/ReviewsSection'
 import RevealOnScroll from '../components/RevealOnScroll'
 import Section from '../components/Section'
 import SEO from '../components/SEO'
+import SeasonCards from '../components/SeasonCards'
 import { useLanguage } from '../context/useLanguage'
 import { buildGreeting } from '../i18n/whatsappMessages'
 import { categories } from '../data/products'
@@ -54,8 +57,11 @@ export default function Home() {
               {t('heroDescription')}
             </p>
 
+            {/* Live open / closed status (rendered after load) */}
+            <OpenStatus tone="dark" className="mt-5" />
+
             {/* Store Information Strip */}
-            <div className="mt-6 flex flex-wrap items-center gap-4 text-xs text-amber-50 font-medium">
+            <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-amber-50 font-medium">
               <div className="inline-flex items-center gap-1.5">
                 <ClockIcon className="h-3.5 w-3.5 text-amber-300" />
                 <span>{t('hours')}</span>
@@ -138,6 +144,23 @@ export default function Home() {
             </div>
           </Section>
 
+          {/* Shop by season */}
+          <Section title={t('shopBySeason')} subtitle={t('shopBySeasonSubtitle')}>
+            <SeasonCards />
+          </Section>
+
+          {/* Buying guide prompt */}
+          <section className="flex flex-col items-start gap-4 rounded-2xl border border-amber-200 bg-amber-50/70 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-7">
+            <div>
+              <h2 className="font-heading text-xl font-bold text-stone-900">{t('guideHomeTitle')}</h2>
+              <p className="mt-1 text-sm text-stone-700">{t('guideHomeText')}</p>
+            </div>
+            <Link to={href('/guide')} className="btn btn-primary shrink-0">
+              <span>{t('guideHomeCta')}</span>
+              <ArrowRightIcon className="h-4 w-4" />
+            </Link>
+          </section>
+
           {/* About Jai Baba Electronic */}
           <Section
             title={t('aboutTitle')}
@@ -189,6 +212,9 @@ export default function Home() {
               </RevealOnScroll>
             </div>
           </Section>
+
+          {/* Customer reviews (hidden until the shop adds real reviews or its Google review link) */}
+          <ReviewsSection />
 
           {/* Recently Viewed Products */}
           <RecentlyViewed />

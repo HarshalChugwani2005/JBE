@@ -17,8 +17,11 @@ import { markHydrated } from './utils/hydration'
 import Catalog from './pages/Catalog'
 import CategoryPage from './pages/CategoryPage'
 import Contact from './pages/Contact'
+import Faq from './pages/Faq'
+import Guide from './pages/Guide'
 import Home from './pages/Home'
 import NotFound from './pages/NotFound'
+import Season from './pages/Season'
 
 // Service-worker registration only exists in the browser; it is never part of pre-rendering.
 const UpdatePrompt = lazy(() => import('./components/UpdatePrompt'))
@@ -31,6 +34,9 @@ const PAGES = [
   ['/catalog/:category', CategoryPage],
   ['/catalog/:category/:model', CategoryPage],
   ['/contact', Contact],
+  ['/guide', Guide],
+  ['/faq', Faq],
+  ['/season/:season', Season],
 ]
 
 function useHasMounted() {

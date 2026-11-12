@@ -18,6 +18,17 @@ export const shop = {
   mapDirectionsUrl:
     'https://www.google.com/maps/search/?api=1&query=Buldana+Road+Malkapur+Maharashtra',
   // Formspree endpoint (set via VITE_FORMSPREE_URL or VITE_FORMSPREE_ID)
+  // Opening hours in shop time (Asia/Kolkata). Drives the live "Open now" badge; keep the
+  // `hours` text in src/i18n/locales/*.js and the JSON-LD in index.html in sync (test enforces
+  // the JSON-LD). days: 0 = Sunday … 6 = Saturday.
+  timeZone: 'Asia/Kolkata',
+  openingHours: [
+    { days: [1, 2, 3, 4, 5, 6], opens: '09:00', closes: '20:00' },
+    { days: [0], opens: '10:00', closes: '14:00' },
+  ],
+  // Google Business Profile "write a review" link (Google Maps → your listing → Share → "Ask
+  // for reviews" link). Leave empty to hide the "Review us on Google" button.
+  googleReviewUrl: '',
   formspreeUrl:
     (typeof import.meta !== 'undefined' && import.meta.env?.VITE_FORMSPREE_URL) ||
     (typeof import.meta !== 'undefined' && import.meta.env?.VITE_FORMSPREE_ID

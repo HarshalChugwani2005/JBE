@@ -9,6 +9,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { categories } from '../src/data/products.js'
+import { seasons } from '../src/data/seasons.js'
 import { shop } from '../src/data/site.js'
 import { withLang } from '../src/i18n/paths.js'
 import { SUPPORTED_LANGS } from '../src/i18n/registry.js'
@@ -25,6 +26,9 @@ const routes = [
   { route: '/', priority: '1.0', changefreq: 'weekly' },
   { route: '/catalog', priority: '0.9', changefreq: 'weekly' },
   { route: '/contact', priority: '0.7', changefreq: 'monthly' },
+  { route: '/guide', priority: '0.7', changefreq: 'monthly' },
+  { route: '/faq', priority: '0.6', changefreq: 'monthly' },
+  ...seasons.map((season) => ({ route: `/season/${season.slug}`, priority: '0.7', changefreq: 'monthly' })),
 ]
 for (const cat of categories) {
   if (cat.comingSoon) continue // skip unlaunched categories

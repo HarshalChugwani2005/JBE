@@ -1,6 +1,6 @@
 /**
  * Page metadata builders shared by the runtime <SEO> component and
- * scripts/generate-static-seo.js, so pre-rendered and client-side tags match.
+ * scripts/prerender.js, so pre-rendered and client-side tags match.
  */
 import { slugify } from '../utils/slugify.js'
 import { translate, translateCategory } from './format.js'
@@ -73,5 +73,18 @@ export function buildProductJsonLd(siteUrl, { category, brandName, model, imageU
     ...(model.specs?.length ? { description: model.specs.join(', ') } : {}),
     ...(imageUrl ? { image: imageUrl } : {}),
     url: `${siteUrl}${withLang(lang, `/catalog/${category.category}/${slugify(model.modelName)}`)}`,
+  }
+}
+
+/** FAQPage structured data from localizedFaq() items. */
+export function buildFaqJsonLd(items) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+    })),
   }
 }

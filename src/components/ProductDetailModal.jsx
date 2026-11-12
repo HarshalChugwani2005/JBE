@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { Link } from 'react-router-dom'
 import { useCart } from '../context/useCart'
 import { useLanguage } from '../context/useLanguage'
 import { buildProductEnquiryMessage } from '../i18n/whatsappMessages'
@@ -8,6 +9,7 @@ import { getPhoneUrl, getWhatsAppUrl, shop } from '../data/site'
 import { getImageBaseName, getImageSrcSet, getProductImageUrls } from '../data/productImages'
 import { trackCallClick, trackEnquiryCartAction, trackWhatsAppClick } from '../utils/analytics'
 import { addRecentlyViewed } from '../utils/recentlyViewed'
+import { similarModels } from '../utils/similarProducts'
 import { slugify } from '../utils/slugify'
 import { CartIcon, CloseIcon, PhoneIcon, ShareIcon, WhatsAppIcon } from './Icons'
 import ImageLightbox from './ImageLightbox'
@@ -66,7 +68,7 @@ function findColorForImage(imageSource, colors, modelName) {
 
 export default function ProductDetailModal({ isOpen, onClose, product }) {
   const { addToCart, openCart } = useCart()
-  const { t, tCategory, tProduct, lang } = useLanguage()
+  const { t, tCategory, tProduct, lang, href } = useLanguage()
   const { showToast } = useToast()
   const dialogRef = useRef(null)
   const closeButtonRef = useRef(null)
@@ -76,6 +78,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
   const [lightboxOpen, setLightboxOpen] = useState(false)
   // The modal renders into <body> via a portal, which only exists in the browser: it opens right
   // after mount, never in the pre-rendered HTML (the page underneath is pre-rendered instead).
+  const overlayRef = useRef(null)
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
   // The lightbox owns the keyboard while open (Escape / Tab must not also reach this dialog).
@@ -144,6 +147,16 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
   useEffect(() => {
     setActiveImageIndex(0)
   }, [imageSources.length])
+
+  const similar = useMemo(
+    () => (model?.modelName ? similarModels(categorySlug, model.modelName, model.priceTier) : []),
+    [categorySlug, model],
+  )
+
+  // Opening another product from "More in …" starts at the top of the modal.
+  useEffect(() => {
+    overlayRef.current?.scrollTo({ top: 0 })
+  }, [model])
 
   if (!isOpen || !model || !mounted) return null
 
@@ -230,6 +243,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
   // with the page and sit under the sticky header.
   return createPortal(
     <div
+      ref={overlayRef}
       className="fixed inset-0 z-50 overflow-y-auto bg-stone-950/80 px-3 py-4 sm:px-6 sm:py-8 transition-all duration-300"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
@@ -434,6 +448,38 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
             )}
           </div>
         </div>
+
+        {similar.length > 0 && (
+          <section className="border-t border-stone-200/90 bg-stone-50/70 px-5 py-5 sm:px-7" aria-labelledby="similar-products-title">
+            <h3 id="similar-products-title" className="text-xs font-bold uppercase tracking-[0.2em] text-stone-600">
+              {t('moreInCategory', { category: productLabel })}
+            </h3>
+            <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {similar.map(({ brand: otherBrand, model: other }) => (
+                <li key={other.modelName}>
+                  <Link
+                    to={href(`/catalog/${categorySlug}/${slugify(other.modelName)}`)}
+                    className="group flex h-full flex-col overflow-hidden rounded-xl border border-stone-200 bg-white transition hover:border-amber-400 hover:shadow-sm"
+                  >
+                    <ProductImage
+                      category={categorySlug}
+                      product={other}
+                      alt=""
+                      fallbackLabel=""
+                      sizes="(min-width: 640px) 200px, 45vw"
+                      className="aspect-4/3 w-full"
+                      imgClassName="object-contain p-2"
+                    />
+                    <span className="p-2.5">
+                      <span className="block text-[11px] font-bold uppercase tracking-wider text-amber-800">{otherBrand.brand}</span>
+                      <span className="block truncate text-sm font-semibold text-stone-900 group-hover:text-amber-800">{other.modelName}</span>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
 
       {/* Lightbox portal */}

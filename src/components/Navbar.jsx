@@ -13,6 +13,8 @@ import {
   CartIcon,
   MenuIcon,
   CloseIcon,
+  InfoIcon,
+  TagIcon,
 } from './Icons'
 
 /**
@@ -66,6 +68,8 @@ export default function Navbar() {
   const navRoutes = useMemo(() => [
     { to: href('/'), label: t('navHome'), end: true, Icon: HomeIcon },
     { to: href('/catalog'), label: t('navCatalog'), end: false, Icon: PackageIcon },
+    { to: href('/guide'), label: t('navGuide'), end: false, Icon: TagIcon },
+    { to: href('/faq'), label: t('navFaq'), end: false, Icon: InfoIcon },
     { to: href('/contact'), label: t('navContact'), end: false, Icon: MapPinIcon },
   ], [t, href])
 
