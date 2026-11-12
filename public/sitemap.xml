@@ -154,6 +154,36 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jai-baba-electronics.vercel.app/faq" />
   </url>
   <url>
+    <loc>https://jai-baba-electronics.vercel.app/about</loc>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jai-baba-electronics.vercel.app/about" />
+    <xhtml:link rel="alternate" hreflang="mr" href="https://jai-baba-electronics.vercel.app/mr/about" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://jai-baba-electronics.vercel.app/hi/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jai-baba-electronics.vercel.app/about" />
+  </url>
+  <url>
+    <loc>https://jai-baba-electronics.vercel.app/mr/about</loc>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jai-baba-electronics.vercel.app/about" />
+    <xhtml:link rel="alternate" hreflang="mr" href="https://jai-baba-electronics.vercel.app/mr/about" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://jai-baba-electronics.vercel.app/hi/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jai-baba-electronics.vercel.app/about" />
+  </url>
+  <url>
+    <loc>https://jai-baba-electronics.vercel.app/hi/about</loc>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jai-baba-electronics.vercel.app/about" />
+    <xhtml:link rel="alternate" hreflang="mr" href="https://jai-baba-electronics.vercel.app/mr/about" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://jai-baba-electronics.vercel.app/hi/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jai-baba-electronics.vercel.app/about" />
+  </url>
+  <url>
     <loc>https://jai-baba-electronics.vercel.app/season/summer</loc>
     <lastmod>2026-11-12</lastmod>
     <changefreq>monthly</changefreq>

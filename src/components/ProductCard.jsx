@@ -4,6 +4,7 @@ import { useLanguage } from '../context/useLanguage'
 import { useToast } from '../context/useToast'
 import { trackEnquiryCartAction } from '../utils/analytics'
 import { addRecentlyViewed } from '../utils/recentlyViewed'
+import CompareToggle from './CompareToggle'
 import { PlusIcon, ShareIcon } from './Icons'
 import ProductImage from './ProductImage'
 
@@ -116,9 +117,7 @@ export default function ProductCard({
 
       {/* Action Footer */}
       <div className="mt-auto px-4 pb-4 pt-2 flex items-center justify-between gap-2 border-t border-stone-100">
-        <span className="text-xs font-bold text-amber-800 group-hover:text-amber-950" aria-hidden="true">
-          {t('viewSpecs')}
-        </span>
+        <CompareToggle categorySlug={category} modelName={modelName} productName={productName} className="-ml-1.5" />
         <button
           type="button"
           onClick={handleQuickAdd}

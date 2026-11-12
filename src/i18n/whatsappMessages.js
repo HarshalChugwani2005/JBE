@@ -43,6 +43,8 @@ export const whatsappLabels = {
     notProvided: 'Not provided',
     contactClosing: 'Looking forward to hearing from you soon. Thank you!',
     errorReport: 'Hi, the Jai Baba Electronic website is showing an error. Please help!',
+    compareTitle: 'PRODUCT COMPARISON',
+    compareClosing: 'Hello! I am choosing between these models. Please share prices and help me pick the right one. Thank you!',
   },
   mr: {
     greeting: 'नमस्कार, मला तुमच्या उत्पादनांबद्दल चौकशी करायची आहे.',
@@ -77,6 +79,8 @@ export const whatsappLabels = {
     notProvided: 'दिलेले नाही',
     contactClosing: 'तुमच्या उत्तराची वाट पाहत आहे. धन्यवाद!',
     errorReport: 'नमस्कार, जय बाबा इलेक्ट्रॉनिकच्या वेबसाइटवर त्रुटी दिसत आहे. कृपया मदत करा!',
+    compareTitle: 'उत्पादन तुलना',
+    compareClosing: 'नमस्कार! मला यापैकी एक मॉडेल निवडायचे आहे. कृपया दर कळवा आणि योग्य मॉडेल निवडण्यास मदत करा. धन्यवाद!',
   },
   hi: {
     greeting: 'नमस्ते, मुझे आपके उत्पादों के बारे में जानकारी चाहिए।',
@@ -111,6 +115,8 @@ export const whatsappLabels = {
     notProvided: 'नहीं दिया गया',
     contactClosing: 'आपके जवाब का इंतज़ार रहेगा। धन्यवाद!',
     errorReport: 'नमस्ते, जय बाबा इलेक्ट्रॉनिक की वेबसाइट पर त्रुटि दिख रही है। कृपया मदद करें!',
+    compareTitle: 'उत्पाद तुलना',
+    compareClosing: 'नमस्ते! मुझे इनमें से एक मॉडल चुनना है। कृपया रेट बताएं और सही मॉडल चुनने में मदद करें। धन्यवाद!',
   },
 }
 
@@ -180,6 +186,21 @@ export function buildProductEnquiryMessage(lang, { brand, modelName, categoryLab
     keySpec ? `*${L.keySpec}:* ${keySpec}` : null,
     DIVIDER,
     `_"${L.productClosing}"_`,
+  ]
+    .filter(Boolean)
+    .join('\n')
+}
+
+/** Several models from the compare page: "which of these should I buy?" */
+export function buildCompareMessage(lang, { categoryLabel, products }) {
+  const L = labelsFor(lang)
+  return [
+    `*${SHOP_HEADING} — ${L.compareTitle}*`,
+    DIVIDER,
+    categoryLabel ? `*${L.category}:* ${categoryLabel}` : null,
+    ...products.map((name, index) => `${index + 1}. ${name}`),
+    DIVIDER,
+    `_"${L.compareClosing}"_`,
   ]
     .filter(Boolean)
     .join('\n')

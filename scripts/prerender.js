@@ -26,6 +26,7 @@ import {
   buildAlternates,
   buildBreadcrumbJsonLd,
   buildCategorySeo,
+  buildAboutJsonLd,
   buildFaqJsonLd,
   buildModelSeo,
   buildProductJsonLd,
@@ -106,6 +107,13 @@ for (const lang of SUPPORTED_LANGS) {
   renderPage({ lang, route: '/guide', title: titled(t('guideTitle')), description: t('seoGuideDescription') })
   renderPage({
     lang,
+    route: '/about',
+    title: titled(t('aboutPageTitle')),
+    description: t('seoAboutDescription'),
+    jsonLd: buildAboutJsonLd(shop.siteUrl, lang, t('aboutPageTitle')),
+  })
+  renderPage({
+    lang,
     route: '/faq',
     title: titled(t('faqTitle')),
     description: t('seoFaqDescription'),
@@ -121,7 +129,7 @@ for (const lang of SUPPORTED_LANGS) {
       image: `/og/${seasonCategories(season)[0]?.category ?? 'ceiling-fans'}.png`,
     })
   }
-  pages += 5 + seasons.length
+  pages += 6 + seasons.length
 
   for (const category of categories) {
     const categoryRoute = `/catalog/${category.category}`

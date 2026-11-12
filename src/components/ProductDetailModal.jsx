@@ -12,6 +12,7 @@ import { addRecentlyViewed } from '../utils/recentlyViewed'
 import { similarModels } from '../utils/similarProducts'
 import { slugify } from '../utils/slugify'
 import { CartIcon, CloseIcon, PhoneIcon, ShareIcon, WhatsAppIcon } from './Icons'
+import CompareToggle from './CompareToggle'
 import ImageLightbox from './ImageLightbox'
 import ProductImage from './ProductImage'
 import { trapTabKey } from '../utils/focus'
@@ -406,7 +407,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
               </div>
             )}
 
-            {/* WhatsApp is the main action: full-width first row; list + call share the second row. */}
+            {/* WhatsApp is the main action: full-width first row; list + call share the second row; compare below. */}
             <div className="mt-7 grid grid-cols-2 gap-2.5">
               <a
                 href={whatsappHref}
@@ -436,6 +437,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }) {
                 <PhoneIcon className="h-4 w-4" />
                 <span>{t('callSeller')}</span>
               </a>
+              <CompareToggle variant="modal" categorySlug={categorySlug} modelName={modelName} productName={productName} />
             </div>
 
             <p className="mt-5 text-xs text-stone-600">

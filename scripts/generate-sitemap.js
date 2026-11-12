@@ -28,6 +28,7 @@ const routes = [
   { route: '/contact', priority: '0.7', changefreq: 'monthly' },
   { route: '/guide', priority: '0.7', changefreq: 'monthly' },
   { route: '/faq', priority: '0.6', changefreq: 'monthly' },
+  { route: '/about', priority: '0.6', changefreq: 'monthly' },
   ...seasons.map((season) => ({ route: `/season/${season.slug}`, priority: '0.7', changefreq: 'monthly' })),
 ]
 for (const cat of categories) {

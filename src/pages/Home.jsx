@@ -209,6 +209,13 @@ export default function Home() {
                 </div>
               </RevealOnScroll>
             </div>
+            <Link
+              to={href('/about')}
+              className="mt-6 inline-flex min-h-10 items-center gap-1.5 text-sm font-bold text-amber-800 transition hover:text-amber-950"
+            >
+              <span>{t('aboutMoreLink')}</span>
+              <ArrowRightIcon className="h-4 w-4" />
+            </Link>
           </Section>
 
           {/* Customer reviews (hidden until the shop adds real reviews or its Google review link) */}

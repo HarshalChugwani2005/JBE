@@ -88,3 +88,15 @@ export function buildFaqJsonLd(items) {
     })),
   }
 }
+
+/** AboutPage structured data, pointing at the shop's LocalBusiness entry (index.html). */
+export function buildAboutJsonLd(siteUrl, lang, name) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name,
+    inLanguage: lang,
+    url: `${siteUrl}${withLang(lang, '/about')}`,
+    about: { '@type': 'ElectronicsStore', name: 'Jai Baba Electronic', url: siteUrl },
+  }
+}

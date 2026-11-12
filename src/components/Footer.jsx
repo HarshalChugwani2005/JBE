@@ -78,6 +78,12 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
+                  <Link to={href('/about')} className="text-stone-600 hover:text-amber-800 font-medium transition duration-150 inline-flex min-h-8 items-center gap-1.5">
+                    <ArrowRightIcon className="h-3 w-3" />
+                    <span>{t('navAbout')}</span>
+                  </Link>
+                </li>
+                <li>
                   <Link to={href('/contact')} className="text-stone-600 hover:text-amber-800 font-medium transition duration-150 inline-flex min-h-8 items-center gap-1.5">
                     <ArrowRightIcon className="h-3 w-3" />
                     <span>{t('navContact')}</span>

@@ -2,6 +2,7 @@ import { Fragment, lazy, Suspense, useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Analytics } from '@vercel/analytics/react'
 import CartDrawer from './components/CartDrawer'
+import CompareTray from './components/CompareTray'
 import ErrorBoundary from './components/ErrorBoundary'
 import Footer from './components/Footer'
 import MobileActionBar from './components/MobileActionBar'
@@ -14,8 +15,10 @@ import WhatsAppButton from './components/WhatsAppButton'
 import { AppProviders } from './context/AppProviders'
 import { ROUTE_PREFIXES } from './i18n/paths'
 import { markHydrated } from './utils/hydration'
+import About from './pages/About'
 import Catalog from './pages/Catalog'
 import CategoryPage from './pages/CategoryPage'
+import Compare from './pages/Compare'
 import Contact from './pages/Contact'
 import Faq from './pages/Faq'
 import Guide from './pages/Guide'
@@ -37,6 +40,8 @@ const PAGES = [
   ['/guide', Guide],
   ['/faq', Faq],
   ['/season/:season', Season],
+  ['/about', About],
+  ['/compare', Compare],
 ]
 
 function useHasMounted() {
@@ -76,6 +81,7 @@ export function AppShell() {
         <Footer />
         <WhatsAppButton />
         <MobileActionBar />
+        <CompareTray />
         <CartDrawer />
         <SearchPalette />
         <OfflineBanner />

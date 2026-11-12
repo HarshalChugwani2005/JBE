@@ -207,3 +207,20 @@ export function ArrowLeftIcon({ className = 'h-4 w-4', ...props }) {
     </svg>
   )
 }
+
+/** Two side-by-side columns — "compare". */
+export function CompareIcon({ className = 'h-4 w-4', ...props }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" aria-hidden="true" {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 4.5h5.25v15H4.5zM14.25 4.5h5.25v15h-5.25zM12 2.25v19.5" />
+    </svg>
+  )
+}
+
+export function ImageIcon({ className = 'h-4 w-4', ...props }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" aria-hidden="true" {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.16-5.16a2.25 2.25 0 013.18 0l5.16 5.16m-1.5-1.5l1.41-1.41a2.25 2.25 0 013.18 0l2.91 2.91M3.75 19.5h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zM14.25 8.25h.008v.008h-.008V8.25z" />
+    </svg>
+  )
+}

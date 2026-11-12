@@ -29,6 +29,9 @@ export const shop = {
   // Google Business Profile "write a review" link (Google Maps → your listing → Share → "Ask
   // for reviews" link). Leave empty to hide the "Review us on Google" button.
   googleReviewUrl: '',
+  // Year the shop opened, e.g. 1998. Shows "Serving Malkapur since …" on the About page;
+  // leave null to hide it.
+  establishedYear: null,
   formspreeUrl:
     (typeof import.meta !== 'undefined' && import.meta.env?.VITE_FORMSPREE_URL) ||
     (typeof import.meta !== 'undefined' && import.meta.env?.VITE_FORMSPREE_ID

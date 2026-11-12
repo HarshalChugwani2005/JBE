@@ -14,6 +14,7 @@ import {
   MenuIcon,
   CloseIcon,
   InfoIcon,
+  StoreIcon,
   TagIcon,
 } from './Icons'
 
@@ -70,6 +71,8 @@ export default function Navbar() {
     { to: href('/catalog'), label: t('navCatalog'), end: false, Icon: PackageIcon },
     { to: href('/guide'), label: t('navGuide'), end: false, Icon: TagIcon },
     { to: href('/faq'), label: t('navFaq'), end: false, Icon: InfoIcon },
+    // Wide screens only in the desktop bar (it would crowd the bar at 1024px); always in the phone menu and footer.
+    { to: href('/about'), label: t('navAbout'), end: false, Icon: StoreIcon, wideOnly: true },
     { to: href('/contact'), label: t('navContact'), end: false, Icon: MapPinIcon },
   ], [t, href])
 
@@ -142,8 +145,8 @@ export default function Navbar() {
               }}
             />
 
-            {navRoutes.map(({ to, label, end }) => (
-              <li key={to} className="relative z-10">
+            {navRoutes.map(({ to, label, end, wideOnly }) => (
+              <li key={to} className={`relative z-10 ${wideOnly ? 'hidden xl:block' : ''}`}>
                 <NavLink
                   ref={(el) => {
                     if (el) linkRefs.current[to] = el
@@ -151,7 +154,7 @@ export default function Navbar() {
                   to={to}
                   end={end}
                   className={({ isActive }) =>
-                    `px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-colors duration-200 inline-block ${
+                    `px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide whitespace-nowrap transition-colors duration-200 inline-block ${
                       isActive
                         ? 'text-amber-900 font-bold'
                         : 'text-stone-600 hover:text-stone-900'

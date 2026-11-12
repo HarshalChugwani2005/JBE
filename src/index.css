@@ -745,6 +745,17 @@
   body.install-banner-open footer {
     padding-bottom: calc(var(--mobile-bar-h, 4.5rem) + 5rem);
   }
+  /* The floating "Compare (n)" pill sits above the action bar — and above the install strip
+     when both are showing; the footer grows to match so nothing ends up hidden behind them. */
+  body.compare-tray-open footer {
+    padding-bottom: calc(var(--mobile-bar-h, 4.5rem) + 4.5rem);
+  }
+  body.install-banner-open .compare-tray {
+    bottom: calc(var(--mobile-bar-h, 4.5rem) + 4.75rem);
+  }
+  body.install-banner-open.compare-tray-open footer {
+    padding-bottom: calc(var(--mobile-bar-h, 4.5rem) + 9rem);
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
