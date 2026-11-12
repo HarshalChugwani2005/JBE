@@ -285,5 +285,9 @@ export default {
     reviewsTitle: 'What our customers say',
     reviewsSubtitle: 'Reviews from customers in and around Malkapur.',
     reviewUsOnGoogle: 'Review us on Google',
+    carouselPause: 'Pause slideshow',
+    carouselPlay: 'Play slideshow',
+    carouselShow: 'Show {name}',
+    carouselSlide: '{index} of {total}',
   },
 }

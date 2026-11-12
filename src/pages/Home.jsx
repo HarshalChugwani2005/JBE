@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 import CategoryCard from '../components/CategoryCard'
+import HeroCarousel from '../components/HeroCarousel'
 import MapPreview from '../components/MapPreview'
 import OpenStatus from '../components/OpenStatus'
-import ProductImage from '../components/ProductImage'
 import RecentlyViewed from '../components/RecentlyViewed'
 import ReviewsSection from '../components/ReviewsSection'
 import RevealOnScroll from '../components/RevealOnScroll'
@@ -12,6 +12,7 @@ import SeasonCards from '../components/SeasonCards'
 import { useLanguage } from '../context/useLanguage'
 import { buildGreeting } from '../i18n/whatsappMessages'
 import { categories } from '../data/products'
+import { getProductImageUrls } from '../data/productImages'
 import { featuredCategorySlugs, getWhatsAppUrl, shop } from '../data/site'
 import { trackWhatsAppClick } from '../utils/analytics'
 import {
@@ -25,13 +26,26 @@ import {
   ArrowRightIcon,
 } from '../components/Icons'
 
+// Category order for the hero showcase; categories without a product photo are skipped.
+const HERO_CATEGORY_ORDER = ['ceiling-fans', 'geysers', 'led-bulbs', 'led-battens', '12v-batteries', 'coolers', 'table-fans']
+
 export default function Home() {
-  const { t, tCategory, lang, href } = useLanguage()
+  const { t, lang, href } = useLanguage()
   const featured = featuredCategorySlugs
     .map((slug) => categories.find((c) => c.category === slug))
     .filter(Boolean)
-  const heroProduct = categories
-    .find((category) => category.category === 'ceiling-fans')?.brands?.[0]?.models?.[0]
+  // Hero showcase: the first model with a photo from each category, ceiling fans first.
+  const heroSlides = HERO_CATEGORY_ORDER.map((slug) => categories.find((c) => c.category === slug))
+    .filter(Boolean)
+    .map((category) => {
+      for (const brand of category.brands ?? []) {
+        const model = (brand.models ?? []).find((m) => getProductImageUrls(category.category, m).length > 0)
+        if (model) return { category, brand, model }
+      }
+      return null
+    })
+    .filter(Boolean)
+    .slice(0, 6)
 
   return (
     <>
@@ -94,25 +108,9 @@ export default function Home() {
             </div>
             </div>
 
-            {heroProduct && (
+            {heroSlides.length > 0 && (
               <div className="relative hidden md:block hero-product-enter">
-                <div className="absolute -inset-4 rounded-4xl border border-white/15 bg-white/5" aria-hidden="true" />
-                <div className="animate-float">
-                  <ProductImage
-                    category="ceiling-fans"
-                    product={heroProduct}
-                    alt={`${heroProduct.modelName} — ${tCategory('ceiling-fans')}`}
-                    className="relative aspect-4/3 overflow-hidden rounded-3xl border border-white/20 bg-white/10 shadow-2xl"
-                    sizes="(min-width: 768px) 50vw, 100vw"
-                    imgClassName="object-contain p-6"
-                    loading="eager"
-                    fetchPriority="high"
-                  />
-                </div>
-                <div className="absolute bottom-4 left-4 rounded-xl border border-white/20 bg-stone-950/65 px-3 py-2 backdrop-blur-sm animate-slide-in-up" style={{animationDelay:'0.6s'}}>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-amber-200">{t('featuredRange')}</p>
-                  <p className="mt-0.5 text-sm font-bold text-white">{heroProduct.modelName}</p>
-                </div>
+                <HeroCarousel slides={heroSlides} />
               </div>
             )}
           </div>

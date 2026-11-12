@@ -279,6 +279,10 @@ export default {
     reviewsTitle: 'आमचे ग्राहक काय म्हणतात',
     reviewsSubtitle: 'मलकापूर आणि परिसरातील ग्राहकांचे अभिप्राय.',
     reviewUsOnGoogle: 'Google वर अभिप्राय द्या',
+    carouselPause: 'स्लाइडशो थांबवा',
+    carouselPlay: 'स्लाइडशो सुरू करा',
+    carouselShow: '{name} दाखवा',
+    carouselSlide: '{total} पैकी {index}',
   },
   products: {
     'Highest air delivery': 'सर्वाधिक हवा',
