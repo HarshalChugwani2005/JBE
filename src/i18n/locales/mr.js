@@ -631,5 +631,13 @@ export default {
     'Hybrid motor': 'हायब्रिड मोटर',
     'Energy saver': 'वीज बचत',
     '3 blades': '3 पाती',
+    'Ornamental design · Anti-corrosion blades': 'नक्षीदार डिझाइन · गंजरोधक पाती',
+    '5 Years Warranty': '5 वर्षांची वॉरंटी',
+    '320 RPM': '320 RPM',
+    '220 CMM air delivery': '220 CMM हवा',
+    '50 W power': '50 W वीज वापर',
+    '16-pole motor': '16-पोल मोटर',
+    'Anti-corrosion aluminium blades': 'गंजरोधक ॲल्युमिनियम पाती',
+    'Ornamental bottom design': 'नक्षीदार खालचा भाग',
   },
 }

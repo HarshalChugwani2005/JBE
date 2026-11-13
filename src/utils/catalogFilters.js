@@ -35,7 +35,9 @@ function modelSearchText(names, entry, model) {
     ...names,
     entry.brand,
     model.modelName,
-    ...[entry.tagline, entry.warranty, ...(model.specs ?? []), ...(model.colors ?? [])].flatMap(productTextVariants),
+    ...[entry.tagline, entry.warranty, model.tagline, model.warranty, ...(model.specs ?? []), ...(model.colors ?? [])]
+      .filter(Boolean)
+      .flatMap(productTextVariants),
   ]
 }
 

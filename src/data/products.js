@@ -106,11 +106,12 @@ export const categories = [
       },
       {
         brand: 'Orient Electric',
-        tagline: 'High Speed · Superior Air Delivery',
-        warranty: '2 Years Warranty',
+        // Tagline and warranty differ per model, so they live on each model.
         models: [
           {
             modelName: 'Arctic Air FX',
+            tagline: 'High Speed · Superior Air Delivery',
+            warranty: '2 Years Warranty',
             specs: [
               '1200 mm (48") sweep',
               '380 RPM high speed',
@@ -123,6 +124,24 @@ export const categories = [
             image: 'arctic-air-fx-brown.jpg',
             images: ['arctic-air-fx-brown.jpg'],
             priceTier: 'budget',
+          },
+          {
+            modelName: 'Summercool',
+            tagline: 'Ornamental design · Anti-corrosion blades',
+            warranty: '5 Years Warranty',
+            specs: [
+              '1200 mm (48") sweep',
+              '320 RPM',
+              '220 CMM air delivery',
+              '50 W power',
+              '16-pole motor',
+              'Anti-corrosion aluminium blades',
+              'Ornamental bottom design',
+            ],
+            colors: ['Brown'],
+            image: 'summercool-brown.jpg',
+            images: ['summercool-brown.jpg'],
+            priceTier: 'mid',
           },
         ],
       },

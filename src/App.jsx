@@ -27,7 +27,9 @@ import NotFound from './pages/NotFound'
 import Season from './pages/Season'
 
 // Service-worker registration only exists in the browser; it is never part of pre-rendering.
-const UpdatePrompt = lazy(() => import('./components/UpdatePrompt'))
+// Optional: if its chunk can't load (offline, or a tab left open across a deploy), render nothing
+// instead of letting the error reach the error boundary.
+const UpdatePrompt = lazy(() => import('./components/UpdatePrompt').catch(() => ({ default: () => null })))
 
 // Every page is imported directly (no lazy routes) so each one can be pre-rendered to HTML at
 // build time and hydrated without a loading state.
