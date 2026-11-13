@@ -514,6 +514,36 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jai-baba-electronics.vercel.app/catalog/ceiling-fans/48-air-flow" />
   </url>
   <url>
+    <loc>https://jai-baba-electronics.vercel.app/catalog/ceiling-fans/arctic-air-fx</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jai-baba-electronics.vercel.app/catalog/ceiling-fans/arctic-air-fx" />
+    <xhtml:link rel="alternate" hreflang="mr" href="https://jai-baba-electronics.vercel.app/mr/catalog/ceiling-fans/arctic-air-fx" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://jai-baba-electronics.vercel.app/hi/catalog/ceiling-fans/arctic-air-fx" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jai-baba-electronics.vercel.app/catalog/ceiling-fans/arctic-air-fx" />
+  </url>
+  <url>
+    <loc>https://jai-baba-electronics.vercel.app/mr/catalog/ceiling-fans/arctic-air-fx</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jai-baba-electronics.vercel.app/catalog/ceiling-fans/arctic-air-fx" />
+    <xhtml:link rel="alternate" hreflang="mr" href="https://jai-baba-electronics.vercel.app/mr/catalog/ceiling-fans/arctic-air-fx" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://jai-baba-electronics.vercel.app/hi/catalog/ceiling-fans/arctic-air-fx" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jai-baba-electronics.vercel.app/catalog/ceiling-fans/arctic-air-fx" />
+  </url>
+  <url>
+    <loc>https://jai-baba-electronics.vercel.app/hi/catalog/ceiling-fans/arctic-air-fx</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jai-baba-electronics.vercel.app/catalog/ceiling-fans/arctic-air-fx" />
+    <xhtml:link rel="alternate" hreflang="mr" href="https://jai-baba-electronics.vercel.app/mr/catalog/ceiling-fans/arctic-air-fx" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://jai-baba-electronics.vercel.app/hi/catalog/ceiling-fans/arctic-air-fx" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jai-baba-electronics.vercel.app/catalog/ceiling-fans/arctic-air-fx" />
+  </url>
+  <url>
     <loc>https://jai-baba-electronics.vercel.app/catalog/hot-plates</loc>
     <lastmod>2026-11-13</lastmod>
     <changefreq>weekly</changefreq>

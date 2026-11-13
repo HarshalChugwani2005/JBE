@@ -104,6 +104,28 @@ export const categories = [
           },
         ],
       },
+      {
+        brand: 'Orient Electric',
+        tagline: 'High Speed · Superior Air Delivery',
+        warranty: '2 Years Warranty',
+        models: [
+          {
+            modelName: 'Arctic Air FX',
+            specs: [
+              '1200 mm (48") sweep',
+              '380 RPM high speed',
+              '210 CMM air delivery',
+              'Hybrid motor',
+              'Energy saver',
+              '3 blades',
+            ],
+            colors: ['Brown', 'White'],
+            image: 'arctic-air-fx-brown.jpg',
+            images: ['arctic-air-fx-brown.jpg'],
+            priceTier: 'budget',
+          },
+        ],
+      },
     ],
   },
   {

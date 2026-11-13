@@ -625,5 +625,11 @@ export default {
     'Low noise': 'कमी आवाज',
     'Silver Grey': 'सिल्व्हर ग्रे',
     'Premium Quality': 'प्रीमियम दर्जा',
+    'High Speed · Superior Air Delivery': 'हाय स्पीड · उत्तम हवा',
+    '380 RPM high speed': '380 RPM हाय स्पीड',
+    '210 CMM air delivery': '210 CMM हवा',
+    'Hybrid motor': 'हायब्रिड मोटर',
+    'Energy saver': 'वीज बचत',
+    '3 blades': '3 पाती',
   },
 }
