@@ -620,5 +620,10 @@ export default {
     '5 Years Tank · 2 Years Heating Element · 2 Years Product': 'टैंक 5 साल · हीटिंग एलिमेंट 2 साल · प्रोडक्ट 2 साल',
     '2 Years Warranty': '2 साल की वारंटी',
     '12 Months Genuine Warranty': '12 महीने की असली वारंटी',
+    '1200 mm (48") sweep': '1200 मिमी (48") स्वीप',
+    'High air delivery': 'ज़्यादा हवा',
+    'Low noise': 'कम आवाज़',
+    'Silver Grey': 'सिल्वर ग्रे',
+    'Premium Quality': 'प्रीमियम क्वालिटी',
   },
 }

@@ -90,6 +90,20 @@ export const categories = [
           },
         ],
       },
+      {
+        brand: 'STYLE BOSS',
+        tagline: 'Premium Quality',
+        models: [
+          {
+            modelName: '48" Air Flow',
+            specs: ['1200 mm (48") sweep', 'High air delivery', 'Low noise', 'Energy efficient', 'Long life'],
+            colors: ['Silver Grey', 'Ivory'],
+            image: 'air-flow-silver-grey.jpg',
+            images: ['air-flow-silver-grey.jpg'],
+            priceTier: 'premium',
+          },
+        ],
+      },
     ],
   },
   {
